@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <group android:checkableBehavior="single">
+        <item android:title="abc">
+            <menu>
+                <group android:checkableBehavior="single">
+                    <item
+                        android:id="@+id/mov_now_playing"
+                        android:icon="@mipmap/ic_launcher"
+                        android:title="def" />
+                </group>
+            </menu>
+        </item>
+
+    </group>
+</menu>
