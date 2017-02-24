@@ -1,17 +1,30 @@
 package ultimate.fit.ultimatefit.fragment;
 
 import android.content.Context;
+import android.content.Intent;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.CursorLoader;
+import android.support.v4.content.Loader;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import ultimate.fit.ultimatefit.R;
+import ultimate.fit.ultimatefit.activity.AddPlanActivity;
+import ultimate.fit.ultimatefit.adapter.PlanAdapter;
+import ultimate.fit.ultimatefit.data.UltimateFitProvider;
 
 
 /**
@@ -22,8 +35,15 @@ import ultimate.fit.ultimatefit.R;
  * Use the {@link TabPlanFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class TabPlanFragment extends Fragment {
+public class TabPlanFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
+    private static final String LOG_TAG = TabPlanFragment.class.getSimpleName();
+    private static final int PLAN_LOADER = 1000;
     ItemsListClickHandler handler;
+    @BindView(R.id.fab_add_plan)
+    FloatingActionButton fabAddPlan;
+    @BindView(R.id.recyclerview_plan)
+    RecyclerView recyclerViewPlan;
+    private PlanAdapter planAdapter;
     // TODO: Rename parameter arguments, choose names that match
     private OnFragmentInteractionListener mListener;
 
@@ -55,10 +75,27 @@ public class TabPlanFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_tab_plan, container, false);
-        //while(TabPlanFragment.moviesList.size()==0){}
         ButterKnife.bind(this, rootView);
 
+        planAdapter = new PlanAdapter(getContext(), new PlanAdapter.PlanAdapterOnClickHandler() {
+            @Override
+            public void onClick(int planId) {
+                Log.i(LOG_TAG, "plan ID: " + planId);
+                handler.onHandleItemClick(planId);
+            }
+        });
+        recyclerViewPlan.setAdapter(planAdapter);
+        recyclerViewPlan.setHasFixedSize(true);
+        recyclerViewPlan.setLayoutManager(new LinearLayoutManager(getContext()));
+        getLoaderManager().initLoader(PLAN_LOADER, null, this);
+
         return rootView;
+    }
+
+    @OnClick(R.id.fab_add_plan)
+    public void onClickAddPlan() {
+        Intent addPlanIntent = new Intent(this.getActivity(), AddPlanActivity.class);
+        startActivity(addPlanIntent);
     }
 
     @Override
@@ -99,6 +136,21 @@ public class TabPlanFragment extends Fragment {
         super.onDestroy();
     }
 
+    @Override
+    public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+        return new CursorLoader(getActivity(), UltimateFitProvider.Plans.CONTENT_URI, null, null, null, null);
+    }
+
+    @Override
+    public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+        planAdapter.swapCursor(data);
+    }
+
+    @Override
+    public void onLoaderReset(Loader<Cursor> loader) {
+        planAdapter.swapCursor(null);
+    }
+
     /**
      * This interface must be implemented by activities that contain this
      * fragment to allow an interaction in this fragment to be communicated
@@ -115,7 +167,7 @@ public class TabPlanFragment extends Fragment {
     }
 
     public interface ItemsListClickHandler {
-        public void onHandleItemClick(int position);
+        public void onHandleItemClick(int planId);
     }
 
 }

@@ -6,4 +6,14 @@
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="title_tab_workout">Workouts</string>
     <string name="title_tab_plan">Plan</string>
+    <string name="action_add_plan">Create New Plan</string>
+    <string name="form_plan_name">Name</string>
+    <string name="form_plan_goal">Goal</string>
+    <string name="form_plan_num_of_week">Number of week</string>
+    <string name="form_plan_day_per_week">No. of days per week</string>
+    <string name="cd_save_plan">Save Plan Button</string>
+    <string name="save_button">Save</string>
+    <string name="plan_add_message">Success!</string>
+    <string name="add_plan_label">Add Plan</string>
+    <string name="button_apply_plan">Apply</string>
 </resources>
