@@ -52,6 +52,7 @@ public class PlanAdapter extends RecyclerView.Adapter<PlanAdapter.ViewHolder> {
 
     @Override
     public void onBindViewHolder(final PlanAdapter.ViewHolder holder, int position) {
+        final int pos = position;
         cursor.moveToPosition(position);
         holder.textViewPlanName.setText(String.format(Locale.ENGLISH, "%s", cursor.getString(cursor.getColumnIndex(PlanColumns.NAME))));
         int numOfWeeks = cursor.getInt(cursor.getColumnIndex(PlanColumns.NUM_OF_WEEK));
@@ -73,6 +74,7 @@ public class PlanAdapter extends RecyclerView.Adapter<PlanAdapter.ViewHolder> {
         holder.buttonApplyPlan.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                cursor.moveToPosition(pos);
                 holder.buttonApplyPlan.setVisibility(View.INVISIBLE);
                 currentAppliedPlanID = cursor.getInt(cursor.getColumnIndex(PlanColumns.ID));
                 new Thread(new Runnable() {
