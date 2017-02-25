@@ -13,6 +13,7 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
+import android.view.View;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -22,7 +23,8 @@ import ultimate.fit.ultimatefit.fragment.TabPlanFragment;
 import ultimate.fit.ultimatefit.fragment.TabWorkoutFragment;
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener,TabPlanFragment.OnFragmentInteractionListener, TabWorkoutFragment.OnFragmentInteractionListener,TabPlanFragment.ItemsListClickHandler {
+        implements NavigationView.OnNavigationItemSelectedListener, TabPlanFragment.OnFragmentInteractionListener,
+        TabWorkoutFragment.OnFragmentInteractionListener, TabPlanFragment.ItemsListClickHandler {
 
     public PagerAdapter adapter;
     ActionBarDrawerToggle toggle;
@@ -38,19 +40,28 @@ public class MainActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
-
+        setSupportActionBar(toolbar);
+        toolbar.setTitle("Ultimate Fit");
 
         toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
-        //setSupportActionBar(toolbar);
+        toggle.setDrawerIndicatorEnabled(false);
+        toggle.setHomeAsUpIndicator(R.drawable.view_sequential);
+        toggle.setToolbarNavigationClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (drawer.isDrawerVisible(GravityCompat.START)) {
+                    drawer.closeDrawer(GravityCompat.START);
+                } else {
+                    drawer.openDrawer(GravityCompat.START);
+                }
+            }
+        });
         tabLayout.addTab(tabLayout.newTab().setText(R.string.title_tab_workout));
         tabLayout.addTab(tabLayout.newTab().setText(getString(R.string.title_tab_plan)));
         tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
-        getSupportActionBar().setHomeButtonEnabled(true);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setHomeAsUpIndicator(R.drawable.view_sequential);
 
         final ViewPager viewPager = (ViewPager) findViewById(R.id.pager);
         adapter = new PagerAdapter(getSupportFragmentManager(), tabLayout.getTabCount(), this);
