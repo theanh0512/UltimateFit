@@ -44,7 +44,6 @@ public class TabPlanFragment extends Fragment implements LoaderManager.LoaderCal
     @BindView(R.id.recyclerview_plan)
     RecyclerView recyclerViewPlan;
     private PlanAdapter planAdapter;
-    // TODO: Rename parameter arguments, choose names that match
     private OnFragmentInteractionListener mListener;
 
     public TabPlanFragment() {

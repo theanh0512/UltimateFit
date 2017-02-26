@@ -35,6 +35,4 @@ public interface PlanColumns {
     @Nullable
     //@DefaultValue("0")
     String APPLIED_DATE = "applied_date";
-
-    String WORKOUTS = "workouts";
 }

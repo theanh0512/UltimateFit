@@ -18,8 +18,11 @@ import java.util.Locale;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import ultimate.fit.ultimatefit.R;
+import ultimate.fit.ultimatefit.activity.MainActivity;
 import ultimate.fit.ultimatefit.data.PlanColumns;
 import ultimate.fit.ultimatefit.data.UltimateFitProvider;
+import ultimate.fit.ultimatefit.fragment.TabWorkoutFragment;
+import ultimate.fit.ultimatefit.utils.SharedPreferenceHelper;
 import ultimate.fit.ultimatefit.utils.ViewHolderUtil;
 
 /**
@@ -28,7 +31,7 @@ import ultimate.fit.ultimatefit.utils.ViewHolderUtil;
 
 public class PlanAdapter extends RecyclerView.Adapter<PlanAdapter.ViewHolder> {
     private static final String LOG_TAG = PlanAdapter.class.getSimpleName();
-    private static int currentAppliedPlanID = 0;
+    public static int currentAppliedPlanID = 0;
     private final Context context;
     final private PlanAdapterOnClickHandler clickHandler;
     private Cursor cursor;
@@ -56,7 +59,7 @@ public class PlanAdapter extends RecyclerView.Adapter<PlanAdapter.ViewHolder> {
         cursor.moveToPosition(position);
         holder.textViewPlanName.setText(String.format(Locale.ENGLISH, "%s", cursor.getString(cursor.getColumnIndex(PlanColumns.NAME))));
         int numOfWeeks = cursor.getInt(cursor.getColumnIndex(PlanColumns.NUM_OF_WEEK));
-        holder.textViewPlanNumOfWeeks.setText(String.format(Locale.ENGLISH, "%s", numOfWeeks) + " week" + (numOfWeeks==1?"":"s"));
+        holder.textViewPlanNumOfWeeks.setText(String.format(Locale.ENGLISH, "%s", numOfWeeks) + " week" + (numOfWeeks == 1 ? "" : "s"));
         DateTime today = new DateTime();
         //DateTime appliedDate = new DateTime(cursor.getLong(cursor.getColumnIndex(WorkoutColumns.APPLIED_DATE)));
 //        int isToday = DateTimeComparator.getDateOnlyInstance().compare(today, appliedDate);
@@ -77,14 +80,25 @@ public class PlanAdapter extends RecyclerView.Adapter<PlanAdapter.ViewHolder> {
                 cursor.moveToPosition(pos);
                 holder.buttonApplyPlan.setVisibility(View.INVISIBLE);
                 currentAppliedPlanID = cursor.getInt(cursor.getColumnIndex(PlanColumns.ID));
-                new Thread(new Runnable() {
+                SharedPreferenceHelper.getInstance().put(SharedPreferenceHelper.Key.CURRENT_APPLIED_PLANID_INT,currentAppliedPlanID);
+                Thread thread = new Thread(new Runnable() {
                     @Override
                     public void run() {
                         ContentValues cv = new ContentValues();
                         cv.put(PlanColumns.APPLIED_DATE, new DateTime().getMillis());
                         context.getContentResolver().update(UltimateFitProvider.Plans.withId(currentAppliedPlanID), cv, null, null);
                     }
-                }).start();
+                });
+                thread.start();
+                try {
+                    thread.join();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                TabWorkoutFragment tabWorkoutFragment = (TabWorkoutFragment) MainActivity.adapter.getRegisteredFragment(0);
+                if (tabWorkoutFragment != null) {
+                    tabWorkoutFragment.getLoaderManager().restartLoader(2000,null,tabWorkoutFragment);
+                }
                 holder.imageViewOnGoingCheck.setVisibility(View.VISIBLE);
             }
         });

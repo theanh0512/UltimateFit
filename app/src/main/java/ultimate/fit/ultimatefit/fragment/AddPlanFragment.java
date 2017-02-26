@@ -1,8 +1,10 @@
 package ultimate.fit.ultimatefit.fragment;
 
+import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -20,6 +22,7 @@ import ultimate.fit.ultimatefit.R;
 import ultimate.fit.ultimatefit.activity.MainActivity;
 import ultimate.fit.ultimatefit.data.PlanColumns;
 import ultimate.fit.ultimatefit.data.UltimateFitProvider;
+import ultimate.fit.ultimatefit.data.generated.values.WorkoutsValuesBuilder;
 
 /**
  * Created by User on 12/10/2016.
@@ -63,17 +66,27 @@ public class AddPlanFragment extends Fragment {
     @OnClick(R.id.buttonSavePlan)
     public void onClickSavePlan() {
         final Context context = getActivity().getApplicationContext();
-        new Thread(new Runnable() {
+        Thread thread = new Thread(new Runnable() {
             @Override
             public void run() {
-                ContentValues cv = new ContentValues();
-                cv.put(PlanColumns.NAME, editNameText.getText().toString());
-                cv.put(PlanColumns.GOAL, editGoalText.getText().toString());
-                cv.put(PlanColumns.NUM_OF_WEEK, Integer.parseInt(editNumOfWeekText.getText().toString()));
-                cv.put(PlanColumns.DAY_PER_WEEK, Integer.parseInt(editDayPerWeekText.getText().toString()));
-                context.getContentResolver().insert(UltimateFitProvider.Plans.CONTENT_URI, cv);
+                ContentValues planContentValues = new ContentValues();
+                planContentValues.put(PlanColumns.NAME, editNameText.getText().toString());
+                planContentValues.put(PlanColumns.GOAL, editGoalText.getText().toString());
+                int numOfWeek = Integer.parseInt(editNumOfWeekText.getText().toString());
+                int dayPerWeek = Integer.parseInt(editDayPerWeekText.getText().toString());
+                planContentValues.put(PlanColumns.NUM_OF_WEEK, numOfWeek);
+                planContentValues.put(PlanColumns.DAY_PER_WEEK, dayPerWeek);
+                Uri uri = context.getContentResolver().insert(UltimateFitProvider.Plans.CONTENT_URI, planContentValues);
+
+                long planId = ContentUris.parseId(uri);
+                ContentValues[] workoutContentValues = new ContentValues[numOfWeek * dayPerWeek];
+                for (int i = 0; i < workoutContentValues.length; i++) {
+                    workoutContentValues[i] = new WorkoutsValuesBuilder().dayNumber(i + 1).planId(planId).values();
+                }
+                context.getContentResolver().bulkInsert(UltimateFitProvider.Workouts.CONTENT_URI, workoutContentValues);
             }
-        }).start();
+        });
+        thread.start();
         Toast.makeText(this.getActivity(), R.string.plan_add_message, Toast.LENGTH_SHORT).show();
         Intent backToMain = new Intent(this.getActivity(), MainActivity.class);
         backToMain.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK);

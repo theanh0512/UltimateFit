@@ -27,6 +27,7 @@ public class UltimateFitProvider {
     interface Path {
         String WORKOUTS = "workouts";
         String PLANS = "plans";
+        String FROM_PLAN = "fromPlan";
     }
 
     @TableEndpoint(table = UltimateFitDatabase.Tables.PLANS)

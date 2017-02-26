@@ -10,12 +10,14 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import org.joda.time.DateTime;
+import org.joda.time.DateTimeComparator;
 
 import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import ultimate.fit.ultimatefit.R;
+import ultimate.fit.ultimatefit.data.PlanColumns;
 import ultimate.fit.ultimatefit.data.WorkoutColumns;
 import ultimate.fit.ultimatefit.utils.ViewHolderUtil;
 
@@ -25,12 +27,14 @@ import ultimate.fit.ultimatefit.utils.ViewHolderUtil;
 
 public class WorkoutAdapter extends RecyclerView.Adapter<WorkoutAdapter.ViewHolder> {
     private static final String LOG_TAG = WorkoutAdapter.class.getSimpleName();
-    private final Cursor cursor;
+    final private WorkoutAdapter.WorkoutAdapterOnClickHandler clickHandler;
+    private Cursor cursor;
     private Context context;
     private ViewHolderUtil.SetOnClickListener listener;
 
-    public WorkoutAdapter(Cursor cursor) {
-        this.cursor = cursor;
+    public WorkoutAdapter(Context context, WorkoutAdapterOnClickHandler clickHandler) {
+        this.context = context;
+        this.clickHandler = clickHandler;
     }
 
     @Override
@@ -46,14 +50,16 @@ public class WorkoutAdapter extends RecyclerView.Adapter<WorkoutAdapter.ViewHold
     @Override
     public void onBindViewHolder(WorkoutAdapter.ViewHolder holder, int position) {
         cursor.moveToPosition(position);
-        holder.textViewWorkoutDate.setText(String.format(Locale.ENGLISH, "%s", cursor.getString(cursor.getColumnIndex(WorkoutColumns.DAY_NUMBER))
-                + " - " + cursor.getString(cursor.getColumnIndex(WorkoutColumns.DAY_NUMBER))));
-        holder.textViewWorkoutBodyPart.setText(String.format(Locale.ENGLISH, "%s", cursor.getString(cursor.getColumnIndex(WorkoutColumns.DAY_NUMBER))));
+        int dayNumber = cursor.getInt(cursor.getColumnIndex(WorkoutColumns.DAY_NUMBER));
+        holder.textViewWorkoutDate.setText(String.format(Locale.ENGLISH, "%s", "Day: " + dayNumber));
+        holder.textViewWorkoutBodyPart.setText(String.format(Locale.ENGLISH, "%s", cursor.getString(cursor.getColumnIndex(WorkoutColumns.BODY_PART))));
         DateTime today = new DateTime();
-        //DateTime appliedDate = new DateTime(cursor.getLong(cursor.getColumnIndex(WorkoutColumns.APPLIED_DATE)));
-//        int isToday = DateTimeComparator.getDateOnlyInstance().compare(today, appliedDate);
-//        if (isToday == 0) holder.imageViewOnGoingCheck.setVisibility(View.VISIBLE);
-//        else holder.imageViewOnGoingCheck.setVisibility(View.INVISIBLE);
+        DateTime relativeDate = new DateTime(cursor.getLong(cursor.getColumnIndex(PlanColumns.APPLIED_DATE))).plusDays(dayNumber - 1);
+        int isToday = DateTimeComparator.getDateOnlyInstance().compare(today, relativeDate);
+        if (isToday == 0) {
+            holder.imageViewOnGoingCheck.setVisibility(View.VISIBLE);
+        }
+        else holder.imageViewOnGoingCheck.setVisibility(View.INVISIBLE);
         holder.setItemClickListener(listener);
     }
 
@@ -65,19 +71,16 @@ public class WorkoutAdapter extends RecyclerView.Adapter<WorkoutAdapter.ViewHold
         return 0;
     }
 
-    public Cursor getCursor() {
-        return cursor;
+    public void swapCursor(Cursor newCursor) {
+        cursor = newCursor;
+        notifyDataSetChanged();
     }
 
-    public void setOnClickListener(ViewHolderUtil.SetOnClickListener clickListener) {
-        this.listener = clickListener;
+    public interface WorkoutAdapterOnClickHandler {
+        void onClick(int planId);
     }
 
-    public interface SetOnClickListener extends ViewHolderUtil.SetOnClickListener {
-        void onItemClick(int position);
-    }
-
-    class ViewHolder extends RecyclerView.ViewHolder {
+    class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         @BindView(R.id.imageViewOnGoingCheck)
         ImageView imageViewOnGoingCheck;
@@ -103,6 +106,14 @@ public class WorkoutAdapter extends RecyclerView.Adapter<WorkoutAdapter.ViewHold
 
         void setItemClickListener(ViewHolderUtil.SetOnClickListener itemClickListener) {
             this.listener = itemClickListener;
+        }
+
+        @Override
+        public void onClick(View view) {
+            int position = getAdapterPosition();
+            cursor.moveToPosition(position);
+            int workoutId = cursor.getInt(cursor.getColumnIndex(WorkoutColumns.ID));
+            clickHandler.onClick(workoutId);
         }
 
     }

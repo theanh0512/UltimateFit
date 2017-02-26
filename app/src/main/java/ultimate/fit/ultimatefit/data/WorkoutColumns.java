@@ -19,9 +19,9 @@ public interface WorkoutColumns {
     @AutoIncrement
     String ID = "_id";
 
-    @DataType(DataType.Type.TEXT)
-    @NotNull
-    String DAY_IN_WEEK = "day_in_week";
+//    @DataType(DataType.Type.TEXT)
+//    @NotNull
+//    String DAY_IN_WEEK = "day_in_week";
 
     @DataType(DataType.Type.INTEGER)
     @NotNull
