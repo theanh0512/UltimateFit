@@ -19,14 +19,16 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import ultimate.fit.ultimatefit.R;
 import ultimate.fit.ultimatefit.adapter.PagerAdapter;
+import ultimate.fit.ultimatefit.adapter.PlanAdapter;
 import ultimate.fit.ultimatefit.fragment.TabPlanFragment;
 import ultimate.fit.ultimatefit.fragment.TabWorkoutFragment;
+import ultimate.fit.ultimatefit.utils.SharedPreferenceHelper;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, TabPlanFragment.OnFragmentInteractionListener,
-        TabWorkoutFragment.OnFragmentInteractionListener, TabPlanFragment.ItemsListClickHandler {
+        TabWorkoutFragment.OnFragmentInteractionListener, TabPlanFragment.ItemsListClickHandler, TabWorkoutFragment.ItemsListClickHandler {
 
-    public PagerAdapter adapter;
+    public static PagerAdapter adapter;
     ActionBarDrawerToggle toggle;
     @BindView(R.id.drawer_layout)
     DrawerLayout drawer;
@@ -83,6 +85,9 @@ public class MainActivity extends AppCompatActivity
 
             }
         });
+
+        //Init SharedPreferenceLoader and set currentAppliedPlanId
+        PlanAdapter.currentAppliedPlanID = SharedPreferenceHelper.getInstance(getApplicationContext()).getInt(SharedPreferenceHelper.Key.CURRENT_APPLIED_PLANID_INT);
     }
 
     @Override

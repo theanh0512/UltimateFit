@@ -38,26 +38,6 @@ public class UltimateFitProvider {
                 type = "vnd.android.cursor.dir/plan",
                 defaultSort = PlanColumns.NAME + " ASC")
         public static final Uri CONTENT_URI = buildUri(Path.PLANS);
-        static final String WORKOUT_COUNT = "(SELECT COUNT(*) FROM "
-                + UltimateFitDatabase.WORKOUTS
-                + " WHERE "
-                + UltimateFitDatabase.WORKOUTS
-                + "."
-                + WorkoutColumns.PLAN_ID
-                + "="
-                + UltimateFitDatabase.Tables.PLANS
-                + "."
-                + PlanColumns.ID
-                + ")";
-
-        @MapColumns
-        public static Map<String, String> mapColumns() {
-            Map<String, String> map = new HashMap<>();
-
-            map.put(PlanColumns.WORKOUTS, WORKOUT_COUNT);
-
-            return map;
-        }
 
         @InexactContentUri(
                 path = Path.PLANS + "/#",
@@ -87,6 +67,23 @@ public class UltimateFitProvider {
                 pathSegment = 1)
         public static Uri withId(long id) {
             return buildUri(Path.WORKOUTS, String.valueOf(id));
+        }
+
+        @InexactContentUri(
+                name = "WORKOUTS_FROM_PLAN",
+                path = Path.WORKOUTS + "/" + Path.FROM_PLAN + "/#",
+                type = "vnd.android.cursor.dir/plan",
+                whereColumn = WorkoutColumns.PLAN_ID,
+                join = "left join "+UltimateFitDatabase.Tables.PLANS + " on " + UltimateFitDatabase.WORKOUTS
+                        + "."
+                        + WorkoutColumns.PLAN_ID
+                        + "="
+                        + UltimateFitDatabase.Tables.PLANS
+                        + "."
+                        + PlanColumns.ID,
+                pathSegment = 2)
+        public static Uri fromPlan(long planId) {
+            return buildUri(Path.WORKOUTS, Path.FROM_PLAN, String.valueOf(planId));
         }
 
         public static Uri withWorkoutID(String workoutid) {
