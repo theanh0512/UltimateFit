@@ -17,7 +17,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import org.joda.time.DateTime;
-import org.joda.time.DateTimeComparator;
 import org.joda.time.Days;
 
 import butterknife.BindView;
@@ -61,7 +60,7 @@ public class TabWorkoutFragment extends Fragment implements LoaderManager.Loader
             @Override
             public void onClick(int workoutId) {
                 Log.i(LOG_TAG, "plan ID: " + workoutId);
-                handler.onHandleItemClick(workoutId);
+                handler.onHandleItemClickFromTabWorkout(workoutId);
             }
         });
         recyclerViewWorkout.setAdapter(workoutAdapter);
@@ -121,6 +120,6 @@ public class TabWorkoutFragment extends Fragment implements LoaderManager.Loader
     }
 
     public interface ItemsListClickHandler {
-        public void onHandleItemClick(int planId);
+        public void onHandleItemClickFromTabWorkout(int workoutId);
     }
 }

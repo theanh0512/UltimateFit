@@ -80,7 +80,7 @@ public class TabPlanFragment extends Fragment implements LoaderManager.LoaderCal
             @Override
             public void onClick(int planId) {
                 Log.i(LOG_TAG, "plan ID: " + planId);
-                handler.onHandleItemClick(planId);
+                handler.onHandleItemClickFromTabPlan(planId);
             }
         });
         recyclerViewPlan.setAdapter(planAdapter);
@@ -166,7 +166,7 @@ public class TabPlanFragment extends Fragment implements LoaderManager.LoaderCal
     }
 
     public interface ItemsListClickHandler {
-        public void onHandleItemClick(int planId);
+        public void onHandleItemClickFromTabPlan(int planId);
     }
 
 }

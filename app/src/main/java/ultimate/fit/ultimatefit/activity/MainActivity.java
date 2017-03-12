@@ -1,5 +1,6 @@
 package ultimate.fit.ultimatefit.activity;
 
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Bundle;
@@ -17,12 +18,15 @@ import android.view.View;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.internal.Utils;
 import ultimate.fit.ultimatefit.R;
 import ultimate.fit.ultimatefit.adapter.PagerAdapter;
 import ultimate.fit.ultimatefit.adapter.PlanAdapter;
 import ultimate.fit.ultimatefit.fragment.TabPlanFragment;
 import ultimate.fit.ultimatefit.fragment.TabWorkoutFragment;
+import ultimate.fit.ultimatefit.utils.Config;
 import ultimate.fit.ultimatefit.utils.SharedPreferenceHelper;
+import ultimate.fit.ultimatefit.utils.GetDataTask;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, TabPlanFragment.OnFragmentInteractionListener,
@@ -88,6 +92,8 @@ public class MainActivity extends AppCompatActivity
 
         //Init SharedPreferenceLoader and set currentAppliedPlanId
         PlanAdapter.currentAppliedPlanID = SharedPreferenceHelper.getInstance(getApplicationContext()).getInt(SharedPreferenceHelper.Key.CURRENT_APPLIED_PLANID_INT);
+        GetDataTask getDataTask = new GetDataTask(this, Config.CATEGORY_URL);
+        getDataTask.execute();
     }
 
     @Override
@@ -128,7 +134,13 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
-    public void onHandleItemClick(int planId) {
+    public void onHandleItemClickFromTabPlan(int planId) {
 
+    }
+
+    @Override
+    public void onHandleItemClickFromTabWorkout(int workoutId) {
+        Intent intent = new Intent(this,WorkoutActivity.class);
+        startActivity(intent);
     }
 }

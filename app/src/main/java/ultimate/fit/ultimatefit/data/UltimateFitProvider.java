@@ -5,11 +5,7 @@ import android.net.Uri;
 import net.simonvt.schematic.annotation.ContentProvider;
 import net.simonvt.schematic.annotation.ContentUri;
 import net.simonvt.schematic.annotation.InexactContentUri;
-import net.simonvt.schematic.annotation.MapColumns;
 import net.simonvt.schematic.annotation.TableEndpoint;
-
-import java.util.HashMap;
-import java.util.Map;
 
 @ContentProvider(authority = UltimateFitProvider.AUTHORITY, database = UltimateFitDatabase.class)
 public class UltimateFitProvider {
@@ -28,6 +24,7 @@ public class UltimateFitProvider {
         String WORKOUTS = "workouts";
         String PLANS = "plans";
         String FROM_PLAN = "fromPlan";
+        String CATEGORIES = "categories";
     }
 
     @TableEndpoint(table = UltimateFitDatabase.Tables.PLANS)
@@ -74,7 +71,7 @@ public class UltimateFitProvider {
                 path = Path.WORKOUTS + "/" + Path.FROM_PLAN + "/#",
                 type = "vnd.android.cursor.dir/plan",
                 whereColumn = WorkoutColumns.PLAN_ID,
-                join = "left join "+UltimateFitDatabase.Tables.PLANS + " on " + UltimateFitDatabase.WORKOUTS
+                join = "left join " + UltimateFitDatabase.Tables.PLANS + " on " + UltimateFitDatabase.WORKOUTS
                         + "."
                         + WorkoutColumns.PLAN_ID
                         + "="
@@ -88,6 +85,26 @@ public class UltimateFitProvider {
 
         public static Uri withWorkoutID(String workoutid) {
             return buildUri(Path.WORKOUTS, workoutid);
+        }
+    }
+
+    @TableEndpoint(table = UltimateFitDatabase.Tables.CATEGORIES)
+    public static class Categories {
+
+        @ContentUri(
+                path = Path.CATEGORIES,
+                type = "vnd.android.cursor.dir/category",
+                defaultSort = CategoryColumns.CATEGORY_NAME + " ASC")
+        public static final Uri CONTENT_URI = buildUri(Path.CATEGORIES);
+
+        @InexactContentUri(
+                path = Path.CATEGORIES + "/#",
+                name = "CATEGORY_ID",
+                type = "vnd.android.cursor.item/category",
+                whereColumn = CategoryColumns.ID,
+                pathSegment = 1)
+        public static Uri withId(long id) {
+            return buildUri(Path.CATEGORIES, String.valueOf(id));
         }
     }
 }

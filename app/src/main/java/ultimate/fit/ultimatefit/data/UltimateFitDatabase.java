@@ -15,5 +15,9 @@ public class UltimateFitDatabase {
         @Table(PlanColumns.class)
         @IfNotExists
         public static final String PLANS = "plans";
+
+        @Table(CategoryColumns.class)
+        @IfNotExists
+        public static final String CATEGORIES = "categories";
     }
 }

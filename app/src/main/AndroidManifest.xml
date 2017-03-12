@@ -32,6 +32,25 @@
             android:name=".data.generated.UltimateFitProvider"
             android:authorities="ultimate.fit.ultimatefit.data.UltimateFitProvider"
             android:exported="false" />
+
+        <activity
+            android:name=".activity.WorkoutActivity"
+            android:label="@string/title_activity_workout"
+            android:parentActivityName=".activity.MainActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="ultimate.fit.ultimatefit.activity.MainActivity" />
+        </activity>
+        <activity
+            android:name=".activity.CategoryActivity"
+            android:label="@string/title_activity_category"
+            android:parentActivityName=".activity.WorkoutActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="ultimate.fit.ultimatefit.activity.WorkoutActivity" />
+        </activity>
     </application>
 
 </manifest>

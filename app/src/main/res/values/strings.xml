@@ -16,4 +16,12 @@
     <string name="plan_add_message">Success!</string>
     <string name="add_plan_label">Add Plan</string>
     <string name="button_apply_plan">Apply</string>
+
+    <string name="alert_message">There is no internet connection. Application only can display whatever has loaded previously.</string>
+    <string name="alert_title">No Internet</string>
+    <string name="alert_button">OK</string>
+    <string name="title_activity_workout">WorkoutActivity</string>
+    <string name="day_number">Day Number:</string>
+    <string name="body_part">Body Part(s):</string>
+    <string name="title_activity_category">CategoryActivity</string>
 </resources>

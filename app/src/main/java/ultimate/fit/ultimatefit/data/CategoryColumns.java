@@ -6,29 +6,24 @@ import net.simonvt.schematic.annotation.AutoIncrement;
 import net.simonvt.schematic.annotation.DataType;
 import net.simonvt.schematic.annotation.NotNull;
 import net.simonvt.schematic.annotation.PrimaryKey;
-import net.simonvt.schematic.annotation.References;
-
-import ultimate.fit.ultimatefit.data.UltimateFitDatabase.Tables;
-
-import static net.simonvt.schematic.annotation.DataType.Type.INTEGER;
+import net.simonvt.schematic.annotation.Unique;
 
 
-public interface WorkoutColumns {
+public interface CategoryColumns {
     @DataType(DataType.Type.INTEGER)
     @PrimaryKey
     @AutoIncrement
     String ID = "_id";
 
     @DataType(DataType.Type.INTEGER)
-    @NotNull
-    String DAY_NUMBER = "day_number";
+    @NotNull @Unique
+    String CATEGORY_ID = "category_id";
 
     @DataType(DataType.Type.TEXT)
     @Nullable
-    String BODY_PART = "body_part";
+    String IMAGE_PATH = "image_path";
 
-    //A plan can contains multiple workouts
-    @DataType(INTEGER)
-    @References(table = Tables.PLANS, column = PlanColumns.ID)
-    String PLAN_ID = "planId";
+    @DataType(DataType.Type.TEXT)
+    @NotNull
+    String CATEGORY_NAME = "category_name";
 }

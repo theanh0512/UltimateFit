@@ -19,7 +19,6 @@ import butterknife.ButterKnife;
 import ultimate.fit.ultimatefit.R;
 import ultimate.fit.ultimatefit.data.PlanColumns;
 import ultimate.fit.ultimatefit.data.WorkoutColumns;
-import ultimate.fit.ultimatefit.utils.ViewHolderUtil;
 
 /**
  * Created by Pham on 18/2/2017.
@@ -30,7 +29,6 @@ public class WorkoutAdapter extends RecyclerView.Adapter<WorkoutAdapter.ViewHold
     final private WorkoutAdapter.WorkoutAdapterOnClickHandler clickHandler;
     private Cursor cursor;
     private Context context;
-    private ViewHolderUtil.SetOnClickListener listener;
 
     public WorkoutAdapter(Context context, WorkoutAdapterOnClickHandler clickHandler) {
         this.context = context;
@@ -60,7 +58,6 @@ public class WorkoutAdapter extends RecyclerView.Adapter<WorkoutAdapter.ViewHold
             holder.imageViewOnGoingCheck.setVisibility(View.VISIBLE);
         }
         else holder.imageViewOnGoingCheck.setVisibility(View.INVISIBLE);
-        holder.setItemClickListener(listener);
     }
 
     @Override
@@ -77,7 +74,7 @@ public class WorkoutAdapter extends RecyclerView.Adapter<WorkoutAdapter.ViewHold
     }
 
     public interface WorkoutAdapterOnClickHandler {
-        void onClick(int planId);
+        void onClick(int workoutId);
     }
 
     class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
@@ -88,24 +85,12 @@ public class WorkoutAdapter extends RecyclerView.Adapter<WorkoutAdapter.ViewHold
         TextView textViewWorkoutDate;
         @BindView(R.id.textViewWorkoutBodyPart)
         TextView textViewWorkoutBodyPart;
-        private ViewHolderUtil.SetOnClickListener listener;
 
         ViewHolder(final View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
             itemView.setClickable(true);
-            itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (listener != null) {
-                        listener.onItemClick(getAdapterPosition());
-                    }
-                }
-            });
-        }
-
-        void setItemClickListener(ViewHolderUtil.SetOnClickListener itemClickListener) {
-            this.listener = itemClickListener;
+            itemView.setOnClickListener(this);
         }
 
         @Override

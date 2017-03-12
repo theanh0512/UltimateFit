@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "273039632846",
+    "firebase_url": "https://ultimatefit-b1ab9.firebaseio.com",
+    "project_id": "ultimatefit-b1ab9",
+    "storage_bucket": "ultimatefit-b1ab9.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:273039632846:android:a8faf3191f252408",
+        "android_client_info": {
+          "package_name": "ultimate.fit.ultimatefit"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "273039632846-ul255knpl8qshscto893v9l3ekgu84rc.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "ultimate.fit.ultimatefit",
+            "certificate_hash": "95088b0d987d572905a680b9cc77c3cb41c11e66"
+          }
+        },
+        {
+          "client_id": "273039632846-q3hju2va7946c09btaojq5ahbq465sqr.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAUYVvTWI60_fM6ew5LWZBOkX78hu0Bud8"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "273039632846-q3hju2va7946c09btaojq5ahbq465sqr.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

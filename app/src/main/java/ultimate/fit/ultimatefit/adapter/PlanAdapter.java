@@ -23,7 +23,6 @@ import ultimate.fit.ultimatefit.data.PlanColumns;
 import ultimate.fit.ultimatefit.data.UltimateFitProvider;
 import ultimate.fit.ultimatefit.fragment.TabWorkoutFragment;
 import ultimate.fit.ultimatefit.utils.SharedPreferenceHelper;
-import ultimate.fit.ultimatefit.utils.ViewHolderUtil;
 
 /**
  * Created by Pham on 18/2/2017.
@@ -35,7 +34,6 @@ public class PlanAdapter extends RecyclerView.Adapter<PlanAdapter.ViewHolder> {
     private final Context context;
     final private PlanAdapterOnClickHandler clickHandler;
     private Cursor cursor;
-    private ViewHolderUtil.SetOnClickListener listener;
 
     public PlanAdapter(Context context, PlanAdapterOnClickHandler clickHandler) {
         this.context = context;
@@ -60,11 +58,6 @@ public class PlanAdapter extends RecyclerView.Adapter<PlanAdapter.ViewHolder> {
         holder.textViewPlanName.setText(String.format(Locale.ENGLISH, "%s", cursor.getString(cursor.getColumnIndex(PlanColumns.NAME))));
         int numOfWeeks = cursor.getInt(cursor.getColumnIndex(PlanColumns.NUM_OF_WEEK));
         holder.textViewPlanNumOfWeeks.setText(String.format(Locale.ENGLISH, "%s", numOfWeeks) + " week" + (numOfWeeks == 1 ? "" : "s"));
-        DateTime today = new DateTime();
-        //DateTime appliedDate = new DateTime(cursor.getLong(cursor.getColumnIndex(WorkoutColumns.APPLIED_DATE)));
-//        int isToday = DateTimeComparator.getDateOnlyInstance().compare(today, appliedDate);
-//        if (isToday == 0) holder.imageViewOnGoingCheck.setVisibility(View.VISIBLE);
-//        else holder.imageViewOnGoingCheck.setVisibility(View.INVISIBLE);
         //ToDo: if cannot click button, add button to the plan detail instead
         if (cursor.getInt(cursor.getColumnIndex(PlanColumns.ID)) == currentAppliedPlanID) {
             holder.buttonApplyPlan.setVisibility(View.INVISIBLE);
@@ -73,14 +66,13 @@ public class PlanAdapter extends RecyclerView.Adapter<PlanAdapter.ViewHolder> {
             holder.buttonApplyPlan.setVisibility(View.VISIBLE);
             holder.imageViewOnGoingCheck.setVisibility(View.INVISIBLE);
         }
-        holder.setItemClickListener(listener);
         holder.buttonApplyPlan.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 cursor.moveToPosition(pos);
                 holder.buttonApplyPlan.setVisibility(View.INVISIBLE);
                 currentAppliedPlanID = cursor.getInt(cursor.getColumnIndex(PlanColumns.ID));
-                SharedPreferenceHelper.getInstance().put(SharedPreferenceHelper.Key.CURRENT_APPLIED_PLANID_INT,currentAppliedPlanID);
+                SharedPreferenceHelper.getInstance().put(SharedPreferenceHelper.Key.CURRENT_APPLIED_PLANID_INT, currentAppliedPlanID);
                 Thread thread = new Thread(new Runnable() {
                     @Override
                     public void run() {
@@ -97,7 +89,7 @@ public class PlanAdapter extends RecyclerView.Adapter<PlanAdapter.ViewHolder> {
                 }
                 TabWorkoutFragment tabWorkoutFragment = (TabWorkoutFragment) MainActivity.adapter.getRegisteredFragment(0);
                 if (tabWorkoutFragment != null) {
-                    tabWorkoutFragment.getLoaderManager().restartLoader(2000,null,tabWorkoutFragment);
+                    tabWorkoutFragment.getLoaderManager().restartLoader(2000, null, tabWorkoutFragment);
                 }
                 holder.imageViewOnGoingCheck.setVisibility(View.VISIBLE);
             }
@@ -131,24 +123,12 @@ public class PlanAdapter extends RecyclerView.Adapter<PlanAdapter.ViewHolder> {
         TextView textViewPlanNumOfWeeks;
         @BindView(R.id.buttonApplyPlan)
         Button buttonApplyPlan;
-        private ViewHolderUtil.SetOnClickListener listener;
 
         ViewHolder(final View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
             itemView.setClickable(true);
-            itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (listener != null) {
-                        listener.onItemClick(getAdapterPosition());
-                    }
-                }
-            });
-        }
-
-        void setItemClickListener(ViewHolderUtil.SetOnClickListener itemClickListener) {
-            this.listener = itemClickListener;
+            itemView.setOnClickListener(this);
         }
 
         @Override
