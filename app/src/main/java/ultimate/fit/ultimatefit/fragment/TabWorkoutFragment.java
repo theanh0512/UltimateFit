@@ -58,9 +58,8 @@ public class TabWorkoutFragment extends Fragment implements LoaderManager.Loader
 
         workoutAdapter = new WorkoutAdapter(getContext(), new WorkoutAdapter.WorkoutAdapterOnClickHandler() {
             @Override
-            public void onClick(int workoutId) {
-                Log.i(LOG_TAG, "plan ID: " + workoutId);
-                handler.onHandleItemClickFromTabWorkout(workoutId);
+            public void onClick(int workoutId,int dayNumber,String bodyPart) {
+                handler.onHandleItemClickFromTabWorkout(workoutId,dayNumber,bodyPart);
             }
         });
         recyclerViewWorkout.setAdapter(workoutAdapter);
@@ -120,6 +119,6 @@ public class TabWorkoutFragment extends Fragment implements LoaderManager.Loader
     }
 
     public interface ItemsListClickHandler {
-        public void onHandleItemClickFromTabWorkout(int workoutId);
+        public void onHandleItemClickFromTabWorkout(int workoutId, int dayNumber,String bodyPart);
     }
 }

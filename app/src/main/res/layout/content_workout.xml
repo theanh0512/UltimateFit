@@ -24,27 +24,34 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
         android:layout_marginTop="16dp"
-        android:text="@string/body_part"
-        app:layout_constraintRight_toLeftOf="@+id/textViewBodyPart"
-        app:layout_constraintTop_toTopOf="parent" />
+        tools:text="15"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintLeft_toRightOf="@+id/textView"
+        android:layout_marginLeft="8dp" />
 
     <TextView
         android:id="@+id/textView3"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="16dp"
-        app:layout_constraintLeft_toRightOf="@+id/textView"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:text="@string/body_part"
+        app:layout_constraintRight_toLeftOf="@+id/editTextBodyPart"
+        android:layout_marginRight="0dp"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginTop="16dp" />
 
-    <TextView
-        android:id="@+id/textViewBodyPart"
-        android:layout_width="wrap_content"
+    <EditText
+        android:id="@+id/editTextBodyPart"
+        android:layout_width="120dp"
         android:layout_height="wrap_content"
         android:layout_marginEnd="16dp"
-        android:layout_marginTop="16dp"
+        android:imeOptions="actionDone"
+        tools:text="Chest"
+        android:layout_marginRight="16dp"
+        android:inputType="textMultiLine"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginTop="4dp" />
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recyclerview_exercise_list"

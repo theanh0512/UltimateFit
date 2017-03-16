@@ -25,26 +25,34 @@ import java.util.Objects;
 
 import ultimate.fit.ultimatefit.R;
 import ultimate.fit.ultimatefit.activity.MainActivity;
-import ultimate.fit.ultimatefit.data.CategoryColumns;
 import ultimate.fit.ultimatefit.data.UltimateFitProvider;
 import ultimate.fit.ultimatefit.data.generated.values.CategoriesValuesBuilder;
-import ultimate.fit.ultimatefit.data.generated.values.WorkoutsValuesBuilder;
+import ultimate.fit.ultimatefit.data.generated.values.ExercisesValuesBuilder;
 
 /**
  * Created by Pham on 12/24/2015.
  */
 public class GetDataTask extends AsyncTask<String, Void, List<String>> {
+    public static int totalPage = 1;
     private final String LOG_TAG = GetDataTask.class.getSimpleName();
     private final Context mContext;
+    int pageNum;
     private String result = "results";
     private String mUrlString = "";
     private String additionalUrl;
-    private int pageNum;
-    private int totalPages = 0;
 
     public GetDataTask(Context context, String additionalUrl) {
         mContext = context;
         this.additionalUrl = additionalUrl;
+        if (!isOnline()) {
+            displayNoInternetDialog();
+        }
+    }
+
+    public GetDataTask(Context context, String additionalUrl, int pageNum) {
+        mContext = context;
+        this.additionalUrl = additionalUrl;
+        this.pageNum = pageNum;
         if (!isOnline()) {
             displayNoInternetDialog();
         }
@@ -128,9 +136,9 @@ public class GetDataTask extends AsyncTask<String, Void, List<String>> {
                 @Override
                 public void run() {
                     try {
-                        final JSONArray jsonArrayMain = new JSONArray(result);
+                        JSONArray jsonArrayMain = new JSONArray(result);
 
-                        final int len = jsonArrayMain.length();
+                        int len = jsonArrayMain.length();
                         ContentValues[] categoryValues = new ContentValues[len];
                         for (int i = 0; i < len; i++) {
                             JSONObject json = jsonArrayMain.getJSONObject(i);
@@ -138,9 +146,38 @@ public class GetDataTask extends AsyncTask<String, Void, List<String>> {
                             JSONObject jsonFields = json.getJSONObject("fields");
                             String name = jsonFields.getString("name");
                             String imagePath = jsonFields.getString("image");
-                            categoryValues[i] = new CategoriesValuesBuilder().categoryId(categoryId).categoryName(name).imagePath(imagePath).values();
+                            categoryValues[i] = new CategoriesValuesBuilder().id(categoryId).categoryName(name).imagePath(imagePath).values();
                         }
                         mContext.getContentResolver().bulkInsert(UltimateFitProvider.Categories.CONTENT_URI, categoryValues);
+                    } catch (Exception e) {
+                        // TODO: handle exception
+                        Log.e("log_tag", "Error Parsing Data " + e.toString());
+                    }
+                }
+            }).start();
+        } else {
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        JSONObject jsonObjectMain = new JSONObject(result);
+                        JSONArray jsonArrayMain = jsonObjectMain.getJSONArray("array");
+                        totalPage = jsonObjectMain.getInt("page");
+
+                        int len = jsonArrayMain.length();
+                        ContentValues[] exerciseValues = new ContentValues[len];
+                        for (int i = 0; i < len; i++) {
+                            JSONObject jsonMain = jsonArrayMain.getJSONObject(i);
+                            JSONObject json = jsonMain.getJSONObject("exercise");
+                            int categoryId = json.getInt("category");
+                            String name = json.getString("name");
+                            String imagePath = json.getString("image");
+                            String videoPath = json.getString("video");
+                            String description = json.getString("description");
+                            exerciseValues[i] = new ExercisesValuesBuilder().categoryId(categoryId).imagePath(imagePath)
+                                    .description(description).exerciseName(name).videoPath(videoPath).values();
+                        }
+                        mContext.getContentResolver().bulkInsert(UltimateFitProvider.Exercises.CONTENT_URI, exerciseValues);
                     } catch (Exception e) {
                         // TODO: handle exception
                         Log.e("log_tag", "Error Parsing Data " + e.toString());
@@ -153,6 +190,11 @@ public class GetDataTask extends AsyncTask<String, Void, List<String>> {
 
     @Override
     protected void onPostExecute(List<String> strings) {
-
+        if (Objects.equals(additionalUrl, Config.EXERCISE_URL) && totalPage > 1) {
+            for (int i = 2; i <= totalPage; i++) {
+                GetDataTask getDataTask = new GetDataTask(mContext, Config.EXERCISE_URL, i);
+                getDataTask.execute();
+            }
+        }
     }
 }

@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="4dp"
+    android:layout_marginLeft="4dp"
+    android:layout_marginRight="4dp"
+    android:layout_marginTop="4dp"
+    android:background="@color/colorPrimaryDark"
+    android:clickable="true"
+    android:focusable="true"
+    android:foreground="?android:attr/selectableItemBackground"
+    android:orientation="horizontal">
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="10"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/textViewExerciseName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingBottom="@dimen/view_padding"
+            android:paddingEnd="@dimen/view_padding"
+            android:paddingStart="@dimen/view_padding"
+            android:paddingTop="@dimen/view_padding"
+            tools:text="Dumbbell Fly" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingBottom="@dimen/view_padding"
+                android:paddingEnd="@dimen/view_padding"
+                android:paddingStart="@dimen/view_padding"
+                android:paddingTop="@dimen/view_padding"
+                android:text="@string/set" />
+
+            <EditText
+                android:id="@+id/edit_text_set"
+                android:layout_width="30dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/view_margin"
+                android:layout_marginStart="@dimen/view_margin"
+                android:paddingBottom="@dimen/view_padding"
+                android:paddingEnd="@dimen/view_padding"
+                android:paddingStart="@dimen/view_padding"
+                android:paddingTop="@dimen/view_padding" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingBottom="@dimen/view_padding"
+                android:paddingEnd="@dimen/view_padding"
+                android:paddingStart="@dimen/view_padding"
+                android:paddingTop="@dimen/view_padding"
+                android:text="@string/reps" />
+
+            <EditText
+                android:id="@+id/edit_text_rep"
+                android:layout_width="30dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/view_margin"
+                android:layout_marginStart="@dimen/view_margin"
+                android:paddingBottom="@dimen/view_padding"
+                android:paddingEnd="@dimen/view_padding"
+                android:paddingStart="@dimen/view_padding"
+                android:paddingTop="@dimen/view_padding" />
+        </LinearLayout>
+    </LinearLayout>
+
+
+    <ImageView
+        android:id="@+id/imageViewExerciseImage"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:layout_gravity="center_vertical"
+        android:layout_weight="1" />
+</LinearLayout>

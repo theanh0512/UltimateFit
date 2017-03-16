@@ -24,4 +24,6 @@
     <string name="day_number">Day Number:</string>
     <string name="body_part">Body Part(s):</string>
     <string name="title_activity_category">CategoryActivity</string>
+    <string name="reps">Reps:</string>
+    <string name="set">Set:</string>
 </resources>

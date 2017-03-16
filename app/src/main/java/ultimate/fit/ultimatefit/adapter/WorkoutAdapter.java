@@ -56,8 +56,7 @@ public class WorkoutAdapter extends RecyclerView.Adapter<WorkoutAdapter.ViewHold
         int isToday = DateTimeComparator.getDateOnlyInstance().compare(today, relativeDate);
         if (isToday == 0) {
             holder.imageViewOnGoingCheck.setVisibility(View.VISIBLE);
-        }
-        else holder.imageViewOnGoingCheck.setVisibility(View.INVISIBLE);
+        } else holder.imageViewOnGoingCheck.setVisibility(View.INVISIBLE);
     }
 
     @Override
@@ -74,7 +73,7 @@ public class WorkoutAdapter extends RecyclerView.Adapter<WorkoutAdapter.ViewHold
     }
 
     public interface WorkoutAdapterOnClickHandler {
-        void onClick(int workoutId);
+        void onClick(int workoutId, int dayNumber, String bodyPart);
     }
 
     class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
@@ -98,7 +97,9 @@ public class WorkoutAdapter extends RecyclerView.Adapter<WorkoutAdapter.ViewHold
             int position = getAdapterPosition();
             cursor.moveToPosition(position);
             int workoutId = cursor.getInt(cursor.getColumnIndex(WorkoutColumns.ID));
-            clickHandler.onClick(workoutId);
+            int dayNumber = cursor.getInt(cursor.getColumnIndex(WorkoutColumns.DAY_NUMBER));
+            String bodyPart = cursor.getString(cursor.getColumnIndex(WorkoutColumns.BODY_PART));
+            clickHandler.onClick(workoutId, dayNumber, bodyPart);
         }
 
     }

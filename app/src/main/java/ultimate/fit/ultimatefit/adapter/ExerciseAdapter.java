@@ -6,6 +6,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -18,41 +19,42 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import ultimate.fit.ultimatefit.R;
 import ultimate.fit.ultimatefit.data.CategoryColumns;
+import ultimate.fit.ultimatefit.data.ExerciseColumns;
 
 /**
  * Created by Pham on 18/2/2017.
  */
 
-public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.ViewHolder> {
-    private static final String LOG_TAG = CategoryAdapter.class.getSimpleName();
-    final private CategoryAdapterOnClickHandler clickHandler;
+public class ExerciseAdapter extends RecyclerView.Adapter<ExerciseAdapter.ViewHolder> {
+    private static final String LOG_TAG = ExerciseAdapter.class.getSimpleName();
+    final private ExerciseAdapterOnClickHandler clickHandler;
     private Cursor cursor;
     private Context context;
 
-    public CategoryAdapter(Context context, CategoryAdapterOnClickHandler clickHandler) {
+    public ExerciseAdapter(Context context, ExerciseAdapterOnClickHandler clickHandler) {
         this.context = context;
         this.clickHandler = clickHandler;
     }
 
     @Override
-    public CategoryAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public ExerciseAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         context = parent.getContext();
         LayoutInflater inflater = LayoutInflater.from(context);
 
-        View view = inflater.inflate(R.layout.list_item_category, parent, false);
+        View view = inflater.inflate(R.layout.list_item_exercise, parent, false);
 
         return new ViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(final CategoryAdapter.ViewHolder holder, int position) {
+    public void onBindViewHolder(final ExerciseAdapter.ViewHolder holder, int position) {
         cursor.moveToPosition(position);
-        String categoryName = cursor.getString(cursor.getColumnIndex(CategoryColumns.CATEGORY_NAME));
-        holder.textViewCategoryName.setText(String.format(Locale.ENGLISH, "%s", categoryName));
-        final String imagePath = cursor.getString(cursor.getColumnIndex(CategoryColumns.IMAGE_PATH));
+        String exerciseName = cursor.getString(cursor.getColumnIndex(ExerciseColumns.EXERCISE_NAME));
+        holder.textViewExerciseName.setText(String.format(Locale.ENGLISH, "%s", exerciseName));
+        final String imagePath = cursor.getString(cursor.getColumnIndex(ExerciseColumns.IMAGE_PATH));
         try {
             Picasso.with(context).load(imagePath).placeholder(R.drawable.ic_place_holder)
-                    .error(R.drawable.ic_error_fallback).into(holder.imageViewCategoryImage, new Callback() {
+                    .error(R.drawable.ic_error_fallback).into(holder.imageViewExerciseImage, new Callback() {
                 @Override
                 public void onSuccess() {
 
@@ -62,7 +64,7 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.ViewHo
                 public void onError() {
                     Picasso.with(context)
                             .load(imagePath)
-                            .into(holder.imageViewCategoryImage, new Callback() {
+                            .into(holder.imageViewExerciseImage, new Callback() {
                                 @Override
                                 public void onSuccess() {
 
@@ -92,16 +94,20 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.ViewHo
         notifyDataSetChanged();
     }
 
-    public interface CategoryAdapterOnClickHandler {
-        void onClick(int categoryId);
+    public interface ExerciseAdapterOnClickHandler {
+        void onClick(int planId);
     }
 
     class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
-        @BindView(R.id.imageViewCategoryImage)
-        ImageView imageViewCategoryImage;
-        @BindView(R.id.textViewCategoryName)
-        TextView textViewCategoryName;
+        @BindView(R.id.imageViewExerciseImage)
+        ImageView imageViewExerciseImage;
+        @BindView(R.id.textViewExerciseName)
+        TextView textViewExerciseName;
+        @BindView(R.id.edit_text_set)
+        EditText editTextSet;
+        @BindView(R.id.edit_text_rep)
+        EditText editTextRep;
 
         ViewHolder(final View itemView) {
             super(itemView);
@@ -114,8 +120,8 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.ViewHo
         public void onClick(View view) {
             int position = getAdapterPosition();
             cursor.moveToPosition(position);
-            int categoryId = cursor.getInt(cursor.getColumnIndex(CategoryColumns.ID));
-            clickHandler.onClick(categoryId);
+            int exerciseId = cursor.getInt(cursor.getColumnIndex(ExerciseColumns.ID));
+            clickHandler.onClick(exerciseId);
         }
 
     }

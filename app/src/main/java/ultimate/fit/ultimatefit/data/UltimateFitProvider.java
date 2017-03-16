@@ -25,6 +25,8 @@ public class UltimateFitProvider {
         String PLANS = "plans";
         String FROM_PLAN = "fromPlan";
         String CATEGORIES = "categories";
+        String EXERCISES = "exercises";
+        String FROM_CATEGORY = "fromCategory";
     }
 
     @TableEndpoint(table = UltimateFitDatabase.Tables.PLANS)
@@ -105,6 +107,43 @@ public class UltimateFitProvider {
                 pathSegment = 1)
         public static Uri withId(long id) {
             return buildUri(Path.CATEGORIES, String.valueOf(id));
+        }
+    }
+
+    @TableEndpoint(table = UltimateFitDatabase.EXERCISES)
+    public static class Exercises {
+
+        @ContentUri(
+                path = Path.EXERCISES,
+                type = "vnd.android.cursor.dir/exercise",
+                defaultSort = ExerciseColumns.EXERCISE_NAME + " ASC")
+        public static final Uri CONTENT_URI = buildUri(Path.EXERCISES);
+
+        @InexactContentUri(
+                path = Path.EXERCISES + "/#",
+                name = "EXERCISE_ID",
+                type = "vnd.android.cursor.item/exercise",
+                whereColumn = ExerciseColumns.ID,
+                pathSegment = 1)
+        public static Uri withId(long id) {
+            return buildUri(Path.EXERCISES, String.valueOf(id));
+        }
+
+        @InexactContentUri(
+                name = "EXERCISES_FROM_CATEGORY",
+                path = Path.EXERCISES + "/" + Path.FROM_CATEGORY + "/#",
+                type = "vnd.android.cursor.dir/category",
+                whereColumn = ExerciseColumns.CATEGORY_ID,
+                join = "left join " + UltimateFitDatabase.Tables.CATEGORIES + " on " + UltimateFitDatabase.EXERCISES
+                        + "."
+                        + ExerciseColumns.CATEGORY_ID
+                        + "="
+                        + UltimateFitDatabase.Tables.CATEGORIES
+                        + "."
+                        + CategoryColumns.ID,
+                pathSegment = 2)
+        public static Uri fromCategory(long categoryId) {
+            return buildUri(Path.EXERCISES, Path.FROM_CATEGORY, String.valueOf(categoryId));
         }
     }
 }

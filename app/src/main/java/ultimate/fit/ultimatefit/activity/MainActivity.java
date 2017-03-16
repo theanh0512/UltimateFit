@@ -18,15 +18,14 @@ import android.view.View;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.internal.Utils;
 import ultimate.fit.ultimatefit.R;
 import ultimate.fit.ultimatefit.adapter.PagerAdapter;
 import ultimate.fit.ultimatefit.adapter.PlanAdapter;
 import ultimate.fit.ultimatefit.fragment.TabPlanFragment;
 import ultimate.fit.ultimatefit.fragment.TabWorkoutFragment;
 import ultimate.fit.ultimatefit.utils.Config;
-import ultimate.fit.ultimatefit.utils.SharedPreferenceHelper;
 import ultimate.fit.ultimatefit.utils.GetDataTask;
+import ultimate.fit.ultimatefit.utils.SharedPreferenceHelper;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, TabPlanFragment.OnFragmentInteractionListener,
@@ -92,8 +91,10 @@ public class MainActivity extends AppCompatActivity
 
         //Init SharedPreferenceLoader and set currentAppliedPlanId
         PlanAdapter.currentAppliedPlanID = SharedPreferenceHelper.getInstance(getApplicationContext()).getInt(SharedPreferenceHelper.Key.CURRENT_APPLIED_PLANID_INT);
-        GetDataTask getDataTask = new GetDataTask(this, Config.CATEGORY_URL);
-        getDataTask.execute();
+        GetDataTask getDataTaskCategory = new GetDataTask(this, Config.CATEGORY_URL);
+        getDataTaskCategory.execute();
+        GetDataTask getDataTaskExercise = new GetDataTask(this, Config.EXERCISE_URL, 1);
+        getDataTaskExercise.execute();
     }
 
     @Override
@@ -139,8 +140,13 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
-    public void onHandleItemClickFromTabWorkout(int workoutId) {
-        Intent intent = new Intent(this,WorkoutActivity.class);
+    public void onHandleItemClickFromTabWorkout(int workoutId, int dayNumber, String bodyPart) {
+        Intent intent = new Intent(this, WorkoutActivity.class);
+        Bundle bundle = new Bundle();
+        bundle.putInt("dayNumber", dayNumber);
+        bundle.putString("bodyPart", bodyPart);
+        bundle.putInt("workoutId",workoutId);
+        intent.putExtras(bundle);
         startActivity(intent);
     }
 }

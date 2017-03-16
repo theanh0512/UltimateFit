@@ -11,6 +11,10 @@ public class UltimateFitDatabase {
     @Table(WorkoutColumns.class)
     public static final String WORKOUTS = "workouts";
 
+    @Table(ExerciseColumns.class)
+    @IfNotExists
+    public static final String EXERCISES = "exercises";
+
     public static class Tables {
         @Table(PlanColumns.class)
         @IfNotExists
