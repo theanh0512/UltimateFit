@@ -114,7 +114,7 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.ViewHo
         public void onClick(View view) {
             int position = getAdapterPosition();
             cursor.moveToPosition(position);
-            int categoryId = cursor.getInt(cursor.getColumnIndex(CategoryColumns.ID));
+            int categoryId = cursor.getInt(0);
             clickHandler.onClick(categoryId);
         }
 

@@ -6,7 +6,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -18,7 +17,6 @@ import java.util.Locale;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import ultimate.fit.ultimatefit.R;
-import ultimate.fit.ultimatefit.data.CategoryColumns;
 import ultimate.fit.ultimatefit.data.ExerciseColumns;
 
 /**
@@ -95,7 +93,7 @@ public class ExerciseAdapter extends RecyclerView.Adapter<ExerciseAdapter.ViewHo
     }
 
     public interface ExerciseAdapterOnClickHandler {
-        void onClick(int planId);
+        void onClick(int exerciseId, String exerciseImagePath, String exerciseName);
     }
 
     class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
@@ -104,10 +102,6 @@ public class ExerciseAdapter extends RecyclerView.Adapter<ExerciseAdapter.ViewHo
         ImageView imageViewExerciseImage;
         @BindView(R.id.textViewExerciseName)
         TextView textViewExerciseName;
-        @BindView(R.id.edit_text_set)
-        EditText editTextSet;
-        @BindView(R.id.edit_text_rep)
-        EditText editTextRep;
 
         ViewHolder(final View itemView) {
             super(itemView);
@@ -120,8 +114,10 @@ public class ExerciseAdapter extends RecyclerView.Adapter<ExerciseAdapter.ViewHo
         public void onClick(View view) {
             int position = getAdapterPosition();
             cursor.moveToPosition(position);
-            int exerciseId = cursor.getInt(cursor.getColumnIndex(ExerciseColumns.ID));
-            clickHandler.onClick(exerciseId);
+            int exerciseId = cursor.getInt(0);
+            String exerciseImagePath = cursor.getString(cursor.getColumnIndex(ExerciseColumns.IMAGE_PATH));
+            String exerciseName = cursor.getString(cursor.getColumnIndex(ExerciseColumns.EXERCISE_NAME));
+            clickHandler.onClick(exerciseId, exerciseImagePath, exerciseName);
         }
 
     }

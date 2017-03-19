@@ -27,6 +27,10 @@ public class UltimateFitProvider {
         String CATEGORIES = "categories";
         String EXERCISES = "exercises";
         String FROM_CATEGORY = "fromCategory";
+        String WORKOUT_EXERCISES = "workoutExercises";
+        String SETS = "sets";
+        String FROM_WORKOUT = "fromWorkout";
+        String FROM_WORKOUT_EXERCISE = "fromWorkoutExercise";
     }
 
     @TableEndpoint(table = UltimateFitDatabase.Tables.PLANS)
@@ -144,6 +148,80 @@ public class UltimateFitProvider {
                 pathSegment = 2)
         public static Uri fromCategory(long categoryId) {
             return buildUri(Path.EXERCISES, Path.FROM_CATEGORY, String.valueOf(categoryId));
+        }
+    }
+
+    @TableEndpoint(table = UltimateFitDatabase.Tables.WORKOUT_EXERCISES)
+    public static class WorkoutExercises {
+
+        @ContentUri(
+                path = Path.WORKOUT_EXERCISES,
+                type = "vnd.android.cursor.dir/workoutexercise",
+                defaultSort = WorkoutExerciseColumns.WORKOUT_ID + " ASC")
+        public static final Uri CONTENT_URI = buildUri(Path.WORKOUT_EXERCISES);
+
+        @InexactContentUri(
+                path = Path.WORKOUT_EXERCISES + "/#",
+                name = "WORKOUT_EXERCISES_ID",
+                type = "vnd.android.cursor.item/workoutexercise",
+                whereColumn = WorkoutExerciseColumns.ID,
+                pathSegment = 1)
+        public static Uri withId(long id) {
+            return buildUri(Path.WORKOUT_EXERCISES, String.valueOf(id));
+        }
+
+        @InexactContentUri(
+                name = "WORKOUT_EXERCISES_FROM_WORKOUT",
+                path = Path.WORKOUT_EXERCISES + "/" + Path.FROM_WORKOUT + "/#",
+                type = "vnd.android.cursor.dir/workout",
+                whereColumn = WorkoutExerciseColumns.WORKOUT_ID,
+                join = "left join " + UltimateFitDatabase.WORKOUTS + " on " + UltimateFitDatabase.WORKOUTS
+                        + "."
+                        + WorkoutColumns.ID
+                        + "="
+                        + UltimateFitDatabase.Tables.WORKOUT_EXERCISES
+                        + "."
+                        + WorkoutExerciseColumns.WORKOUT_ID,
+                pathSegment = 2)
+        public static Uri fromWorkout(long workoutId) {
+            return buildUri(Path.WORKOUT_EXERCISES, Path.FROM_WORKOUT, String.valueOf(workoutId));
+        }
+    }
+
+    @TableEndpoint(table = UltimateFitDatabase.Tables.SETS)
+    public static class Sets {
+
+        @ContentUri(
+                path = Path.SETS,
+                type = "vnd.android.cursor.dir/set",
+                defaultSort = SetColumns.SET_NUMBER + " ASC")
+        public static final Uri CONTENT_URI = buildUri(Path.SETS);
+
+        @InexactContentUri(
+                path = Path.SETS + "/#",
+                name = "SET_ID",
+                type = "vnd.android.cursor.item/set",
+                whereColumn = SetColumns.ID,
+                pathSegment = 1)
+        public static Uri withId(long id) {
+            return buildUri(Path.SETS, String.valueOf(id));
+        }
+
+        @InexactContentUri(
+                name = "SETS_FROM_WORKOUT_EXERCISE",
+                path = Path.SETS + "/" + Path.FROM_WORKOUT_EXERCISE + "/#",
+                type = "vnd.android.cursor.dir/workoutexercise",
+                whereColumn = SetColumns.WORKOUT_EXERCISE_ID,
+                join = "left join " + UltimateFitDatabase.Tables.WORKOUT_EXERCISES + " on " + UltimateFitDatabase.Tables.SETS
+                        + "."
+                        + SetColumns.WORKOUT_EXERCISE_ID
+                        + "="
+                        + UltimateFitDatabase.Tables.WORKOUT_EXERCISES
+                        + "."
+                        + WorkoutExerciseColumns.ID,
+                pathSegment = 2)
+        public static Uri fromWorkoutExercise(long workoutExerciseId) {
+            return buildUri(Path.SETS, Path.FROM_WORKOUT_EXERCISE, String.valueOf(workoutExerciseId));
         }
     }
 }

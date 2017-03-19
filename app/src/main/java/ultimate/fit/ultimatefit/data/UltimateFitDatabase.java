@@ -23,5 +23,13 @@ public class UltimateFitDatabase {
         @Table(CategoryColumns.class)
         @IfNotExists
         public static final String CATEGORIES = "categories";
+
+        @Table(WorkoutExerciseColumns.class)
+        @IfNotExists
+        public static final String WORKOUT_EXERCISES = "workout_exercises";
+
+        @Table(SetColumns.class)
+        @IfNotExists
+        public static final String SETS = "sets";
     }
 }

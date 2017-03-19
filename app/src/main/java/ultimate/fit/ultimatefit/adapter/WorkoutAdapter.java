@@ -96,7 +96,7 @@ public class WorkoutAdapter extends RecyclerView.Adapter<WorkoutAdapter.ViewHold
         public void onClick(View view) {
             int position = getAdapterPosition();
             cursor.moveToPosition(position);
-            int workoutId = cursor.getInt(cursor.getColumnIndex(WorkoutColumns.ID));
+            int workoutId = cursor.getInt(0);
             int dayNumber = cursor.getInt(cursor.getColumnIndex(WorkoutColumns.DAY_NUMBER));
             String bodyPart = cursor.getString(cursor.getColumnIndex(WorkoutColumns.BODY_PART));
             clickHandler.onClick(workoutId, dayNumber, bodyPart);

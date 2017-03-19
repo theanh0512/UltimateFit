@@ -1,5 +1,8 @@
 package ultimate.fit.ultimatefit.activity;
 
+import android.content.ContentValues;
+import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -21,6 +24,7 @@ import ultimate.fit.ultimatefit.R;
 import ultimate.fit.ultimatefit.adapter.CategoryAdapter;
 import ultimate.fit.ultimatefit.adapter.ExerciseAdapter;
 import ultimate.fit.ultimatefit.data.UltimateFitProvider;
+import ultimate.fit.ultimatefit.data.generated.values.Workout_exercisesValuesBuilder;
 
 public class CategoryActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> {
     private static final String LOG_TAG = CategoryActivity.class.getSimpleName();
@@ -35,6 +39,7 @@ public class CategoryActivity extends AppCompatActivity implements LoaderManager
     @BindView(R.id.toolbarCategory)
     Toolbar toolbarCategory;
     int clickedCategoryId = 1;
+    int workoutId;
     private CategoryAdapter categoryAdapter;
     private ExerciseAdapter exerciseAdapter;
 
@@ -44,6 +49,10 @@ public class CategoryActivity extends AppCompatActivity implements LoaderManager
         setContentView(R.layout.activity_category);
         ButterKnife.bind(this);
         setSupportActionBar(toolbarCategory);
+
+        Intent intent = getIntent();
+        if (intent.hasExtra("workoutId"))
+            workoutId = intent.getIntExtra("workoutId", 0);
 
         final LoaderManager.LoaderCallbacks callbacks = this;
 
@@ -62,13 +71,31 @@ public class CategoryActivity extends AppCompatActivity implements LoaderManager
         recyclerViewCategory.setAdapter(categoryAdapter);
         recyclerViewCategory.setHasFixedSize(true);
         recyclerViewCategory.setLayoutManager(new LinearLayoutManager(this));
+        final Context context = this;
 
         exerciseAdapter = new ExerciseAdapter(this, new ExerciseAdapter.ExerciseAdapterOnClickHandler() {
             @Override
-            public void onClick(int exerciseId) {
+            public void onClick(final int exerciseId, final String exerciseImagePath, final String exerciseName) {
                 Log.i(LOG_TAG, "exercise ID: " + exerciseId);
-                recyclerViewCategory.setVisibility(View.VISIBLE);
-                recyclerViewExercise.setVisibility(View.INVISIBLE);
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        ContentValues workoutExerciseContentValues = new Workout_exercisesValuesBuilder().exerciseIds(String.valueOf(exerciseId)).firstExerciseName(exerciseName)
+                                .firstExerciseImage(exerciseImagePath).workoutId(workoutId).rep(8).set(4).values();
+                        context.getContentResolver().insert(UltimateFitProvider.WorkoutExercises.CONTENT_URI, workoutExerciseContentValues);
+                    }
+                }).start();
+
+                Intent data = new Intent();
+                if (getParent() == null) {
+                    setResult(RESULT_OK, data);
+                } else {
+                    getParent().setResult(RESULT_OK, data);
+                }
+                finish();
+
+//                recyclerViewCategory.setVisibility(View.VISIBLE);
+//                recyclerViewExercise.setVisibility(View.INVISIBLE);
             }
         });
         recyclerViewExercise.setAdapter(exerciseAdapter);
