@@ -68,7 +68,10 @@ public class WorkoutExerciseAdapter extends RecyclerView.Adapter<WorkoutExercise
         int rep = cursor.getInt(cursor.getColumnIndex(WorkoutExerciseColumns.REP));
         holder.editTextRep.setText(String.valueOf(rep));
         holder.editTextSet.setText(String.valueOf(set));
-        final String imagePath = cursor.getString(cursor.getColumnIndex(WorkoutExerciseColumns.FIRST_EXERCISE_IMAGE));
+        String originalImagePath = cursor.getString(cursor.getColumnIndex(WorkoutExerciseColumns.FIRST_EXERCISE_IMAGE));
+        CharSequence http = "http://";
+        final String imagePath = originalImagePath.contains(http) ? originalImagePath.replace("http://", "https://") : originalImagePath;
+
         try {
             Picasso.with(context).load(imagePath).placeholder(R.drawable.ic_place_holder)
                     .error(R.drawable.ic_error_fallback).into(holder.imageViewWorkoutExerciseImage, new Callback() {
@@ -112,7 +115,7 @@ public class WorkoutExerciseAdapter extends RecyclerView.Adapter<WorkoutExercise
     }
 
     public interface WorkoutExerciseAdapterOnClickHandler {
-        void onClick(int workoutExerciseId);
+        void onClick(int workoutExerciseId, int noOfSet);
     }
 
     class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
@@ -138,7 +141,8 @@ public class WorkoutExerciseAdapter extends RecyclerView.Adapter<WorkoutExercise
             int position = getAdapterPosition();
             cursor.moveToPosition(position);
             int workoutExerciseId = cursor.getInt(0);
-            clickHandler.onClick(workoutExerciseId);
+            int noOfSet = cursor.getInt(cursor.getColumnIndex(WorkoutExerciseColumns.SET));
+            clickHandler.onClick(workoutExerciseId, noOfSet);
         }
 
         @OnEditorAction(R.id.edit_text_workout_exercise_rep)

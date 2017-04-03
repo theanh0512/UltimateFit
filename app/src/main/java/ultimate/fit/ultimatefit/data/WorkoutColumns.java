@@ -4,6 +4,7 @@ import android.support.annotation.Nullable;
 
 import net.simonvt.schematic.annotation.AutoIncrement;
 import net.simonvt.schematic.annotation.DataType;
+import net.simonvt.schematic.annotation.DefaultValue;
 import net.simonvt.schematic.annotation.NotNull;
 import net.simonvt.schematic.annotation.PrimaryKey;
 import net.simonvt.schematic.annotation.References;
@@ -25,6 +26,7 @@ public interface WorkoutColumns {
 
     @DataType(DataType.Type.TEXT)
     @Nullable
+    @DefaultValue("'Set body part(s)'")
     String BODY_PART = "body_part";
 
     //A plan can contains multiple workouts

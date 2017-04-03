@@ -51,6 +51,15 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="ultimate.fit.ultimatefit.activity.WorkoutActivity" />
         </activity>
+        <activity
+            android:name=".activity.WorkoutExerciseActivity"
+            android:label="@string/title_activity_workout_exercise2"
+            android:parentActivityName=".activity.WorkoutActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="ultimate.fit.ultimatefit.activity.WorkoutActivity" />
+        </activity>
     </application>
 
 </manifest>

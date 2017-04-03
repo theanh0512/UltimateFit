@@ -13,7 +13,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
@@ -55,7 +54,7 @@ public class WorkoutActivity extends AppCompatActivity implements LoaderManager.
         ButterKnife.bind(this);
         setSupportActionBar(toolbarWorkout);
 
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(false);
 
         Intent intent = getIntent();
         Bundle bundle = intent.getExtras();
@@ -66,10 +65,16 @@ public class WorkoutActivity extends AppCompatActivity implements LoaderManager.
             textViewDayNumber.setText(String.valueOf(dayNumber));
             editTextBodyPart.setText(bodyPart);
         }
+        final Context context = this;
         workoutExerciseAdapter = new WorkoutExerciseAdapter(this, new WorkoutExerciseAdapter.WorkoutExerciseAdapterOnClickHandler() {
             @Override
-            public void onClick(int workoutExerciseId) {
-                Log.i(LOG_TAG, "workoutExercise ID: " + workoutExerciseId);
+            public void onClick(int workoutExerciseId, int noOfSet) {
+                Intent intent = new Intent(context, WorkoutExerciseActivity.class);
+                Bundle bundle = new Bundle();
+                bundle.putInt("workoutExerciseId", workoutExerciseId);
+                bundle.putInt("set", noOfSet);
+                intent.putExtras(bundle);
+                startActivity(intent);
             }
         });
         recyclerViewExerciseList.setLayoutManager(new LinearLayoutManager(this));

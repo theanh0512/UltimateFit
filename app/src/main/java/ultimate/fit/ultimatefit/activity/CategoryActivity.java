@@ -23,7 +23,9 @@ import butterknife.OnClick;
 import ultimate.fit.ultimatefit.R;
 import ultimate.fit.ultimatefit.adapter.CategoryAdapter;
 import ultimate.fit.ultimatefit.adapter.ExerciseAdapter;
+import ultimate.fit.ultimatefit.data.UltimateFitDatabase;
 import ultimate.fit.ultimatefit.data.UltimateFitProvider;
+import ultimate.fit.ultimatefit.data.WorkoutExerciseColumns;
 import ultimate.fit.ultimatefit.data.generated.values.Workout_exercisesValuesBuilder;
 
 public class CategoryActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> {
@@ -39,7 +41,9 @@ public class CategoryActivity extends AppCompatActivity implements LoaderManager
     @BindView(R.id.toolbarCategory)
     Toolbar toolbarCategory;
     int clickedCategoryId = 1;
-    int workoutId;
+    int workoutId = -1;
+    int workoutExerciseId = -1;
+    String exerciseIds;
     private CategoryAdapter categoryAdapter;
     private ExerciseAdapter exerciseAdapter;
 
@@ -53,10 +57,14 @@ public class CategoryActivity extends AppCompatActivity implements LoaderManager
         Intent intent = getIntent();
         if (intent.hasExtra("workoutId"))
             workoutId = intent.getIntExtra("workoutId", 0);
+        if (intent.hasExtra("workoutExerciseId")) {
+            workoutExerciseId = intent.getIntExtra("workoutExerciseId", 0);
+            exerciseIds = intent.getStringExtra("exerciseIds");
+        }
 
         final LoaderManager.LoaderCallbacks callbacks = this;
 
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(false);
 
         categoryAdapter = new CategoryAdapter(this, new CategoryAdapter.CategoryAdapterOnClickHandler() {
             @Override
@@ -80,9 +88,15 @@ public class CategoryActivity extends AppCompatActivity implements LoaderManager
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
-                        ContentValues workoutExerciseContentValues = new Workout_exercisesValuesBuilder().exerciseIds(String.valueOf(exerciseId)).firstExerciseName(exerciseName)
-                                .firstExerciseImage(exerciseImagePath).workoutId(workoutId).rep(8).set(4).values();
-                        context.getContentResolver().insert(UltimateFitProvider.WorkoutExercises.CONTENT_URI, workoutExerciseContentValues);
+                        if (workoutId != -1) {
+                            ContentValues workoutExerciseContentValues = new Workout_exercisesValuesBuilder().exerciseIds(String.valueOf(exerciseId)).firstExerciseName(exerciseName)
+                                    .firstExerciseImage(exerciseImagePath).workoutId(workoutId).rep(8).set(4).values();
+                            context.getContentResolver().insert(UltimateFitProvider.WorkoutExercises.CONTENT_URI, workoutExerciseContentValues);
+                        } else {
+                            ContentValues workoutExerciseContentValues = new Workout_exercisesValuesBuilder().exerciseIds(exerciseIds + "," + String.valueOf(exerciseId)).values();
+                            context.getContentResolver().update(UltimateFitProvider.WorkoutExercises.CONTENT_URI, workoutExerciseContentValues,
+                                    UltimateFitDatabase.Tables.WORKOUT_EXERCISES + "." + WorkoutExerciseColumns.ID + "=" + workoutExerciseId, null);
+                        }
                     }
                 }).start();
 

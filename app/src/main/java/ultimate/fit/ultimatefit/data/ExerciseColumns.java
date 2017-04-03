@@ -21,7 +21,11 @@ public interface ExerciseColumns {
 
     @DataType(DataType.Type.TEXT)
     @Nullable
-    String IMAGE_PATH = "image_path";
+    String IMAGE_PATH = "exercise_image_path";
+
+    @DataType(DataType.Type.TEXT)
+    @Nullable
+    String IMAGE_2_PATH = "exercise_image_2_path";
 
     @DataType(DataType.Type.TEXT)
     @Nullable

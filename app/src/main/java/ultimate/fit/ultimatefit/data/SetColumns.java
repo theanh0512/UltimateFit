@@ -16,15 +16,19 @@ public interface SetColumns {
     @NotNull
     String EXERCISE_ID = "exercise_id";
 
+    @DataType(DataType.Type.TEXT)
+    @NotNull
+    String SET_NAME = "set_name";
+
     @DataType(DataType.Type.INTEGER)
     @NotNull
     String WORKOUT_EXERCISE_ID = "workout_exercise_id";
 
     @DataType(DataType.Type.INTEGER)
-    String REP = "weight";
+    String WEIGHT = "weight";
 
     @DataType(DataType.Type.INTEGER)
-    String SET = "rep";
+    String REP = "rep_in_set";
 
     @DataType(DataType.Type.INTEGER)
     @NotNull

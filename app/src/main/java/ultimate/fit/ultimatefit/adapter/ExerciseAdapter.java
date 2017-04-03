@@ -49,7 +49,9 @@ public class ExerciseAdapter extends RecyclerView.Adapter<ExerciseAdapter.ViewHo
         cursor.moveToPosition(position);
         String exerciseName = cursor.getString(cursor.getColumnIndex(ExerciseColumns.EXERCISE_NAME));
         holder.textViewExerciseName.setText(String.format(Locale.ENGLISH, "%s", exerciseName));
-        final String imagePath = cursor.getString(cursor.getColumnIndex(ExerciseColumns.IMAGE_PATH));
+        String originalImagePath = cursor.getString(cursor.getColumnIndex(ExerciseColumns.IMAGE_PATH));
+        CharSequence http = "http://";
+        final String imagePath = originalImagePath.contains(http) ? originalImagePath.replace("http://", "https://") : originalImagePath;
         try {
             Picasso.with(context).load(imagePath).placeholder(R.drawable.ic_place_holder)
                     .error(R.drawable.ic_error_fallback).into(holder.imageViewExerciseImage, new Callback() {

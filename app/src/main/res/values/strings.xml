@@ -20,10 +20,16 @@
     <string name="alert_message">There is no internet connection. Application only can display whatever has loaded previously.</string>
     <string name="alert_title">No Internet</string>
     <string name="alert_button">OK</string>
-    <string name="title_activity_workout">WorkoutActivity</string>
+    <string name="title_activity_workout">Workout</string>
     <string name="day_number">Day Number:</string>
     <string name="body_part">Body Part(s):</string>
-    <string name="title_activity_category">CategoryActivity</string>
+    <string name="title_activity_category">Category</string>
     <string name="reps">Reps:</string>
     <string name="set">Set:</string>
+    <string name="text_view_set">Set:</string>
+    <string name="button_generate_sets">Generate Sets</string>
+    <string name="text_view_weight">Weight:</string>
+    <string name="title_activity_workout_exercise2">Workout\'s Exercises</string>
+    <string name="action_settings">Settings</string>
+    <string name="text_view_exercises">Exercise(s):</string>
 </resources>
