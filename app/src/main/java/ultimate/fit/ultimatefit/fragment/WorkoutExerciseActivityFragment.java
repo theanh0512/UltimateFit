@@ -41,6 +41,7 @@ import static android.app.Activity.RESULT_OK;
 public class WorkoutExerciseActivityFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
     private static final int SET_LOADER = 103;
     private static final int PICK_EXERCISE_REQUEST = 105;
+    private static final String TAG_FRAGMENT = "Exercise Fragment";
     @BindView(R.id.fab_add_exercise_2)
     FloatingActionButton fabAddExercise;
     @BindView(R.id.recycler_view_horizontal_exercises)
@@ -72,19 +73,25 @@ public class WorkoutExerciseActivityFragment extends Fragment implements LoaderM
             workoutExerciseId = bundle.getInt("workoutExerciseId");
             noOfSet = bundle.getInt("set");
             editTextSet.setText(String.valueOf(noOfSet));
+            final Fragment fragment = this;
             setAdapter = new SetAdapter(getActivity(), new SetAdapter.SetAdapterOnClickHandler() {
                 @Override
-                public void onClick(int workoutExerciseId) {
-
+                public void onClick(int exerciseId) {
+                    ExerciseFragment exerciseFragment = ExerciseFragment.newInstance(exerciseId);
+                    fragment.getFragmentManager().beginTransaction()
+                            .replace(R.id.container, exerciseFragment, TAG_FRAGMENT)
+                            .addToBackStack(null)
+                            .commit();
                 }
             });
+
             recyclerViewSet.setHasFixedSize(true);
             recyclerViewSet.setLayoutManager(new LinearLayoutManager(getActivity()));
             recyclerViewSet.setAdapter(setAdapter);
 
             exerciseArrayListAdapter = new ExerciseArrayListAdapter(getActivity(), new ExerciseArrayListAdapter.ExerciseArrayListAdapterOnClickHandler() {
                 @Override
-                public void onClick(int setId) {
+                public void onClick(int exerciseId) {
 
                 }
             });

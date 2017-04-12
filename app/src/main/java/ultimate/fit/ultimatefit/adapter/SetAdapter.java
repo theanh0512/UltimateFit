@@ -73,7 +73,7 @@ public class SetAdapter extends RecyclerView.Adapter<SetAdapter.ViewHolder> {
     }
 
     public interface SetAdapterOnClickHandler {
-        void onClick(int workoutExerciseId);
+        void onClick(int exerciseId);
     }
 
     class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
@@ -96,8 +96,8 @@ public class SetAdapter extends RecyclerView.Adapter<SetAdapter.ViewHolder> {
         public void onClick(View view) {
             int position = getAdapterPosition();
             cursor.moveToPosition(position);
-            int workoutExerciseId = cursor.getInt(0);
-            clickHandler.onClick(workoutExerciseId);
+            int exerciseId = cursor.getInt(cursor.getColumnIndex(SetColumns.EXERCISE_ID));
+            clickHandler.onClick(exerciseId);
         }
 
         @OnEditorAction(R.id.edit_text_set_rep)

@@ -235,6 +235,8 @@ public class SharedPreferenceHelper {
          *
          * String: SAMPLE_KEY, SAMPLE_STR or just SAMPLE
          */
-        CURRENT_APPLIED_PLANID_INT
+        CURRENT_APPLIED_PLANID_INT,
+        LAST_EXERCISE_MODIFIED_DATE_LONG,
+        LAST_CATEGORY_MODIFIED_DATE_LONG
     }
 }

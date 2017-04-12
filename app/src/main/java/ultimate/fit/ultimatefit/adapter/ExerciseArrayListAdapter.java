@@ -59,7 +59,7 @@ public class ExerciseArrayListAdapter extends RecyclerView.Adapter<ExerciseArray
     }
 
     public interface ExerciseArrayListAdapterOnClickHandler {
-        void onClick(int setId);
+        void onClick(int exerciseId);
     }
 
     class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {

@@ -9,6 +9,8 @@ import android.os.AsyncTask;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
 
+import org.joda.time.DateTime;
+import org.joda.time.DateTimeZone;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -89,7 +91,17 @@ public class GetDataTask extends AsyncTask<String, Void, List<String>> {
         mUrlString = Config.MAIN_URL;
         mUrlString = mUrlString + additionalUrl;
         if (Objects.equals(additionalUrl, Config.EXERCISE_URL)) {
-            mUrlString += "/" + pageNum;
+            long lastUpdated = SharedPreferenceHelper.getInstance(mContext).getLong(SharedPreferenceHelper.Key.LAST_EXERCISE_MODIFIED_DATE_LONG);
+            if (lastUpdated == 0) {
+                lastUpdated = 1000000;
+            }
+            mUrlString += "/" + lastUpdated + "/" + pageNum;
+        } else {
+            long lastUpdated = SharedPreferenceHelper.getInstance(mContext).getLong(SharedPreferenceHelper.Key.LAST_CATEGORY_MODIFIED_DATE_LONG);
+            if (lastUpdated == 0) {
+                lastUpdated = 1000000;
+            }
+            mUrlString += "/" + lastUpdated;
         }
         List<String> jsonData = new ArrayList<>();
         URL url;
@@ -191,6 +203,15 @@ public class GetDataTask extends AsyncTask<String, Void, List<String>> {
 
     @Override
     protected void onPostExecute(List<String> strings) {
+        if (Objects.equals(additionalUrl, Config.EXERCISE_URL) && pageNum == 1) {
+            DateTime dateTime = new DateTime(DateTimeZone.UTC);
+            long lastUpdated = dateTime.getMillis();
+            SharedPreferenceHelper.getInstance().put(SharedPreferenceHelper.Key.LAST_EXERCISE_MODIFIED_DATE_LONG, lastUpdated);
+        } else if (Objects.equals(additionalUrl, Config.CATEGORY_URL)) {
+            DateTime dateTime = new DateTime(DateTimeZone.UTC);
+            long lastUpdated = dateTime.getMillis();
+            SharedPreferenceHelper.getInstance().put(SharedPreferenceHelper.Key.LAST_CATEGORY_MODIFIED_DATE_LONG, lastUpdated);
+        }
         if (Objects.equals(additionalUrl, Config.EXERCISE_URL) && totalPage > 1) {
             for (int i = 2; i <= totalPage; i++) {
                 GetDataTask getDataTask = new GetDataTask(mContext, Config.EXERCISE_URL, i);

@@ -35,10 +35,12 @@ dependencies {
     compile 'com.firebaseui:firebase-ui-auth:1.2.0'
     compile 'com.squareup.picasso:picasso:2.5.2'
     compile 'com.android.support.constraint:constraint-layout:1.0.0-beta5'
+    compile 'com.android.support:support-v4:25.2.0'
     testCompile 'junit:junit:4.12'
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.5.1'
     annotationProcessor 'net.simonvt.schematic:schematic-compiler:0.7.0'
 }
+
 
 
 
