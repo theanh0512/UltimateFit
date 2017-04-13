@@ -17,8 +17,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Iterator;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -28,9 +31,12 @@ import ultimate.fit.ultimatefit.activity.CategoryActivity;
 import ultimate.fit.ultimatefit.adapter.ExerciseArrayListAdapter;
 import ultimate.fit.ultimatefit.adapter.SetAdapter;
 import ultimate.fit.ultimatefit.data.ExerciseColumns;
+import ultimate.fit.ultimatefit.data.SetColumns;
+import ultimate.fit.ultimatefit.data.UltimateFitDatabase;
 import ultimate.fit.ultimatefit.data.UltimateFitProvider;
 import ultimate.fit.ultimatefit.data.WorkoutExerciseColumns;
 import ultimate.fit.ultimatefit.data.generated.values.SetsValuesBuilder;
+import ultimate.fit.ultimatefit.data.generated.values.Workout_exercisesValuesBuilder;
 import ultimate.fit.ultimatefit.model.Exercise;
 
 import static android.app.Activity.RESULT_OK;
@@ -45,7 +51,7 @@ public class WorkoutExerciseActivityFragment extends Fragment implements LoaderM
     @BindView(R.id.fab_add_exercise_2)
     FloatingActionButton fabAddExercise;
     @BindView(R.id.recycler_view_horizontal_exercises)
-    RecyclerView recyclerViewHorizontalExercise;
+    RecyclerView recyclerViewArrayListExercise;
     @BindView(R.id.recycler_view_set)
     RecyclerView recyclerViewSet;
     @BindView(R.id.edit_text_set)
@@ -63,7 +69,7 @@ public class WorkoutExerciseActivityFragment extends Fragment implements LoaderM
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(final LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_workout_exercise, container, false);
 
@@ -91,18 +97,82 @@ public class WorkoutExerciseActivityFragment extends Fragment implements LoaderM
 
             exerciseArrayListAdapter = new ExerciseArrayListAdapter(getActivity(), new ExerciseArrayListAdapter.ExerciseArrayListAdapterOnClickHandler() {
                 @Override
-                public void onClick(int exerciseId) {
+                public void onClick(final int exerciseId) {
+                    Iterator<Exercise> iterator = arrayListExercise.iterator();
+                    boolean deleted = false;
+                    while (iterator.hasNext()) {
+                        if (arrayListExercise.size() == 1) {
+                            Toast.makeText(getActivity(), R.string.warning_one_exercise, Toast.LENGTH_SHORT).show();
+                            break;
+                        }
+                        Exercise exercise = iterator.next();
+                        if (exercise.getExerciseId() == exerciseId) {
+                            iterator.remove();
+                            deleted = true;
+                            break;
+                        }
+                    }
+                    exerciseArrayListAdapter.swapArrayList(arrayListExercise);
 
+                    //remove exerciseId in workoutExercise
+                    if (deleted) {
+                        Thread thread = new Thread(new Runnable() {
+                            @Override
+                            public void run() {
+                                try {
+                                    ArrayList<String> currentExerciseIds = new ArrayList<>(Arrays.asList(exerciseIds.split(",")));
+                                    Iterator<String> iterator = currentExerciseIds.iterator();
+
+                                    while (iterator.hasNext()) {
+                                        String exercise = iterator.next();
+                                        if (Integer.parseInt(exercise) == exerciseId) {
+                                            iterator.remove();
+                                            break;
+                                        }
+                                    }
+                                    String newExerciseIds = strJoin(currentExerciseIds.toArray(new String[currentExerciseIds.size()]), ",");
+                                    ContentValues contentValues;
+                                    if (currentExerciseIds.size() == 1) {
+                                        Cursor exerciseCursor = getActivity().getContentResolver().query(UltimateFitProvider.Exercises.withId(Integer.parseInt(newExerciseIds))
+                                                , null, null, null, null);
+                                        exerciseCursor.moveToFirst();
+                                        String exerciseName = exerciseCursor.getString(exerciseCursor.getColumnIndex(ExerciseColumns.EXERCISE_NAME));
+                                        String exerciseImage = exerciseCursor.getString(exerciseCursor.getColumnIndex(ExerciseColumns.IMAGE_PATH));
+                                        contentValues = new Workout_exercisesValuesBuilder().exerciseIds(newExerciseIds).firstExerciseName(exerciseName)
+                                                .firstExerciseImage(exerciseImage).values();
+                                        exerciseCursor.close();
+                                    } else
+                                        contentValues = new Workout_exercisesValuesBuilder().exerciseIds(newExerciseIds).values();
+                                    getActivity().getContentResolver().update(UltimateFitProvider.WorkoutExercises.CONTENT_URI,
+                                            contentValues, UltimateFitDatabase.Tables.WORKOUT_EXERCISES + "." + WorkoutExerciseColumns.ID + "=" + workoutExerciseId, null);
+                                } catch (Exception e) {
+                                    // TODO: handle exception
+                                    Log.e("log_tag", "Error Parsing Data " + e.toString());
+                                }
+                            }
+                        });
+                        thread.start();
+                    }
                 }
             });
-            recyclerViewHorizontalExercise.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
-            recyclerViewHorizontalExercise.setAdapter(exerciseArrayListAdapter);
+            recyclerViewArrayListExercise.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
+            recyclerViewArrayListExercise.setAdapter(exerciseArrayListAdapter);
             //ToDo: see if we need to check if we only init loader when the button is already hidden
             getLoaderManager().initLoader(SET_LOADER, null, this);
             arrayListExercise = new ArrayList<>();
             loadExerciseHorizontal();
         }
         return rootView;
+    }
+
+    private String strJoin(String[] stringArray, String separator) {
+        StringBuilder stringBuilder = new StringBuilder();
+        for (int i = 0, il = stringArray.length; i < il; i++) {
+            if (i > 0)
+                stringBuilder.append(separator);
+            stringBuilder.append(stringArray[i]);
+        }
+        return stringBuilder.toString();
     }
 
     private void loadExerciseHorizontal() {
@@ -146,6 +216,8 @@ public class WorkoutExerciseActivityFragment extends Fragment implements LoaderM
             @Override
             public void run() {
                 try {
+                    getActivity().getContentResolver().delete(UltimateFitProvider.Sets.CONTENT_URI,
+                            UltimateFitDatabase.Tables.SETS + "." + SetColumns.WORKOUT_EXERCISE_ID + "=" + workoutExerciseId, null);
                     ContentValues[] setValues = new ContentValues[arrayListExercise.size() * noOfSet];
                     int count = 0;
                     for (int j = 0; j < noOfSet; j++) {

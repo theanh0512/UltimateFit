@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="AppTheme.ButtonStyle" parent="android:style/Widget.Button">
+        <item name="android:background">@drawable/button_background_click</item>
+        <item name="android:textColor">@drawable/button_text_click</item>
+        <item name="android:minHeight">36dp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:radius">2dp</item>
+        <item name="android:paddingStart">16dp</item>
+        <item name="android:paddingEnd">16dp</item>
+        <item name="android:elevation">2dp</item>
+    </style>
+</resources>

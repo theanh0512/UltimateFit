@@ -115,13 +115,13 @@ public class PlanAdapter extends RecyclerView.Adapter<PlanAdapter.ViewHolder> {
 
     class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
-        @BindView(R.id.imageViewOnGoingCheck)
+        @BindView(R.id.image_view_on_going_check)
         ImageView imageViewOnGoingCheck;
-        @BindView(R.id.textViewPlanName)
+        @BindView(R.id.text_view_plan_name)
         TextView textViewPlanName;
-        @BindView(R.id.textViewPlanNumOfWeeks)
+        @BindView(R.id.text_view_plan_num_of_weeks)
         TextView textViewPlanNumOfWeeks;
-        @BindView(R.id.buttonApplyPlan)
+        @BindView(R.id.button_apply_plan)
         Button buttonApplyPlan;
 
         ViewHolder(final View itemView) {

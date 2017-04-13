@@ -78,7 +78,7 @@ public class WorkoutAdapter extends RecyclerView.Adapter<WorkoutAdapter.ViewHold
 
     class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
-        @BindView(R.id.imageViewOnGoingCheck)
+        @BindView(R.id.image_view_on_going_check)
         ImageView imageViewOnGoingCheck;
         @BindView(R.id.textViewWorkoutDate)
         TextView textViewWorkoutDate;

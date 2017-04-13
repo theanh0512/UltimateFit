@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginBottom="4dp"
@@ -13,45 +15,49 @@
     android:orientation="horizontal">
 
     <ImageView
-        android:id="@+id/imageViewOnGoingCheck"
+        android:id="@+id/image_view_on_going_check"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
-        android:layout_weight="1"
-        android:src="@drawable/on_going_check" />
+        android:layout_marginLeft="16dp"
+        android:src="@drawable/on_going_check"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.5" />
 
-    <LinearLayout
+    <TextView
+        android:id="@+id/text_view_plan_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_weight="10"
-        android:orientation="vertical">
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="8dp"
+        app:layout_constraintLeft_toRightOf="@+id/image_view_on_going_check"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="Bulking Plan" />
 
-        <TextView
-            android:id="@+id/textViewPlanName"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:paddingBottom="10dp"
-            android:paddingEnd="10dp"
-            android:paddingStart="10dp"
-            android:paddingTop="10dp" />
-
-        <TextView
-            android:id="@+id/textViewPlanNumOfWeeks"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:paddingBottom="10dp"
-            android:paddingEnd="10dp"
-            android:paddingStart="10dp"
-            android:paddingTop="10dp" />
-    </LinearLayout>
+    <TextView
+        android:id="@+id/text_view_plan_num_of_weeks"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="8dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toRightOf="@+id/image_view_on_going_check"
+        app:layout_constraintTop_toBottomOf="@+id/text_view_plan_name"
+        tools:text="2 weeks" />
 
     <Button
-        android:id="@+id/buttonApplyPlan"
+        android:id="@+id/button_apply_plan"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
-        android:layout_marginEnd="5dp"
-        android:layout_weight="1.4"
-        android:text="@string/button_apply_plan" />
+        android:layout_marginRight="15dp"
+        android:text="@string/button_apply_plan"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.5" />
 
-</LinearLayout>
+</android.support.constraint.ConstraintLayout>

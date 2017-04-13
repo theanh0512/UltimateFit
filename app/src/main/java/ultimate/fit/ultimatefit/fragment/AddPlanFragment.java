@@ -30,15 +30,15 @@ import ultimate.fit.ultimatefit.data.generated.values.WorkoutsValuesBuilder;
 
 public class AddPlanFragment extends Fragment {
 
-    @BindView(R.id.editNameText)
+    @BindView(R.id.edit_text_name)
     EditText editNameText;
-    @BindView(R.id.editGoalText)
+    @BindView(R.id.edit_text_goal)
     EditText editGoalText;
-    @BindView(R.id.editNumOfWeekText)
+    @BindView(R.id.edit_num_of_week_text)
     EditText editNumOfWeekText;
-    @BindView(R.id.editDayPerWeekText)
+    @BindView(R.id.edit_text_day_per_week)
     EditText editDayPerWeekText;
-    @BindView(R.id.buttonSavePlan)
+    @BindView(R.id.button_save_plan)
     Button buttonSavePlan;
 
 
@@ -63,7 +63,7 @@ public class AddPlanFragment extends Fragment {
         return rootView;
     }
 
-    @OnClick(R.id.buttonSavePlan)
+    @OnClick(R.id.button_save_plan)
     public void onClickSavePlan() {
         final Context context = getActivity().getApplicationContext();
         Thread thread = new Thread(new Runnable() {

@@ -43,6 +43,11 @@ public class GetDataTask extends AsyncTask<String, Void, List<String>> {
     private String mUrlString = "";
     private String additionalUrl;
 
+    //currentUpdatedTime is for page from 2 onward. If this value is set then we ignore lastUpdatedTime
+    //lastUpdatedTime is the time getting from SharedPreference
+    private long currentUpdatedTime = 1;
+    private long lastUpdatedTime;
+
     public GetDataTask(Context context, String additionalUrl) {
         mContext = context;
         this.additionalUrl = additionalUrl;
@@ -53,6 +58,16 @@ public class GetDataTask extends AsyncTask<String, Void, List<String>> {
 
     public GetDataTask(Context context, String additionalUrl, int pageNum) {
         mContext = context;
+        this.additionalUrl = additionalUrl;
+        this.pageNum = pageNum;
+        if (!isOnline()) {
+            displayNoInternetDialog();
+        }
+    }
+
+    public GetDataTask(Context context, String additionalUrl, int pageNum, long currentUpdatedTime) {
+        mContext = context;
+        this.currentUpdatedTime = currentUpdatedTime;
         this.additionalUrl = additionalUrl;
         this.pageNum = pageNum;
         if (!isOnline()) {
@@ -91,11 +106,13 @@ public class GetDataTask extends AsyncTask<String, Void, List<String>> {
         mUrlString = Config.MAIN_URL;
         mUrlString = mUrlString + additionalUrl;
         if (Objects.equals(additionalUrl, Config.EXERCISE_URL)) {
-            long lastUpdated = SharedPreferenceHelper.getInstance(mContext).getLong(SharedPreferenceHelper.Key.LAST_EXERCISE_MODIFIED_DATE_LONG);
-            if (lastUpdated == 0) {
-                lastUpdated = 1000000;
+            lastUpdatedTime = SharedPreferenceHelper.getInstance(mContext).getLong(SharedPreferenceHelper.Key.LAST_EXERCISE_MODIFIED_DATE_LONG);
+            if (lastUpdatedTime == 0) {
+                lastUpdatedTime = 1000000;
             }
-            mUrlString += "/" + lastUpdated + "/" + pageNum;
+            if (currentUpdatedTime == 1)
+                mUrlString += "/" + lastUpdatedTime + "/" + pageNum;
+            else mUrlString += "/" + currentUpdatedTime + "/" + pageNum;
         } else {
             long lastUpdated = SharedPreferenceHelper.getInstance(mContext).getLong(SharedPreferenceHelper.Key.LAST_CATEGORY_MODIFIED_DATE_LONG);
             if (lastUpdated == 0) {
@@ -212,9 +229,9 @@ public class GetDataTask extends AsyncTask<String, Void, List<String>> {
             long lastUpdated = dateTime.getMillis();
             SharedPreferenceHelper.getInstance().put(SharedPreferenceHelper.Key.LAST_CATEGORY_MODIFIED_DATE_LONG, lastUpdated);
         }
-        if (Objects.equals(additionalUrl, Config.EXERCISE_URL) && totalPage > 1) {
+        if (Objects.equals(additionalUrl, Config.EXERCISE_URL) && totalPage > 1 && pageNum == 1) {
             for (int i = 2; i <= totalPage; i++) {
-                GetDataTask getDataTask = new GetDataTask(mContext, Config.EXERCISE_URL, i);
+                GetDataTask getDataTask = new GetDataTask(mContext, Config.EXERCISE_URL, i, lastUpdatedTime);
                 getDataTask.execute();
             }
         }

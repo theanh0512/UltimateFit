@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import java.util.Locale;
@@ -53,6 +54,12 @@ public class SetAdapter extends RecyclerView.Adapter<SetAdapter.ViewHolder> {
         cursor.moveToPosition(position);
         String exerciseName = cursor.getString(cursor.getColumnIndex(SetColumns.SET_NAME));
         holder.textViewSetName.setText(String.format(Locale.ENGLISH, "%s", exerciseName));
+        int setNumber = cursor.getInt(cursor.getColumnIndex(SetColumns.SET_NUMBER));
+        int exerciseNumber = cursor.getInt(cursor.getColumnIndex(SetColumns.EXERCISE_NUMBER));
+        if (exerciseNumber == 0) {
+            holder.textViewHeader.setText("Set: " + String.valueOf(setNumber + 1));
+            holder.separatorContainer.setVisibility(View.VISIBLE);
+        } else holder.separatorContainer.setVisibility(View.GONE);
         int weight = cursor.getInt(cursor.getColumnIndex(SetColumns.WEIGHT));
         int rep = cursor.getInt(cursor.getColumnIndex(SetColumns.REP));
         holder.editTextRep.setText(String.valueOf(rep));
@@ -84,6 +91,10 @@ public class SetAdapter extends RecyclerView.Adapter<SetAdapter.ViewHolder> {
         EditText editTextRep;
         @BindView(R.id.edit_text_set_weight)
         EditText editTextWeight;
+        @BindView(R.id.separatorContainer)
+        FrameLayout separatorContainer;
+        @BindView(R.id.text_view_header)
+        TextView textViewHeader;
 
         ViewHolder(final View itemView) {
             super(itemView);

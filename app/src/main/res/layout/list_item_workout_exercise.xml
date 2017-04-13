@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -13,74 +14,72 @@
     android:foreground="?android:attr/selectableItemBackground"
     android:orientation="horizontal">
 
-    <LinearLayout
+    <TextView
+        android:id="@+id/textViewWorkoutExerciseName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_weight="10"
-        android:orientation="vertical">
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="8dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="Dumbbell Fly" />
 
-        <TextView
-            android:id="@+id/textViewWorkoutExerciseName"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:paddingBottom="@dimen/view_padding"
-            android:paddingEnd="@dimen/view_padding"
-            android:paddingStart="@dimen/view_padding"
-            android:paddingTop="@dimen/view_padding"
-            tools:text="Dumbbell Fly" />
+    <TextView
+        android:id="@+id/text_view_set"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="8dp"
+        android:text="@string/set"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/textViewWorkoutExerciseName"
+        app:layout_constraintVertical_bias="0.25" />
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
+    <EditText
+        android:id="@+id/edit_text_workout_exercise_set"
+        android:layout_width="48dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="0dp"
+        app:layout_constraintLeft_toRightOf="@id/text_view_set"
+        app:layout_constraintTop_toBottomOf="@id/textViewWorkoutExerciseName"
+        tools:text="0" />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingBottom="@dimen/view_padding"
-                android:paddingEnd="@dimen/view_padding"
-                android:paddingStart="@dimen/view_padding"
-                android:paddingTop="@dimen/view_padding"
-                android:text="@string/set" />
+    <TextView
+        android:id="@+id/text_view_rep"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="8dp"
+        android:text="@string/reps"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toRightOf="@id/edit_text_workout_exercise_set"
+        app:layout_constraintTop_toBottomOf="@id/textViewWorkoutExerciseName"
+        app:layout_constraintVertical_bias="0.25" />
 
-            <EditText
-                android:id="@+id/edit_text_workout_exercise_set"
-                android:layout_width="30dp"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="@dimen/view_margin"
-                android:layout_marginStart="@dimen/view_margin"
-                android:paddingBottom="@dimen/view_padding"
-                android:paddingEnd="@dimen/view_padding"
-                android:paddingStart="@dimen/view_padding"
-                android:paddingTop="@dimen/view_padding" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingBottom="@dimen/view_padding"
-                android:paddingEnd="@dimen/view_padding"
-                android:paddingStart="@dimen/view_padding"
-                android:paddingTop="@dimen/view_padding"
-                android:text="@string/reps" />
-
-            <EditText
-                android:id="@+id/edit_text_workout_exercise_rep"
-                android:layout_width="30dp"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="@dimen/view_margin"
-                android:layout_marginStart="@dimen/view_margin"
-                android:paddingBottom="@dimen/view_padding"
-                android:paddingEnd="@dimen/view_padding"
-                android:paddingStart="@dimen/view_padding"
-                android:paddingTop="@dimen/view_padding" />
-        </LinearLayout>
-    </LinearLayout>
-
+    <EditText
+        android:id="@+id/edit_text_workout_exercise_rep"
+        android:layout_width="48dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="0dp"
+        app:layout_constraintLeft_toRightOf="@id/text_view_rep"
+        app:layout_constraintTop_toBottomOf="@id/textViewWorkoutExerciseName"
+        tools:text="0" />
 
     <ImageView
         android:id="@+id/imageViewWorkoutExerciseImage"
         android:layout_width="80dp"
         android:layout_height="80dp"
         android:layout_gravity="center_vertical"
-        android:layout_weight="1" />
-</LinearLayout>
+        android:layout_marginBottom="0dp"
+        android:layout_marginRight="0dp"
+        android:layout_marginTop="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0" />
+</android.support.constraint.ConstraintLayout>

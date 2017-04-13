@@ -16,7 +16,7 @@
 
     <TextView
         android:id="@+id/textViewExerciseName"
-        android:layout_width="229dp"
+        android:layout_width="224dp"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_marginBottom="8dp"
@@ -36,8 +36,8 @@
 
     <ImageView
         android:id="@+id/imageViewExerciseImage"
-        android:layout_width="100dp"
-        android:layout_height="80dp"
+        android:layout_width="96dp"
+        android:layout_height="96dp"
         android:layout_gravity="center_vertical"
         android:layout_marginBottom="0dp"
         android:layout_marginRight="0dp"
