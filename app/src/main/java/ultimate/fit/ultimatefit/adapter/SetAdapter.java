@@ -18,6 +18,7 @@ import java.util.Locale;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnEditorAction;
+import butterknife.OnFocusChange;
 import ultimate.fit.ultimatefit.R;
 import ultimate.fit.ultimatefit.data.SetColumns;
 import ultimate.fit.ultimatefit.data.UltimateFitDatabase;
@@ -165,6 +166,44 @@ public class SetAdapter extends RecyclerView.Adapter<SetAdapter.ViewHolder> {
             }
             return false; // pass on to other listeners.
 
+        }
+
+        @OnFocusChange(R.id.edit_text_set_weight)
+        public void onFocusChangeWeight(View v, boolean hasFocus) {
+            if (!hasFocus) {
+                int position = getAdapterPosition();
+                if(position!=-1) {
+                    cursor.moveToPosition(position);
+                    final int setId = cursor.getInt(0);
+                    new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            ContentValues contentValues = new SetsValuesBuilder().weight(Integer.valueOf(editTextWeight.getText().toString())).values();
+                            context.getContentResolver().update(UltimateFitProvider.Sets.CONTENT_URI,
+                                    contentValues, UltimateFitDatabase.Tables.SETS + "." + SetColumns.ID + "=" + setId, null);
+                        }
+                    }).start();
+                }
+            }
+        }
+
+        @OnFocusChange(R.id.edit_text_set_rep)
+        public void onFocusChangeRep(View v, boolean hasFocus) {
+            if (!hasFocus) {
+                int position = getAdapterPosition();
+                if(position!=-1) {
+                    cursor.moveToPosition(position);
+                    final int setId = cursor.getInt(0);
+                    new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            ContentValues contentValues = new SetsValuesBuilder().rep(Integer.valueOf(editTextRep.getText().toString())).values();
+                            context.getContentResolver().update(UltimateFitProvider.Sets.CONTENT_URI,
+                                    contentValues, UltimateFitDatabase.Tables.SETS + "." + SetColumns.ID + "=" + setId, null);
+                        }
+                    }).start();
+                }
+            }
         }
     }
 }

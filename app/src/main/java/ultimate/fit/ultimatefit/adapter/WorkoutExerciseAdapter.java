@@ -21,6 +21,7 @@ import java.util.Locale;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnEditorAction;
+import butterknife.OnFocusChange;
 import ultimate.fit.ultimatefit.R;
 import ultimate.fit.ultimatefit.data.UltimateFitDatabase;
 import ultimate.fit.ultimatefit.data.UltimateFitProvider;
@@ -198,7 +199,44 @@ public class WorkoutExerciseAdapter extends RecyclerView.Adapter<WorkoutExercise
                 }
             }
             return false; // pass on to other listeners.
+        }
 
+        @OnFocusChange(R.id.edit_text_workout_exercise_rep)
+        public void onFocusChangeRep(View v, boolean hasFocus) {
+            if (!hasFocus) {
+                int position = getAdapterPosition();
+                if (position != -1) {
+                    cursor.moveToPosition(position);
+                    final int workoutExerciseId = cursor.getInt(0);
+                    new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            ContentValues contentValues = new Workout_exercisesValuesBuilder().rep(Integer.valueOf(editTextRep.getText().toString())).values();
+                            context.getContentResolver().update(UltimateFitProvider.WorkoutExercises.CONTENT_URI,
+                                    contentValues, UltimateFitDatabase.Tables.WORKOUT_EXERCISES + "." + WorkoutExerciseColumns.ID + "=" + workoutExerciseId, null);
+                        }
+                    }).start();
+                }
+            }
+        }
+
+        @OnFocusChange(R.id.edit_text_workout_exercise_set)
+        public void onFocusChangeSet(View v, boolean hasFocus) {
+            if (!hasFocus) {
+                int position = getAdapterPosition();
+                if (position != -1) {
+                    cursor.moveToPosition(position);
+                    final int workoutExerciseId = cursor.getInt(0);
+                    new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            ContentValues contentValues = new Workout_exercisesValuesBuilder().set(Integer.valueOf(editTextSet.getText().toString())).values();
+                            context.getContentResolver().update(UltimateFitProvider.WorkoutExercises.CONTENT_URI,
+                                    contentValues, UltimateFitDatabase.Tables.WORKOUT_EXERCISES + "." + WorkoutExerciseColumns.ID + "=" + workoutExerciseId, null);
+                        }
+                    }).start();
+                }
+            }
         }
     }
 }

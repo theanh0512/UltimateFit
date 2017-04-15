@@ -14,6 +14,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.KeyEvent;
+import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -22,6 +23,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.OnEditorAction;
+import butterknife.OnFocusChange;
 import ultimate.fit.ultimatefit.R;
 import ultimate.fit.ultimatefit.adapter.WorkoutExerciseAdapter;
 import ultimate.fit.ultimatefit.data.UltimateFitDatabase;
@@ -121,6 +123,21 @@ public class WorkoutActivity extends AppCompatActivity implements LoaderManager.
             }
         }
         return false; // pass on to other listeners.
+    }
+
+    @OnFocusChange(R.id.editTextBodyPart)
+    public void onFocusChangeBodyPart(View v, boolean hasFocus) {
+        if (!hasFocus) {
+            final Context context = this;
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    ContentValues workoutContentValues = new WorkoutsValuesBuilder().bodyPart(editTextBodyPart.getText().toString()).values();
+                    context.getContentResolver().update(UltimateFitProvider.Workouts.CONTENT_URI,
+                            workoutContentValues, UltimateFitDatabase.WORKOUTS + "." + WorkoutColumns.ID + "=" + workoutId, null);
+                }
+            }).start();
+        }
     }
 
     @Override

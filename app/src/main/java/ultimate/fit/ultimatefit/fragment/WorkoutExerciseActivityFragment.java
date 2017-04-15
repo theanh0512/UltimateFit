@@ -1,6 +1,7 @@
 package ultimate.fit.ultimatefit.fragment;
 
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
@@ -12,11 +13,14 @@ import android.support.v4.content.Loader;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -26,6 +30,8 @@ import java.util.Iterator;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import butterknife.OnEditorAction;
+import butterknife.OnFocusChange;
 import ultimate.fit.ultimatefit.R;
 import ultimate.fit.ultimatefit.activity.CategoryActivity;
 import ultimate.fit.ultimatefit.adapter.ExerciseArrayListAdapter;
@@ -259,6 +265,48 @@ public class WorkoutExerciseActivityFragment extends Fragment implements LoaderM
             if (resultCode == RESULT_OK) {
                 loadExerciseHorizontal();
             }
+        }
+    }
+
+    @OnEditorAction(R.id.edit_text_set)
+    public boolean onEditorActionSet(TextView v, int actionId, KeyEvent event) {
+        if (actionId == EditorInfo.IME_ACTION_SEARCH ||
+                actionId == EditorInfo.IME_ACTION_DONE ||
+                event.getAction() == KeyEvent.ACTION_DOWN &&
+                        event.getKeyCode() == KeyEvent.KEYCODE_ENTER) {
+            if (!event.isShiftPressed()) {
+                // the user is done typing.
+
+                final Context context = getActivity();
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        ContentValues contentValues = new Workout_exercisesValuesBuilder().set(Integer.valueOf(editTextSet.getText().toString())).values();
+                        context.getContentResolver().update(UltimateFitProvider.WorkoutExercises.CONTENT_URI,
+                                contentValues, UltimateFitDatabase.Tables.WORKOUT_EXERCISES + "." + WorkoutExerciseColumns.ID + "=" + workoutExerciseId, null);
+                    }
+                }).start();
+                noOfSet = Integer.valueOf(editTextSet.getText().toString());
+                return true; // consume.
+            }
+        }
+        return false; // pass on to other listeners.
+
+    }
+
+    @OnFocusChange(R.id.edit_text_set)
+    public void onFocusChangeSet(View v, boolean hasFocus) {
+        if (!hasFocus) {
+            final Context context = getActivity();
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    ContentValues contentValues = new Workout_exercisesValuesBuilder().set(Integer.valueOf(editTextSet.getText().toString())).values();
+                    context.getContentResolver().update(UltimateFitProvider.WorkoutExercises.CONTENT_URI,
+                            contentValues, UltimateFitDatabase.Tables.WORKOUT_EXERCISES + "." + WorkoutExerciseColumns.ID + "=" + workoutExerciseId, null);
+                }
+            }).start();
+            noOfSet = Integer.valueOf(editTextSet.getText().toString());
         }
     }
 
