@@ -137,6 +137,7 @@ public class WorkoutExerciseActivityFragment extends Fragment implements LoaderM
                                         }
                                     }
                                     String newExerciseIds = strJoin(currentExerciseIds.toArray(new String[currentExerciseIds.size()]), ",");
+                                    exerciseIds = newExerciseIds;
                                     ContentValues contentValues;
                                     if (currentExerciseIds.size() == 1) {
                                         Cursor exerciseCursor = getActivity().getContentResolver().query(UltimateFitProvider.Exercises.withId(Integer.parseInt(newExerciseIds))
