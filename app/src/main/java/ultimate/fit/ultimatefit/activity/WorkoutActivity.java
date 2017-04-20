@@ -107,7 +107,7 @@ public class WorkoutActivity extends AppCompatActivity implements LoaderManager.
                 actionId == EditorInfo.IME_ACTION_DONE ||
                 event.getAction() == KeyEvent.ACTION_DOWN &&
                         event.getKeyCode() == KeyEvent.KEYCODE_ENTER) {
-            if (!event.isShiftPressed()) {
+            if ((event != null && !event.isShiftPressed()) || event == null) {
                 // the user is done typing.
 
                 final Context context = this;
