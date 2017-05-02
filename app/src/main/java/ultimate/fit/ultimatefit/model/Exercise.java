@@ -8,6 +8,9 @@ public class Exercise {
     int exerciseId;
     String exerciseName;
 
+    public Exercise() {
+    }
+
     public Exercise(int exerciseId, String exerciseName) {
         this.exerciseId = exerciseId;
         this.exerciseName = exerciseName;

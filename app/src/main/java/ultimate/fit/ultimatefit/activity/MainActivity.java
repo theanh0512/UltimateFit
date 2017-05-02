@@ -16,6 +16,12 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
 
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import ultimate.fit.ultimatefit.R;
@@ -23,6 +29,7 @@ import ultimate.fit.ultimatefit.adapter.PagerAdapter;
 import ultimate.fit.ultimatefit.adapter.PlanAdapter;
 import ultimate.fit.ultimatefit.fragment.TabPlanFragment;
 import ultimate.fit.ultimatefit.fragment.TabWorkoutFragment;
+import ultimate.fit.ultimatefit.model.Plan;
 import ultimate.fit.ultimatefit.utils.Config;
 import ultimate.fit.ultimatefit.utils.GetDataTask;
 import ultimate.fit.ultimatefit.utils.SharedPreferenceHelper;
@@ -32,6 +39,7 @@ public class MainActivity extends AppCompatActivity
         TabWorkoutFragment.OnFragmentInteractionListener, TabPlanFragment.ItemsListClickHandler, TabWorkoutFragment.ItemsListClickHandler {
 
     public static PagerAdapter adapter;
+    public static DatabaseReference mPlanDatabaseReference;
     ActionBarDrawerToggle toggle;
     @BindView(R.id.drawer_layout)
     DrawerLayout drawer;
@@ -39,6 +47,9 @@ public class MainActivity extends AppCompatActivity
     Toolbar toolbar;
     @BindView(R.id.tab_layout)
     TabLayout tabLayout;
+    //Firebase stuffs
+    private FirebaseDatabase mFirebaseDatabase;
+    private ChildEventListener mChildEventListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,6 +58,12 @@ public class MainActivity extends AppCompatActivity
         ButterKnife.bind(this);
         setSupportActionBar(toolbar);
         toolbar.setTitle("Ultimate Fit");
+
+        //Initialize Firebase components
+        mFirebaseDatabase = FirebaseDatabase.getInstance();
+
+        //Reference the message portion of the database
+        mPlanDatabaseReference = mFirebaseDatabase.getReference().child("plans");
 
         toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -97,6 +114,55 @@ public class MainActivity extends AppCompatActivity
         getDataTaskExercise.execute();
     }
 
+    private void attachDatabaseReadListener() {
+        if (mChildEventListener == null) {
+            mChildEventListener = new ChildEventListener() {
+                @Override
+                public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                    //This message will get called whenever a new message is inserted into a message list
+                    //It is also triggered for every child message in the list when the listener is first attached
+
+                    //Passing the class as parameter, the code will deserialize the message from the database into FriendlyMessage object
+                    Plan uploadedPlan = dataSnapshot.getValue(Plan.class);
+                }
+
+                @Override
+                public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+                    //This gets called when the contents of an existing message gets changed
+                }
+
+                @Override
+                public void onChildRemoved(DataSnapshot dataSnapshot) {
+                }
+
+                @Override
+                public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+                    //This gets called when one of our messages changed its position in the list
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+                    //This gets called when there is error happened.
+                    //Typically, it means that you don't have permission to read the data
+                }
+            };
+            mPlanDatabaseReference.addChildEventListener(mChildEventListener);
+        }
+    }
+
+    private void detachDatabaseReadListener() {
+        if (mChildEventListener != null) {
+            mPlanDatabaseReference.removeEventListener(mChildEventListener);
+            mChildEventListener = null;
+        }
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        detachDatabaseReadListener();
+    }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Pass the event to ActionBarDrawerToggle, if it returns
@@ -145,7 +211,7 @@ public class MainActivity extends AppCompatActivity
         Bundle bundle = new Bundle();
         bundle.putInt("dayNumber", dayNumber);
         bundle.putString("bodyPart", bodyPart);
-        bundle.putInt("workoutId",workoutId);
+        bundle.putInt("workoutId", workoutId);
         intent.putExtras(bundle);
         startActivity(intent);
     }

@@ -4,6 +4,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +14,8 @@ import android.widget.TextView;
 
 import org.joda.time.DateTime;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 
 import butterknife.BindView;
@@ -20,8 +23,15 @@ import butterknife.ButterKnife;
 import ultimate.fit.ultimatefit.R;
 import ultimate.fit.ultimatefit.activity.MainActivity;
 import ultimate.fit.ultimatefit.data.PlanColumns;
+import ultimate.fit.ultimatefit.data.SetColumns;
 import ultimate.fit.ultimatefit.data.UltimateFitProvider;
+import ultimate.fit.ultimatefit.data.WorkoutColumns;
+import ultimate.fit.ultimatefit.data.WorkoutExerciseColumns;
 import ultimate.fit.ultimatefit.fragment.TabWorkoutFragment;
+import ultimate.fit.ultimatefit.model.Plan;
+import ultimate.fit.ultimatefit.model.Set;
+import ultimate.fit.ultimatefit.model.Workout;
+import ultimate.fit.ultimatefit.model.WorkoutExercise;
 import ultimate.fit.ultimatefit.utils.SharedPreferenceHelper;
 
 /**
@@ -55,8 +65,9 @@ public class PlanAdapter extends RecyclerView.Adapter<PlanAdapter.ViewHolder> {
     public void onBindViewHolder(final PlanAdapter.ViewHolder holder, int position) {
         final int pos = position;
         cursor.moveToPosition(position);
-        holder.textViewPlanName.setText(String.format(Locale.ENGLISH, "%s", cursor.getString(cursor.getColumnIndex(PlanColumns.NAME))));
-        int numOfWeeks = cursor.getInt(cursor.getColumnIndex(PlanColumns.NUM_OF_WEEK));
+        final String planName = cursor.getString(cursor.getColumnIndex(PlanColumns.NAME));
+        holder.textViewPlanName.setText(String.format(Locale.ENGLISH, "%s", planName));
+        final int numOfWeeks = cursor.getInt(cursor.getColumnIndex(PlanColumns.NUM_OF_WEEK));
         holder.textViewPlanNumOfWeeks.setText(String.format(Locale.ENGLISH, "%s", numOfWeeks) + " week" + (numOfWeeks == 1 ? "" : "s"));
         //ToDo: if cannot click button, add button to the plan detail instead
         if (cursor.getInt(cursor.getColumnIndex(PlanColumns.ID)) == currentAppliedPlanID) {
@@ -94,6 +105,78 @@ public class PlanAdapter extends RecyclerView.Adapter<PlanAdapter.ViewHolder> {
                 holder.imageViewOnGoingCheck.setVisibility(View.VISIBLE);
             }
         });
+        holder.buttonUploadPlan.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                cursor.moveToPosition(pos);
+
+                Thread thread = new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            getPlanDataToUpload(planName);
+                        } catch (Exception e) {
+                            // TODO: handle exception
+                            Log.e("log_tag", "Error Parsing Data " + e.toString());
+                        }
+                    }
+                });
+                thread.start();
+            }
+        });
+    }
+
+    private void getPlanDataToUpload(String planName) {
+        int dayPerWeek = cursor.getInt(cursor.getColumnIndex(PlanColumns.DAY_PER_WEEK));
+        int numOfWeek = cursor.getInt(cursor.getColumnIndex(PlanColumns.NUM_OF_WEEK));
+        String planGoal = cursor.getString(cursor.getColumnIndex(PlanColumns.GOAL));
+        long planId = cursor.getLong(cursor.getColumnIndex(PlanColumns.ID));
+
+        List<Workout> workouts = new ArrayList<>();
+        //query workout
+        Cursor workoutCursor = context.getContentResolver().query(UltimateFitProvider.Workouts.CONTENT_URI, null,
+                WorkoutColumns.PLAN_ID + " = '" + planId + "'", null, null);
+        for (workoutCursor.moveToFirst(); !workoutCursor.isAfterLast(); workoutCursor.moveToNext()) {
+            int dayNumber = workoutCursor.getInt(workoutCursor.getColumnIndex(WorkoutColumns.DAY_NUMBER));
+            String workoutBodyPart = workoutCursor.getString(workoutCursor.getColumnIndex(WorkoutColumns.BODY_PART));
+            long workoutId = workoutCursor.getInt(workoutCursor.getColumnIndex(WorkoutColumns.ID));
+
+            List<WorkoutExercise> workoutExercises = new ArrayList<>();
+            //query workoutExercise
+            Cursor workoutExerciseCursor = context.getContentResolver().query(UltimateFitProvider.WorkoutExercises.CONTENT_URI, null,
+                    WorkoutExerciseColumns.WORKOUT_ID + " = '" + workoutId + "'", null, null);
+            for (workoutExerciseCursor.moveToFirst(); !workoutExerciseCursor.isAfterLast(); workoutExerciseCursor.moveToNext()) {
+                int noOfSets = workoutExerciseCursor.getInt(workoutExerciseCursor.getColumnIndex(WorkoutExerciseColumns.SET));
+                int rep = workoutExerciseCursor.getInt(workoutExerciseCursor.getColumnIndex(WorkoutExerciseColumns.REP));
+                String firstExerciseName = workoutExerciseCursor.getString(workoutExerciseCursor.getColumnIndex(WorkoutExerciseColumns.FIRST_EXERCISE_NAME));
+                String firstExerciseImage = workoutExerciseCursor.getString(workoutExerciseCursor.getColumnIndex(WorkoutExerciseColumns.FIRST_EXERCISE_IMAGE));
+                int workoutExerciseId = workoutExerciseCursor.getInt(workoutCursor.getColumnIndex(WorkoutExerciseColumns.ID));
+
+                List<Set> sets = new ArrayList<>();
+                //query set
+                Cursor setCursor = context.getContentResolver().query(UltimateFitProvider.Sets.CONTENT_URI, null,
+                        SetColumns.WORKOUT_EXERCISE_ID + " = '" + workoutExerciseId + "'", null, null);
+                for (setCursor.moveToFirst(); !setCursor.isAfterLast(); setCursor.moveToNext()) {
+                    String exerciseName = setCursor.getString(setCursor.getColumnIndex(SetColumns.SET_NAME));
+                    int exerciseNumber = setCursor.getInt(setCursor.getColumnIndex(SetColumns.EXERCISE_NUMBER));
+                    int setNumber = setCursor.getInt(setCursor.getColumnIndex(SetColumns.SET_NUMBER));
+                    int noOfRep = setCursor.getInt(setCursor.getColumnIndex(SetColumns.REP));
+                    Set set = new Set(exerciseName, setNumber, exerciseNumber, noOfRep);
+                    sets.add(set);
+                }
+                setCursor.close();
+
+                WorkoutExercise workoutExercise = new WorkoutExercise(firstExerciseName, firstExerciseImage, noOfSets, rep, sets);
+                workoutExercises.add(workoutExercise);
+            }
+            workoutExerciseCursor.close();
+
+            Workout workout = new Workout(workoutBodyPart, dayNumber, workoutExercises);
+            workouts.add(workout);
+        }
+        workoutCursor.close();
+        Plan toBeUploadedPlan = new Plan(planName, planGoal, numOfWeek, dayPerWeek, workouts);
+        MainActivity.mPlanDatabaseReference.push().setValue(toBeUploadedPlan);
     }
 
     @Override
@@ -123,6 +206,8 @@ public class PlanAdapter extends RecyclerView.Adapter<PlanAdapter.ViewHolder> {
         TextView textViewPlanNumOfWeeks;
         @BindView(R.id.button_apply_plan)
         Button buttonApplyPlan;
+        @BindView(R.id.button_upload_plan)
+        Button buttonUploadPlan;
 
         ViewHolder(final View itemView) {
             super(itemView);
