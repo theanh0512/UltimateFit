@@ -67,7 +67,9 @@ public class PlanAdapter extends RecyclerView.Adapter<PlanAdapter.ViewHolder> {
         final int pos = position;
         cursor.moveToPosition(position);
         final String planName = cursor.getString(cursor.getColumnIndex(PlanColumns.NAME));
+        final String planGoal = cursor.getString(cursor.getColumnIndex(PlanColumns.GOAL));
         holder.textViewPlanName.setText(String.format(Locale.ENGLISH, "%s", planName));
+        holder.textViewPlanGoal.setText(String.format(Locale.ENGLISH, "GOAL: %s", planGoal));
         final int numOfWeeks = cursor.getInt(cursor.getColumnIndex(PlanColumns.NUM_OF_WEEK));
         holder.textViewPlanNumOfWeeks.setText(String.format(Locale.ENGLISH, "%s", numOfWeeks) + " week" + (numOfWeeks == 1 ? "" : "s"));
         //ToDo: if cannot click button, add button to the plan detail instead
@@ -116,7 +118,7 @@ public class PlanAdapter extends RecyclerView.Adapter<PlanAdapter.ViewHolder> {
                     public void run() {
                         try {
                             if (MainActivity.mUsername != MainActivity.ANONYMOUS)
-                                getPlanDataToUpload(planName);
+                                getPlanDataToUpload(planName, planGoal);
                             else
                                 Toast.makeText(context, "Please sign-in to upload the plan", Toast.LENGTH_SHORT).show();
                         } catch (Exception e) {
@@ -130,10 +132,9 @@ public class PlanAdapter extends RecyclerView.Adapter<PlanAdapter.ViewHolder> {
         });
     }
 
-    private void getPlanDataToUpload(String planName) {
+    private void getPlanDataToUpload(String planName, String planGoal) {
         int dayPerWeek = cursor.getInt(cursor.getColumnIndex(PlanColumns.DAY_PER_WEEK));
         int numOfWeek = cursor.getInt(cursor.getColumnIndex(PlanColumns.NUM_OF_WEEK));
-        String planGoal = cursor.getString(cursor.getColumnIndex(PlanColumns.GOAL));
         long planId = cursor.getLong(cursor.getColumnIndex(PlanColumns.ID));
 
         List<Workout> workouts = new ArrayList<>();
@@ -212,6 +213,8 @@ public class PlanAdapter extends RecyclerView.Adapter<PlanAdapter.ViewHolder> {
         Button buttonApplyPlan;
         @BindView(R.id.button_upload_plan)
         Button buttonUploadPlan;
+        @BindView(R.id.text_view_plan_goal)
+        TextView textViewPlanGoal;
 
         ViewHolder(final View itemView) {
             super(itemView);
