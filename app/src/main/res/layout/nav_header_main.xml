@@ -1,36 +1,64 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="@dimen/nav_header_height"
-    android:background="@drawable/side_nav_bar"
-    android:gravity="bottom"
-    android:orientation="vertical"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    android:paddingEnd="@dimen/activity_horizontal_margin"
-    android:paddingStart="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
-    android:theme="@style/ThemeOverlay.AppCompat.Dark">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="horizontal"
-        android:paddingTop="@dimen/nav_header_vertical_spacing"
-        android:weightSum="4">
+<android.support.percent.PercentRelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/navigation_drawer_header"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    tools:context=".activity.MainActivity">
+
+    <FrameLayout
+        android:id="@+id/navigation_drawer_header_clickable"
+        android:clickable="true"
+        android:foreground="@drawable/nav_drawer_header_foreground"
+        app:layout_aspectRatio="178%"
+        app:layout_widthPercent="100%">
 
         <ImageView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:contentDescription="@string/app_logo" />
-
-        <TextView
-            android:layout_width="0dp"
+            android:id="@+id/navigation_drawer_user_account_picture_cover"
+            android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_weight="3"
+            android:scaleType="centerCrop"
+            android:src="@drawable/image_nav_drawer_account_background"
+            tools:ignore="ContentDescription" />
 
-            android:gravity="center|start"
-            android:text="@string/app_name" />
+    </FrameLayout>
+
+    <LinearLayout
+        android:id="@+id/navigation_drawer_account_section"
+        android:gravity="bottom"
+        android:orientation="vertical"
+        android:paddingBottom="@dimen/spacing_8"
+        android:paddingEnd="@dimen/vertical_keyline_first"
+        android:paddingLeft="@dimen/vertical_keyline_first"
+        android:paddingRight="@dimen/vertical_keyline_first"
+        android:paddingStart="@dimen/vertical_keyline_first"
+        app:layout_aspectRatio="178%"
+        app:layout_widthPercent="100%">
+
+        <ImageView
+            android:id="@+id/navigation_drawer_user_account_picture_profile"
+            android:layout_width="@dimen/nav_drawer_profile_image_size"
+            android:layout_height="@dimen/nav_drawer_profile_image_size"
+            app:srcCompat="@drawable/ic_account_circle_white_64dp"
+            tools:ignore="ContentDescription" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/spacing_56"
+            android:gravity="center_vertical"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/navigation_drawer_account_information_display_name"
+                style="@style/AppTheme.Primary"
+                tools:text="Please login to sync available plans" />
+
+        </LinearLayout>
+
     </LinearLayout>
 
-</LinearLayout>
+</android.support.percent.PercentRelativeLayout>

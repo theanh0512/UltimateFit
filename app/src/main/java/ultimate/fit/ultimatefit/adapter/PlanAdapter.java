@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.joda.time.DateTime;
 
@@ -114,7 +115,10 @@ public class PlanAdapter extends RecyclerView.Adapter<PlanAdapter.ViewHolder> {
                     @Override
                     public void run() {
                         try {
-                            getPlanDataToUpload(planName);
+                            if (MainActivity.mUsername != MainActivity.ANONYMOUS)
+                                getPlanDataToUpload(planName);
+                            else
+                                Toast.makeText(context, "Please sign-in to upload the plan", Toast.LENGTH_SHORT).show();
                         } catch (Exception e) {
                             // TODO: handle exception
                             Log.e("log_tag", "Error Parsing Data " + e.toString());

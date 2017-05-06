@@ -30,6 +30,10 @@
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
+    <style name="AppTheme.Primary">
+        <item name="android:textColor">@color/colorTextIcon</item>
+    </style>
+
     <!--&lt;!&ndash; Main activity theme. &ndash;&gt;-->
     <!--<style name="MovieTheme" parent="AppTheme">-->
     <!--<item name="actionBarStyle">@style/ActionBar.Solid.Movie.NoTitle</item>-->

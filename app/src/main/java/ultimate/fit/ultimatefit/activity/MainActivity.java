@@ -7,20 +7,30 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.TabLayout;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
+import android.widget.TextView;
+import android.widget.Toast;
 
+import com.firebase.ui.auth.AuthUI;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+
+import java.util.Arrays;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -38,18 +48,29 @@ public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, TabPlanFragment.OnFragmentInteractionListener,
         TabWorkoutFragment.OnFragmentInteractionListener, TabPlanFragment.ItemsListClickHandler, TabWorkoutFragment.ItemsListClickHandler {
 
+    public static final String ANONYMOUS = "anonymous";
+    private static final int RC_SIGN_IN = 123;
     public static PagerAdapter adapter;
     public static DatabaseReference mPlanDatabaseReference;
+    public static String mUsername;
     ActionBarDrawerToggle toggle;
     @BindView(R.id.drawer_layout)
     DrawerLayout drawer;
+    @BindView(R.id.nav_view)
+    NavigationView navigationView;
     @BindView(R.id.toolbar)
     Toolbar toolbar;
     @BindView(R.id.tab_layout)
     TabLayout tabLayout;
+    TextView textViewWelcome;
+    ImageView imageViewAccount;
+    FragmentActivity activity;
+    Menu navMenu;
     //Firebase stuffs
     private FirebaseDatabase mFirebaseDatabase;
     private ChildEventListener mChildEventListener;
+    private FirebaseAuth mFirebaseAuth;
+    private FirebaseAuth.AuthStateListener mAuthStateListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,28 +80,52 @@ public class MainActivity extends AppCompatActivity
         setSupportActionBar(toolbar);
         toolbar.setTitle("Ultimate Fit");
 
+        mUsername = ANONYMOUS;
         //Initialize Firebase components
         mFirebaseDatabase = FirebaseDatabase.getInstance();
+        mFirebaseAuth = FirebaseAuth.getInstance();
 
         //Reference the message portion of the database
         mPlanDatabaseReference = mFirebaseDatabase.getReference().child("plans");
+        activity = this;
 
-        toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.addDrawerListener(toggle);
-        toggle.syncState();
-        toggle.setDrawerIndicatorEnabled(false);
-        toggle.setHomeAsUpIndicator(R.drawable.view_sequential);
-        toggle.setToolbarNavigationClickListener(new View.OnClickListener() {
+        setupNavigationDrawer();
+
+        setupTabLayout();
+
+        mAuthStateListener = new FirebaseAuth.AuthStateListener() {
             @Override
-            public void onClick(View v) {
-                if (drawer.isDrawerVisible(GravityCompat.START)) {
-                    drawer.closeDrawer(GravityCompat.START);
+            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+                FirebaseUser user = firebaseAuth.getCurrentUser();
+                if (user != null) {
+                    //user is signed in
+                    onSignedInInitialize(user.getDisplayName());
                 } else {
-                    drawer.openDrawer(GravityCompat.START);
+                    //user is signed out
+                    onSignedOutCleanup();
+                    //setIsSmartLockEnabled to false will disable the ability to auto sign in user on subsequent attempts
+                    startActivityForResult(
+                            AuthUI.getInstance()
+                                    .createSignInIntentBuilder()
+                                    .setIsSmartLockEnabled(false)
+                                    .setProviders(Arrays.asList(new AuthUI.IdpConfig.Builder(AuthUI.EMAIL_PROVIDER).build(),
+                                            new AuthUI.IdpConfig.Builder(AuthUI.FACEBOOK_PROVIDER).build(),
+                                            new AuthUI.IdpConfig.Builder(AuthUI.GOOGLE_PROVIDER).build()))
+                                    .build(),
+                            RC_SIGN_IN);
                 }
             }
-        });
+        };
+
+        //Init SharedPreferenceLoader and set currentAppliedPlanId
+        PlanAdapter.currentAppliedPlanID = SharedPreferenceHelper.getInstance(getApplicationContext()).getInt(SharedPreferenceHelper.Key.CURRENT_APPLIED_PLANID_INT);
+        GetDataTask getDataTaskCategory = new GetDataTask(this, Config.CATEGORY_URL);
+        getDataTaskCategory.execute();
+        GetDataTask getDataTaskExercise = new GetDataTask(this, Config.EXERCISE_URL, 1);
+        getDataTaskExercise.execute();
+    }
+
+    private void setupTabLayout() {
         tabLayout.addTab(tabLayout.newTab().setText(R.string.title_tab_workout));
         tabLayout.addTab(tabLayout.newTab().setText(getString(R.string.title_tab_plan)));
         tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
@@ -105,13 +150,55 @@ public class MainActivity extends AppCompatActivity
 
             }
         });
+    }
 
-        //Init SharedPreferenceLoader and set currentAppliedPlanId
-        PlanAdapter.currentAppliedPlanID = SharedPreferenceHelper.getInstance(getApplicationContext()).getInt(SharedPreferenceHelper.Key.CURRENT_APPLIED_PLANID_INT);
-        GetDataTask getDataTaskCategory = new GetDataTask(this, Config.CATEGORY_URL);
-        getDataTaskCategory.execute();
-        GetDataTask getDataTaskExercise = new GetDataTask(this, Config.EXERCISE_URL, 1);
-        getDataTaskExercise.execute();
+    private void setupNavigationDrawer() {
+        toggle = new ActionBarDrawerToggle(
+                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        drawer.addDrawerListener(toggle);
+        toggle.syncState();
+        toggle.setDrawerIndicatorEnabled(false);
+        toggle.setHomeAsUpIndicator(R.drawable.view_sequential);
+        toggle.setToolbarNavigationClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (drawer.isDrawerVisible(GravityCompat.START)) {
+                    drawer.closeDrawer(GravityCompat.START);
+                } else {
+                    drawer.openDrawer(GravityCompat.START);
+                }
+            }
+        });
+
+        textViewWelcome = (TextView) navigationView
+                .getHeaderView(0).findViewById(R.id.navigation_drawer_account_information_display_name);
+        imageViewAccount = (ImageView) navigationView
+                .getHeaderView(0).findViewById(R.id.navigation_drawer_user_account_picture_profile);
+        navMenu = navigationView.getMenu();
+        textViewWelcome.setText(R.string.remind_login);
+        imageViewAccount.setVisibility(View.GONE);
+        navigationView.setNavigationItemSelectedListener
+                (
+                        new NavigationView.OnNavigationItemSelectedListener() {
+                            @Override
+                            public boolean onNavigationItemSelected(final MenuItem item) {
+                                drawer.closeDrawer(GravityCompat.START);
+
+                                switch (item.getItemId()) {
+                                    case R.id.navigation_view_item_login:
+                                        item.setChecked(true);
+                                        break;
+
+                                    case R.id.navigation_view_item_logout:
+                                        item.setChecked(true);
+                                        AuthUI.getInstance().signOut(activity);
+                                        break;
+                                }
+
+                                return true;
+                            }
+                        }
+                );
     }
 
     private void attachDatabaseReadListener() {
@@ -150,6 +237,31 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        //Attach auth listener
+        mFirebaseAuth.addAuthStateListener(mAuthStateListener);
+    }
+
+    private void onSignedOutCleanup() {
+        mUsername = ANONYMOUS;
+        detachDatabaseReadListener();
+        textViewWelcome.setText(R.string.remind_login);
+        imageViewAccount.setVisibility(View.GONE);
+        navMenu.findItem(R.id.navigation_view_item_login).setVisible(true);
+        navMenu.findItem(R.id.navigation_view_item_logout).setVisible(false);
+    }
+
+    private void onSignedInInitialize(String userName) {
+        mUsername = userName;
+        attachDatabaseReadListener();
+        textViewWelcome.setText(String.format("%s %s", getString(R.string.welcome), userName));
+        imageViewAccount.setVisibility(View.VISIBLE);
+        navMenu.findItem(R.id.navigation_view_item_login).setVisible(false);
+        navMenu.findItem(R.id.navigation_view_item_logout).setVisible(true);
+    }
+
     private void detachDatabaseReadListener() {
         if (mChildEventListener != null) {
             mPlanDatabaseReference.removeEventListener(mChildEventListener);
@@ -160,7 +272,24 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onPause() {
         super.onPause();
+        //Remove auth listener
+        if (mAuthStateListener != null) {
+            mFirebaseAuth.removeAuthStateListener(mAuthStateListener);
+        }
         detachDatabaseReadListener();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == RC_SIGN_IN) {
+            if (resultCode == RESULT_OK) {
+                Toast.makeText(this, "Signed in!", Toast.LENGTH_SHORT).show();
+            } else if (resultCode == RESULT_CANCELED) {
+                Toast.makeText(this, "Sign in canceled", Toast.LENGTH_SHORT).show();
+                finish();
+            }
+        }
     }
 
     @Override

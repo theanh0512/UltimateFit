@@ -15,4 +15,12 @@
 
     <dimen name="view_padding">4dp</dimen>
     <dimen name="view_margin">10dp</dimen>
+
+    //navigation drawer
+    <dimen name="spacing_8">8dp</dimen>
+    <dimen name="spacing_56">56dp</dimen>
+    <dimen name="vertical_keyline_first">16dp</dimen>
+    <dimen name="nav_drawer_profile_image_size">64dp</dimen>
+    <dimen name="navigation_drawer_max_width">280dp</dimen>
+    <dimen name="elevation_nav_drawer">16dp</dimen>
 </resources>
