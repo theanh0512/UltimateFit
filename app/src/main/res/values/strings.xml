@@ -11,7 +11,7 @@
     <string name="form_plan_goal">Goal</string>
     <string name="form_plan_num_of_week">Number of week</string>
     <string name="form_plan_day_per_week">No. of days per week</string>
-    <string name="cd_save_plan">Save Plan Button</string>
+    <string name="cd_save_plan">Save Plan</string>
     <string name="save_button">Save</string>
     <string name="plan_add_message">Success!</string>
     <string name="add_plan_label">Add Plan</string>
@@ -47,4 +47,15 @@
     <string name="facebook_application_id" translatable="false">1304302136326339</string>
     <!-- Facebook Application ID, prefixed by 'fb'.  Enables Chrome Custom tabs. -->
     <string name="facebook_login_protocol_scheme" translatable="false">fb1304302136326339</string>
+    <string name="cd_plan_name">Plan\'s name</string>
+    <string name="cd_plan_goal">Plan\'s goal</string>
+    <string name="cd_number_of_week">Number of week</string>
+    <string name="cd_toggle_navigation">Toggle navigation</string>
+    <string name="cd_workout_exercise_number_of_set">Workout Exercise number of set</string>
+    <string name="cd_workout_exercise_number_of_rep">workout exercise number of rep</string>
+    <string name="cd_add_new_workout_exercise">add new workout exercise</string>
+    <string name="cd_add_new_exercise">add new exercise</string>
+    <string name="cd_rep_per_set">number of rep per set</string>
+    <string name="cd_weight_for_this_set">amount of weight for this set</string>
+    <string name="cd_account_information">Account information</string>
 </resources>

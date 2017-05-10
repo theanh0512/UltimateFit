@@ -44,6 +44,7 @@ public class PlanAdapter extends RecyclerView.Adapter<PlanAdapter.ViewHolder> {
     private static final String LOG_TAG = PlanAdapter.class.getSimpleName();
     public static int currentAppliedPlanID = 0;
     private final Context context;
+    private boolean updated = false;
     private PlanAdapterOnClickHandler clickHandler;
     private Cursor cursor;
 
@@ -120,10 +121,11 @@ public class PlanAdapter extends RecyclerView.Adapter<PlanAdapter.ViewHolder> {
                     @Override
                     public void run() {
                         try {
-                            if (!Objects.equals(MainActivity.userName, MainActivity.ANONYMOUS))
+                            if (!Objects.equals(MainActivity.userName, MainActivity.ANONYMOUS)) {
                                 getPlanDataToUpload(planName, planGoal);
-                            else
-                                Toast.makeText(context, "Please sign-in to upload the plan", Toast.LENGTH_SHORT).show();
+                                updated = true;
+                            } else
+                                updated = false;
                         } catch (Exception e) {
                             // TODO: handle exception
                             Log.e("log_tag", "Error Parsing Data " + e.toString());
@@ -131,6 +133,14 @@ public class PlanAdapter extends RecyclerView.Adapter<PlanAdapter.ViewHolder> {
                     }
                 });
                 thread.start();
+                try {
+                    thread.join();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                if (updated) Toast.makeText(context, "Plan uploaded", Toast.LENGTH_SHORT).show();
+                else
+                    Toast.makeText(context, "Please sign-in to upload the plan", Toast.LENGTH_SHORT).show();
             }
         });
     }

@@ -20,7 +20,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_marginBottom="8dp"
-        android:layout_marginLeft="24dp"
+        android:layout_marginStart="24dp"
         android:layout_marginTop="8dp"
         android:paddingBottom="@dimen/view_padding"
         android:paddingEnd="@dimen/view_padding"
@@ -33,7 +33,7 @@
         app:layout_constraintVertical_bias="0.527"
         tools:text="Dumbbell Fly"
         app:layout_constraintRight_toLeftOf="@+id/imageViewCategoryImage"
-        android:layout_marginRight="8dp" />
+        android:layout_marginEnd="8dp" />
 
 
     <ImageView
@@ -42,7 +42,7 @@
         android:layout_height="96dp"
         android:layout_gravity="center_vertical"
         android:layout_marginBottom="0dp"
-        android:layout_marginRight="0dp"
+        android:layout_marginEnd="0dp"
         android:layout_marginTop="0dp"
         android:scaleType="fitXY"
         app:layout_constraintBottom_toBottomOf="parent"

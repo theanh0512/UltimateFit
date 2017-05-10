@@ -97,6 +97,7 @@ public class MainActivity extends AppCompatActivity
         ButterKnife.bind(this);
         setSupportActionBar(toolbar);
         toolbar.setTitle("Ultimate Fit");
+        toolbar.setNavigationContentDescription(R.string.cd_toggle_navigation);
 
         userName = ANONYMOUS;
         userEmail = ANONYMOUS;

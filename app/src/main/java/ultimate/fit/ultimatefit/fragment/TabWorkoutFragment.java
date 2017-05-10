@@ -58,8 +58,8 @@ public class TabWorkoutFragment extends Fragment implements LoaderManager.Loader
 
         workoutAdapter = new WorkoutAdapter(getContext(), new WorkoutAdapter.WorkoutAdapterOnClickHandler() {
             @Override
-            public void onClick(int workoutId,int dayNumber,String bodyPart) {
-                handler.onHandleItemClickFromTabWorkout(workoutId,dayNumber,bodyPart);
+            public void onClick(int workoutId, int dayNumber, String bodyPart) {
+                handler.onHandleItemClickFromTabWorkout(workoutId, dayNumber, bodyPart);
             }
         });
         recyclerViewWorkout.setAdapter(workoutAdapter);
@@ -100,7 +100,7 @@ public class TabWorkoutFragment extends Fragment implements LoaderManager.Loader
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
         workoutAdapter.swapCursor(data);
-        if(data.moveToPosition(0)) {
+        if (data.moveToPosition(0)) {
             DateTime today = new DateTime();
             DateTime relativeDate = new DateTime(data.getLong(data.getColumnIndex(PlanColumns.APPLIED_DATE)));
             int positionToScroll = Days.daysBetween(relativeDate, today).getDays();
@@ -119,6 +119,6 @@ public class TabWorkoutFragment extends Fragment implements LoaderManager.Loader
     }
 
     public interface ItemsListClickHandler {
-        public void onHandleItemClickFromTabWorkout(int workoutId, int dayNumber,String bodyPart);
+        public void onHandleItemClickFromTabWorkout(int workoutId, int dayNumber, String bodyPart);
     }
 }

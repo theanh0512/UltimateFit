@@ -51,10 +51,10 @@
             android:orientation="vertical">
 
             <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
                 android:id="@+id/navigation_drawer_account_information_display_name"
                 style="@style/AppTheme.Primary"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 tools:text="Please login to sync available plans" />
 
         </LinearLayout>
