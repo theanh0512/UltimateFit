@@ -18,6 +18,7 @@ import org.joda.time.DateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.Objects;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -43,7 +44,7 @@ public class PlanAdapter extends RecyclerView.Adapter<PlanAdapter.ViewHolder> {
     private static final String LOG_TAG = PlanAdapter.class.getSimpleName();
     public static int currentAppliedPlanID = 0;
     private final Context context;
-    final private PlanAdapterOnClickHandler clickHandler;
+    private PlanAdapterOnClickHandler clickHandler;
     private Cursor cursor;
 
     public PlanAdapter(Context context, PlanAdapterOnClickHandler clickHandler) {
@@ -68,8 +69,10 @@ public class PlanAdapter extends RecyclerView.Adapter<PlanAdapter.ViewHolder> {
         cursor.moveToPosition(position);
         final String planName = cursor.getString(cursor.getColumnIndex(PlanColumns.NAME));
         final String planGoal = cursor.getString(cursor.getColumnIndex(PlanColumns.GOAL));
+        String creatorEmail = cursor.getString(cursor.getColumnIndex(PlanColumns.CREATOR));
         holder.textViewPlanName.setText(String.format(Locale.ENGLISH, "%s", planName));
-        holder.textViewPlanGoal.setText(String.format(Locale.ENGLISH, "GOAL: %s", planGoal));
+        holder.textViewPlanGoal.setText(String.format(Locale.ENGLISH, "Goal: %s", planGoal));
+        holder.textViewCreator.setText(String.format(Locale.ENGLISH, "Creator: %s", creatorEmail));
         final int numOfWeeks = cursor.getInt(cursor.getColumnIndex(PlanColumns.NUM_OF_WEEK));
         holder.textViewPlanNumOfWeeks.setText(String.format(Locale.ENGLISH, "%s", numOfWeeks) + " week" + (numOfWeeks == 1 ? "" : "s"));
         //ToDo: if cannot click button, add button to the plan detail instead
@@ -117,7 +120,7 @@ public class PlanAdapter extends RecyclerView.Adapter<PlanAdapter.ViewHolder> {
                     @Override
                     public void run() {
                         try {
-                            if (MainActivity.mUsername != MainActivity.ANONYMOUS)
+                            if (!Objects.equals(MainActivity.userName, MainActivity.ANONYMOUS))
                                 getPlanDataToUpload(planName, planGoal);
                             else
                                 Toast.makeText(context, "Please sign-in to upload the plan", Toast.LENGTH_SHORT).show();
@@ -136,6 +139,8 @@ public class PlanAdapter extends RecyclerView.Adapter<PlanAdapter.ViewHolder> {
         int dayPerWeek = cursor.getInt(cursor.getColumnIndex(PlanColumns.DAY_PER_WEEK));
         int numOfWeek = cursor.getInt(cursor.getColumnIndex(PlanColumns.NUM_OF_WEEK));
         long planId = cursor.getLong(cursor.getColumnIndex(PlanColumns.ID));
+        String planUuid = cursor.getString(cursor.getColumnIndex(PlanColumns.PLAN_UUID));
+        String creatorEmail = cursor.getString(cursor.getColumnIndex(PlanColumns.CREATOR));
 
         List<Workout> workouts = new ArrayList<>();
         //query workout
@@ -180,8 +185,9 @@ public class PlanAdapter extends RecyclerView.Adapter<PlanAdapter.ViewHolder> {
             workouts.add(workout);
         }
         workoutCursor.close();
-        Plan toBeUploadedPlan = new Plan(planName, planGoal, numOfWeek, dayPerWeek, workouts);
-        MainActivity.mPlanDatabaseReference.push().setValue(toBeUploadedPlan);
+        Plan toBeUploadedPlan = new Plan(planName, planUuid, creatorEmail, planGoal, numOfWeek, dayPerWeek, workouts);
+        //either upload new or update if already uploaded with UUID
+        MainActivity.mPlanDatabaseReference.child(planUuid).setValue(toBeUploadedPlan);
     }
 
     @Override
@@ -215,6 +221,8 @@ public class PlanAdapter extends RecyclerView.Adapter<PlanAdapter.ViewHolder> {
         Button buttonUploadPlan;
         @BindView(R.id.text_view_plan_goal)
         TextView textViewPlanGoal;
+        @BindView(R.id.text_view_creator)
+        TextView textViewCreator;
 
         ViewHolder(final View itemView) {
             super(itemView);

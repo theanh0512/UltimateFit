@@ -1,7 +1,10 @@
 package ultimate.fit.ultimatefit.activity;
 
+import android.content.ContentUris;
+import android.content.ContentValues;
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -14,6 +17,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -30,16 +34,27 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import ultimate.fit.ultimatefit.R;
 import ultimate.fit.ultimatefit.adapter.PagerAdapter;
 import ultimate.fit.ultimatefit.adapter.PlanAdapter;
+import ultimate.fit.ultimatefit.data.ExerciseColumns;
+import ultimate.fit.ultimatefit.data.PlanColumns;
+import ultimate.fit.ultimatefit.data.UltimateFitProvider;
+import ultimate.fit.ultimatefit.data.generated.values.SetsValuesBuilder;
+import ultimate.fit.ultimatefit.data.generated.values.Workout_exercisesValuesBuilder;
+import ultimate.fit.ultimatefit.data.generated.values.WorkoutsValuesBuilder;
 import ultimate.fit.ultimatefit.fragment.TabPlanFragment;
 import ultimate.fit.ultimatefit.fragment.TabWorkoutFragment;
 import ultimate.fit.ultimatefit.model.Plan;
+import ultimate.fit.ultimatefit.model.Set;
+import ultimate.fit.ultimatefit.model.Workout;
+import ultimate.fit.ultimatefit.model.WorkoutExercise;
 import ultimate.fit.ultimatefit.utils.Config;
 import ultimate.fit.ultimatefit.utils.GetDataTask;
 import ultimate.fit.ultimatefit.utils.SharedPreferenceHelper;
@@ -49,10 +64,13 @@ public class MainActivity extends AppCompatActivity
         TabWorkoutFragment.OnFragmentInteractionListener, TabPlanFragment.ItemsListClickHandler, TabWorkoutFragment.ItemsListClickHandler {
 
     public static final String ANONYMOUS = "anonymous";
+    private static final String TAG = "MainActivity";
     private static final int RC_SIGN_IN = 123;
     public static PagerAdapter adapter;
     public static DatabaseReference mPlanDatabaseReference;
-    public static String mUsername;
+    public static String userName;
+    public static String userEmail;
+    public static List<Plan> uploadedPlans;
     ActionBarDrawerToggle toggle;
     @BindView(R.id.drawer_layout)
     DrawerLayout drawer;
@@ -80,7 +98,8 @@ public class MainActivity extends AppCompatActivity
         setSupportActionBar(toolbar);
         toolbar.setTitle("Ultimate Fit");
 
-        mUsername = ANONYMOUS;
+        userName = ANONYMOUS;
+        userEmail = ANONYMOUS;
         //Initialize Firebase components
         mFirebaseDatabase = FirebaseDatabase.getInstance();
         mFirebaseAuth = FirebaseAuth.getInstance();
@@ -88,6 +107,7 @@ public class MainActivity extends AppCompatActivity
         //Reference the message portion of the database
         mPlanDatabaseReference = mFirebaseDatabase.getReference().child("plans");
         activity = this;
+        uploadedPlans = new ArrayList<>();
 
         setupNavigationDrawer();
 
@@ -99,7 +119,7 @@ public class MainActivity extends AppCompatActivity
                 FirebaseUser user = firebaseAuth.getCurrentUser();
                 if (user != null) {
                     //user is signed in
-                    onSignedInInitialize(user.getDisplayName());
+                    onSignedInInitialize(user.getDisplayName(), user.getEmail());
                 } else {
                     //user is signed out
                     onSignedOutCleanup();
@@ -210,7 +230,119 @@ public class MainActivity extends AppCompatActivity
                     //It is also triggered for every child message in the list when the listener is first attached
 
                     //Passing the class as parameter, the code will deserialize the message from the database into FriendlyMessage object
-                    Plan uploadedPlan = dataSnapshot.getValue(Plan.class);
+                    final Plan uploadedPlan = dataSnapshot.getValue(Plan.class);
+                    uploadedPlans.add(uploadedPlan);
+
+                    //apply downloaded plans
+                    //ToDo: need to ensure no duplicated plan downloaded
+                    Thread thread = new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            String uploadedPlanGoal = uploadedPlan.getPlanGoal();
+                            int uploadedPlanNumOfWeek = uploadedPlan.getNumOfWeek();
+                            int uploadedPlanDayPerWeek = uploadedPlan.getDayPerWeek();
+                            String uploadedPlanName = uploadedPlan.getPlanName();
+                            String creatorEmail = uploadedPlan.getCreatorEmail();
+                            String planUuid = uploadedPlan.getPlanUuid();
+                            Cursor planCursor = activity.getContentResolver().query(UltimateFitProvider.Plans.CONTENT_URI, null,
+                                    PlanColumns.NAME + " = '" + uploadedPlanName + "' AND " +
+                                            PlanColumns.GOAL + " = '" + uploadedPlanGoal + "' AND " +
+                                            PlanColumns.DAY_PER_WEEK + " = " + uploadedPlanDayPerWeek + " AND " +
+                                            PlanColumns.NUM_OF_WEEK + " = " + uploadedPlanNumOfWeek, null, null);
+                            if (!planCursor.moveToFirst()) {
+                                ContentValues planContentValues = new ContentValues();
+                                planContentValues.put(PlanColumns.NAME, uploadedPlanName);
+                                planContentValues.put(PlanColumns.GOAL, uploadedPlanGoal);
+                                planContentValues.put(PlanColumns.NUM_OF_WEEK, uploadedPlanNumOfWeek);
+                                planContentValues.put(PlanColumns.DAY_PER_WEEK, uploadedPlanDayPerWeek);
+                                planContentValues.put(PlanColumns.CREATOR, creatorEmail);
+                                planContentValues.put(PlanColumns.PLAN_UUID, planUuid);
+                                Uri uri = activity.getContentResolver().insert(UltimateFitProvider.Plans.CONTENT_URI, planContentValues);
+                                List<Workout> workouts = uploadedPlan.getWorkouts();
+                                long planId = ContentUris.parseId(uri);
+
+                                //ensure creator set up the workout already
+                                if(workouts != null && workouts.size() > 0) {
+                                    //insert workout
+                                    ContentValues[] workoutContentValues = new ContentValues[workouts.size()];
+                                    for (int i = 0; i < workoutContentValues.length; i++) {
+                                        workoutContentValues[i] = new WorkoutsValuesBuilder()
+                                                .dayNumber(workouts.get(i).getDayNumber())
+                                                .planId(planId)
+                                                .bodyPart(workouts.get(i).getWorkoutBodyPart()).values();
+                                        Uri workoutUri = activity.getContentResolver().insert(UltimateFitProvider.Workouts.CONTENT_URI, workoutContentValues[i]);
+                                        long workoutId = ContentUris.parseId(workoutUri);
+                                        List<WorkoutExercise> workoutExercises = workouts.get(i).getWorkoutExercises();
+
+                                        //ensure creator set up the workoutExercise already
+                                        if(workoutExercises != null && workoutExercises.size() > 0) {
+                                            //insert workoutExercise
+                                            ContentValues[] workoutExerciseContentValues = new ContentValues[workoutExercises.size()];
+                                            for (int j = 0; j < workoutExerciseContentValues.length; j++) {
+                                                WorkoutExercise workoutExercise = workoutExercises.get(j);
+                                                List<Set> sets = workoutExercise.getSets();
+                                                String joinedExerciseIds;
+                                                String[] exerciseIdArray = {};
+                                                //if sets are already generated
+                                                if (sets != null && sets.size() > 0) {
+                                                    int noOfSet = workoutExercise.getNoOfSets();
+                                                    int noOfExercises = sets.size()/noOfSet;
+                                                    exerciseIdArray = new String[noOfExercises];
+                                                    for (int k = 0; k < noOfExercises; k++) {
+                                                        String exerciseName = sets.get(k).getExerciseName();
+                                                        Cursor exerciseCursor = activity.getContentResolver().query(UltimateFitProvider.Exercises.CONTENT_URI, null,
+                                                                ExerciseColumns.EXERCISE_NAME + " = '" + exerciseName + "'", null, null);
+                                                        exerciseCursor.moveToFirst();
+                                                        long exerciseId = exerciseCursor.getLong(exerciseCursor.getColumnIndex(ExerciseColumns.ID));
+                                                        exerciseIdArray[k] = String.valueOf(exerciseId);
+                                                        exerciseCursor.close();
+                                                    }
+                                                    joinedExerciseIds = strJoin(exerciseIdArray, ",");
+                                                } else {//set is not generated
+                                                    Cursor exerciseCursor = activity.getContentResolver().query(UltimateFitProvider.Exercises.CONTENT_URI, null,
+                                                            ExerciseColumns.EXERCISE_NAME + " = '" + workoutExercise.getFirstExerciseName() + "'", null, null);
+                                                    exerciseCursor.moveToFirst();
+                                                    long exerciseId = exerciseCursor.getLong(exerciseCursor.getColumnIndex(ExerciseColumns.ID));
+                                                    joinedExerciseIds = String.valueOf(exerciseId);
+                                                    exerciseCursor.close();
+                                                }
+                                                workoutExerciseContentValues[j] = new Workout_exercisesValuesBuilder()
+                                                        .firstExerciseImage(workoutExercise.getFirstExerciseImage())
+                                                        .firstExerciseName(workoutExercise.getFirstExerciseName())
+                                                        .rep(workoutExercise.getRep())
+                                                        .set(workoutExercise.getNoOfSets())
+                                                        .workoutId(workoutId)
+                                                        .exerciseIds(joinedExerciseIds).values();
+                                                Uri workoutExerciseUri = activity.getContentResolver().insert(UltimateFitProvider.WorkoutExercises.CONTENT_URI, workoutExerciseContentValues[j]);
+                                                long workoutExerciseId = ContentUris.parseId(workoutExerciseUri);
+
+                                                //insert sets if they are already generated
+                                                if (sets != null && sets.size() > 0) {
+                                                    ContentValues[] setContentValues = new ContentValues[sets.size()];
+                                                    for (int k = 0; k < sets.size(); k++) {
+                                                        Set set = sets.get(k);
+                                                        String exerciseName = set.getExerciseName();
+                                                        setContentValues[k] = new SetsValuesBuilder()
+                                                                .exerciseNumber(set.getExerciseNumber())
+                                                                .weight(0)
+                                                                .exerciseId(Long.parseLong(exerciseIdArray[k%exerciseIdArray.length]))
+                                                                .rep(set.getNoOfRep())
+                                                                .setName(exerciseName)
+                                                                .workoutExerciseId(workoutExerciseId)
+                                                                .setNumber(set.getSetNumber()).values();
+                                                        activity.getContentResolver().insert(UltimateFitProvider.Sets.CONTENT_URI, setContentValues[k]);
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            } else {
+                                Log.d(TAG, "The plan is already saved" + uploadedPlan.getPlanName());
+                            }
+                        }
+                    });
+                    thread.start();
                 }
 
                 @Override
@@ -237,6 +369,16 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
+    private String strJoin(String[] stringArray, String separator) {
+        StringBuilder stringBuilder = new StringBuilder();
+        for (int i = 0, il = stringArray.length; i < il; i++) {
+            if (i > 0)
+                stringBuilder.append(separator);
+            stringBuilder.append(stringArray[i]);
+        }
+        return stringBuilder.toString();
+    }
+
     @Override
     protected void onResume() {
         super.onResume();
@@ -245,16 +387,19 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void onSignedOutCleanup() {
-        mUsername = ANONYMOUS;
+        userEmail = ANONYMOUS;
+        userName = ANONYMOUS;
         detachDatabaseReadListener();
         textViewWelcome.setText(R.string.remind_login);
         imageViewAccount.setVisibility(View.GONE);
         navMenu.findItem(R.id.navigation_view_item_login).setVisible(true);
         navMenu.findItem(R.id.navigation_view_item_logout).setVisible(false);
+        uploadedPlans.clear();
     }
 
-    private void onSignedInInitialize(String userName) {
-        mUsername = userName;
+    private void onSignedInInitialize(String userName, String userEmail) {
+        MainActivity.userEmail = userEmail;
+        MainActivity.userName = userName;
         attachDatabaseReadListener();
         textViewWelcome.setText(String.format("%s %s", getString(R.string.welcome), userName));
         imageViewAccount.setVisibility(View.VISIBLE);

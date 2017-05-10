@@ -16,6 +16,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import java.util.UUID;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -91,8 +93,11 @@ public class AddPlanFragment extends Fragment {
                 planContentValues.put(PlanColumns.GOAL, editGoalText.getText().toString());
                 int numOfWeek = Integer.parseInt(editNumOfWeekText.getText().toString());
                 int dayPerWeek = Integer.parseInt(editDayPerWeekText.getText().toString());
+                String planUuid = UUID.randomUUID().toString();
                 planContentValues.put(PlanColumns.NUM_OF_WEEK, numOfWeek);
                 planContentValues.put(PlanColumns.DAY_PER_WEEK, dayPerWeek);
+                planContentValues.put(PlanColumns.CREATOR, MainActivity.userEmail);
+                planContentValues.put(PlanColumns.PLAN_UUID, planUuid);
                 Uri uri = context.getContentResolver().insert(UltimateFitProvider.Plans.CONTENT_URI, planContentValues);
 
                 long planId = ContentUris.parseId(uri);

@@ -17,11 +17,19 @@ public interface PlanColumns {
 
     @DataType(DataType.Type.TEXT)
     @NotNull
+    String PLAN_UUID = "plan_uuid";
+
+    @DataType(DataType.Type.TEXT)
+    @NotNull
     String NAME = "name";
 
     @DataType(DataType.Type.TEXT)
     @NotNull
     String GOAL = "goal";
+
+    @DataType(DataType.Type.TEXT)
+    @NotNull
+    String CREATOR = "creator";
 
     @DataType(DataType.Type.INTEGER)
     @NotNull
