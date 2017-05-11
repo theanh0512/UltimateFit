@@ -1,9 +1,11 @@
 package ultimate.fit.ultimatefit.activity;
 
+import android.app.ActivityOptions;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.LoaderManager;
@@ -76,7 +78,13 @@ public class WorkoutActivity extends AppCompatActivity implements LoaderManager.
                 bundle.putInt("workoutExerciseId", workoutExerciseId);
                 bundle.putInt("set", noOfSet);
                 intent.putExtras(bundle);
-                startActivity(intent);
+                if (Build.VERSION.SDK_INT >= 21) {
+                    // Call some material design APIs here
+                    startActivity(intent, ActivityOptions.makeSceneTransitionAnimation(WorkoutActivity.this).toBundle());
+                } else {
+                    startActivity(intent);
+                    // Implement this feature without material design
+                }
             }
         });
         recyclerViewExerciseList.setLayoutManager(new LinearLayoutManager(this));

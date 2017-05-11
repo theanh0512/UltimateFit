@@ -1,5 +1,7 @@
 package ultimate.fit.ultimatefit.adapter;
 
+import android.appwidget.AppWidgetManager;
+import android.content.ComponentName;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
@@ -23,6 +25,7 @@ import java.util.Objects;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import ultimate.fit.ultimatefit.R;
+import ultimate.fit.ultimatefit.UltimateFitWidgetProvider;
 import ultimate.fit.ultimatefit.activity.MainActivity;
 import ultimate.fit.ultimatefit.data.PlanColumns;
 import ultimate.fit.ultimatefit.data.SetColumns;
@@ -110,6 +113,11 @@ public class PlanAdapter extends RecyclerView.Adapter<PlanAdapter.ViewHolder> {
                     tabWorkoutFragment.getLoaderManager().restartLoader(2000, null, tabWorkoutFragment);
                 }
                 holder.imageViewOnGoingCheck.setVisibility(View.VISIBLE);
+                AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
+                int[] appWidgetIds = appWidgetManager.getAppWidgetIds(new ComponentName(context, UltimateFitWidgetProvider.class));
+                for (int appWidgetId : appWidgetIds) {
+                    UltimateFitWidgetProvider.updateAppWidget(context, appWidgetManager, appWidgetId);
+                }
             }
         });
         holder.buttonUploadPlan.setOnClickListener(new View.OnClickListener() {

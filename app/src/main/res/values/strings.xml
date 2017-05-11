@@ -58,4 +58,7 @@
     <string name="cd_rep_per_set">number of rep per set</string>
     <string name="cd_weight_for_this_set">amount of weight for this set</string>
     <string name="cd_account_information">Account information</string>
+    <string name="cd_appwidget_day">Day number</string>
+    <string name="add_widget">Add widget</string>
+    <string name="cd_appwidget_body_part">Body part</string>
 </resources>

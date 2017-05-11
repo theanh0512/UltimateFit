@@ -1,6 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <style name="AppTheme.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+        <item name="android:windowExitTransition">@transition/exit</item>
+        <item name="android:windowReenterTransition">@transition/reenter</item>
+        <item name="android:windowEnterTransition">@transition/reenter</item>
+        <item name="android:windowTransitionBackgroundFadeDuration">500</item>
+    </style>
+
+    <style name="AppTheme.NoActionBar2">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+        <item name="android:windowEnterTransition">@transition/slide_right</item>
+        <item name="android:windowTransitionBackgroundFadeDuration">500</item>
+    </style>
+
     <style name="AppTheme.ButtonStyle" parent="android:style/Widget.Button">
         <item name="android:background">@drawable/button_background_click</item>
         <item name="android:textColor">@drawable/button_text_click</item>

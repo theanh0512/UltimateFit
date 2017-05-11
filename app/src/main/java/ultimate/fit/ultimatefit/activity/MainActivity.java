@@ -1,11 +1,13 @@
 package ultimate.fit.ultimatefit.activity;
 
+import android.app.ActivityOptions;
 import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
@@ -488,6 +490,13 @@ public class MainActivity extends AppCompatActivity
         bundle.putString("bodyPart", bodyPart);
         bundle.putInt("workoutId", workoutId);
         intent.putExtras(bundle);
-        startActivity(intent);
+        if (Build.VERSION.SDK_INT >= 21) {
+            // Call some material design APIs here
+            startActivity(intent,ActivityOptions.makeSceneTransitionAnimation(MainActivity.this).toBundle());
+        } else {
+            startActivity(intent);
+            // Implement this feature without material design
+        }
+
     }
 }
