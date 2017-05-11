@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
     <string name="app_name">Ultimate Fit</string>
     <string name="app_logo">App Logo</string>
 
@@ -61,4 +61,20 @@
     <string name="cd_appwidget_day">Day number</string>
     <string name="add_widget">Add widget</string>
     <string name="cd_appwidget_body_part">Body part</string>
+    <string name="cd_exercise_start">exercise start</string>
+    <string name="cd_exercise_end">exercise end</string>
+    <string name="cd_category_image">category image</string>
+    <string name="cd_exercise_image">exercise image</string>
+    <string name="cd_on_going_mark">on going mark</string>
+    <string name="cd_workout_exercise_image">workout exercise image</string>
+    <string name="toast_signed_in">Signed in!</string>
+    <string name="toast_signin_cancel">Sign in canceled</string>
+    <string name="toast_enter_plan_name">Please enter Plan\'s name</string>
+    <string name="toast_enter_plan_goal">Please enter Plan\'s goal</string>
+    <string name="toast_enter_plan_no_of_week">Please enter Plan\'s number of weeks</string>
+    <string name="toast_enter_days_per_week">Please enter Plan\'s number of days per week</string>
+    <string name="toast_plan_uploaded">Plan uploaded</string>
+    <string name="toast_signin_to_upload">Please sign-in to upload the plan</string>
+    <string name="cd_add_category">add category</string>
+    <string name="format_set"><xliff:g id="set">%d</xliff:g></string>
 </resources>

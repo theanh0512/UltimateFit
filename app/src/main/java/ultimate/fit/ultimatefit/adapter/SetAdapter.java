@@ -58,7 +58,7 @@ public class SetAdapter extends RecyclerView.Adapter<SetAdapter.ViewHolder> {
         int setNumber = cursor.getInt(cursor.getColumnIndex(SetColumns.SET_NUMBER));
         int exerciseNumber = cursor.getInt(cursor.getColumnIndex(SetColumns.EXERCISE_NUMBER));
         if (exerciseNumber == 0) {
-            holder.textViewHeader.setText("Set: " + String.valueOf(setNumber + 1));
+            holder.textViewHeader.setText(context.getString(R.string.format_set, setNumber + 1));
             holder.separatorContainer.setVisibility(View.VISIBLE);
         } else holder.separatorContainer.setVisibility(View.GONE);
         int weight = cursor.getInt(cursor.getColumnIndex(SetColumns.WEIGHT));
@@ -172,7 +172,7 @@ public class SetAdapter extends RecyclerView.Adapter<SetAdapter.ViewHolder> {
         public void onFocusChangeWeight(View v, boolean hasFocus) {
             if (!hasFocus) {
                 int position = getAdapterPosition();
-                if(position!=-1) {
+                if (position != -1) {
                     cursor.moveToPosition(position);
                     final int setId = cursor.getInt(0);
                     new Thread(new Runnable() {
@@ -191,7 +191,7 @@ public class SetAdapter extends RecyclerView.Adapter<SetAdapter.ViewHolder> {
         public void onFocusChangeRep(View v, boolean hasFocus) {
             if (!hasFocus) {
                 int position = getAdapterPosition();
-                if(position!=-1) {
+                if (position != -1) {
                     cursor.moveToPosition(position);
                     final int setId = cursor.getInt(0);
                     new Thread(new Runnable() {

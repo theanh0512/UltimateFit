@@ -20,6 +20,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
         android:layout_marginEnd="16dp"
+        android:contentDescription="@string/cd_on_going_mark"
         android:src="@drawable/on_going_check"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"

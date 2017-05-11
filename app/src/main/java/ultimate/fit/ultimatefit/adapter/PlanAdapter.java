@@ -146,9 +146,10 @@ public class PlanAdapter extends RecyclerView.Adapter<PlanAdapter.ViewHolder> {
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
-                if (updated) Toast.makeText(context, "Plan uploaded", Toast.LENGTH_SHORT).show();
+                if (updated)
+                    Toast.makeText(context, R.string.toast_plan_uploaded, Toast.LENGTH_SHORT).show();
                 else
-                    Toast.makeText(context, "Please sign-in to upload the plan", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(context, R.string.toast_signin_to_upload, Toast.LENGTH_SHORT).show();
             }
         });
     }

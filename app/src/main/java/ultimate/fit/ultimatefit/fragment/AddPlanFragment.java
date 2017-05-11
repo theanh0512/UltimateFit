@@ -69,19 +69,19 @@ public class AddPlanFragment extends Fragment {
     @OnClick(R.id.button_save_plan)
     public void onClickSavePlan() {
         if (TextUtils.isEmpty(editNameText.getText().toString())) {
-            Toast.makeText(getActivity(), "Please enter Plan's name", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), R.string.toast_enter_plan_name, Toast.LENGTH_SHORT).show();
             return;
         }
         if (TextUtils.isEmpty(editGoalText.getText().toString())) {
-            Toast.makeText(getActivity(), "Please enter Plan's goal", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), R.string.toast_enter_plan_goal, Toast.LENGTH_SHORT).show();
             return;
         }
         if (TextUtils.isEmpty(editNumOfWeekText.getText().toString())) {
-            Toast.makeText(getActivity(), "Please enter Plan's number of weeks", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), R.string.toast_enter_plan_no_of_week, Toast.LENGTH_SHORT).show();
             return;
         }
         if (TextUtils.isEmpty(editDayPerWeekText.getText().toString())) {
-            Toast.makeText(getActivity(), "Please enter Plan's number of days per week", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), R.string.toast_enter_days_per_week, Toast.LENGTH_SHORT).show();
             return;
         }
         final Context context = getActivity().getApplicationContext();
