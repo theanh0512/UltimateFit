@@ -26,9 +26,11 @@ public class WorkoutExerciseActivity extends AppCompatActivity {
         workoutExerciseActivityFragment = new WorkoutExerciseActivityFragment();
         workoutExerciseActivityFragment.setArguments(bundle);
 
-        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        transaction.replace(R.id.container, workoutExerciseActivityFragment);
-        transaction.commit();
+        if (savedInstanceState == null) {
+            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+            transaction.replace(R.id.container, workoutExerciseActivityFragment);
+            transaction.commit();
+        }
     }
 
 }
