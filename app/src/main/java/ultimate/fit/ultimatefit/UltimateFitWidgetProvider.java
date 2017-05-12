@@ -28,7 +28,7 @@ public class UltimateFitWidgetProvider extends AppWidgetProvider {
         setCursor.moveToFirst();
         int dayNumber = setCursor.getInt(setCursor.getColumnIndex(WorkoutColumns.DAY_NUMBER));
         String bodyPart = setCursor.getString(setCursor.getColumnIndex(WorkoutColumns.BODY_PART));
-        CharSequence widgetTextDay = String.format(Locale.ENGLISH, "%s", "Day: " + dayNumber);
+        CharSequence widgetTextDay = String.format(Locale.ENGLISH, "%s", context.getString(R.string.text_view_day) + dayNumber);
         CharSequence widgetTextBodyPart = String.format(Locale.ENGLISH, "%s", bodyPart);
         int workoutId = setCursor.getInt(setCursor.getColumnIndex(WorkoutColumns.ID));
         // Construct the RemoteViews object

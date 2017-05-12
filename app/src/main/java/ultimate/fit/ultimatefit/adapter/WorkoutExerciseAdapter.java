@@ -57,13 +57,13 @@ public class WorkoutExerciseAdapter extends RecyclerView.Adapter<WorkoutExercise
     public void onBindViewHolder(final WorkoutExerciseAdapter.ViewHolder holder, int position) {
         cursor.moveToPosition(position);
         String exerciseIds = cursor.getString(cursor.getColumnIndex(WorkoutExerciseColumns.EXERCISE_IDS));
-        String exerciseName = "";
+        String exerciseName;
         String[] exerciseIdArray = exerciseIds.split(",");
         if (exerciseIdArray.length == 1)
             exerciseName = cursor.getString(cursor.getColumnIndex(WorkoutExerciseColumns.FIRST_EXERCISE_NAME));
         else if (exerciseIdArray.length == 2)
-            exerciseName = "Super Set";
-        else exerciseName = "Giant Set";
+            exerciseName = context.getString(R.string.text_view_super_set);
+        else exerciseName = context.getString(R.string.text_view_giant_set);
         holder.textViewWorkoutExerciseName.setText(String.format(Locale.ENGLISH, "%s", exerciseName));
         int set = cursor.getInt(cursor.getColumnIndex(WorkoutExerciseColumns.SET));
         int rep = cursor.getInt(cursor.getColumnIndex(WorkoutExerciseColumns.REP));

@@ -49,7 +49,7 @@ public class WorkoutAdapter extends RecyclerView.Adapter<WorkoutAdapter.ViewHold
     public void onBindViewHolder(WorkoutAdapter.ViewHolder holder, int position) {
         cursor.moveToPosition(position);
         int dayNumber = cursor.getInt(cursor.getColumnIndex(WorkoutColumns.DAY_NUMBER));
-        holder.textViewWorkoutDate.setText(String.format(Locale.ENGLISH, "%s", "Day: " + dayNumber));
+        holder.textViewWorkoutDate.setText(String.format(Locale.ENGLISH, "%s", context.getString(R.string.text_view_day) + dayNumber));
         holder.textViewWorkoutBodyPart.setText(String.format(Locale.ENGLISH, "%s", cursor.getString(cursor.getColumnIndex(WorkoutColumns.BODY_PART))));
         DateTime today = new DateTime();
         DateTime relativeDate = new DateTime(cursor.getLong(cursor.getColumnIndex(PlanColumns.APPLIED_DATE))).plusDays(dayNumber - 1);

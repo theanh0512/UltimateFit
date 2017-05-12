@@ -75,10 +75,10 @@ public class PlanAdapter extends RecyclerView.Adapter<PlanAdapter.ViewHolder> {
         final String planGoal = cursor.getString(cursor.getColumnIndex(PlanColumns.GOAL));
         String creatorEmail = cursor.getString(cursor.getColumnIndex(PlanColumns.CREATOR));
         holder.textViewPlanName.setText(String.format(Locale.ENGLISH, "%s", planName));
-        holder.textViewPlanGoal.setText(String.format(Locale.ENGLISH, "Goal: %s", planGoal));
-        holder.textViewCreator.setText(String.format(Locale.ENGLISH, "Creator: %s", creatorEmail));
+        holder.textViewPlanGoal.setText(String.format(Locale.ENGLISH, context.getString(R.string.text_view_goal) + "%s", planGoal));
+        holder.textViewCreator.setText(String.format(Locale.ENGLISH, context.getString(R.string.text_view_creator) + "%s", creatorEmail));
         final int numOfWeeks = cursor.getInt(cursor.getColumnIndex(PlanColumns.NUM_OF_WEEK));
-        holder.textViewPlanNumOfWeeks.setText(String.format(Locale.ENGLISH, "%s", numOfWeeks) + " week" + (numOfWeeks == 1 ? "" : "s"));
+        holder.textViewPlanNumOfWeeks.setText(String.format(Locale.ENGLISH, "%s", numOfWeeks) + context.getString(R.string.text_view_week) + (numOfWeeks == 1 ? "" : "s"));
         //ToDo: if cannot click button, add button to the plan detail instead
         if (cursor.getInt(cursor.getColumnIndex(PlanColumns.ID)) == currentAppliedPlanID) {
             holder.buttonApplyPlan.setVisibility(View.INVISIBLE);

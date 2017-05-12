@@ -77,4 +77,10 @@
     <string name="toast_signin_to_upload">Please sign-in to upload the plan</string>
     <string name="cd_add_category">add category</string>
     <string name="format_set"><xliff:g id="set">%d</xliff:g></string>
+    <string name="text_view_day">Day: </string>
+    <string name="text_view_creator">Creator: </string>
+    <string name="text_view_goal">Goal: </string>
+    <string name="text_view_week"> week</string>
+    <string name="text_view_super_set">Super Set</string>
+    <string name="text_view_giant_set">Giant Set</string>
 </resources>
