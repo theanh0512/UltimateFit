@@ -284,7 +284,7 @@ public class MainActivity extends AppCompatActivity
                                             for (int j = 0; j < workoutExerciseContentValues.length; j++) {
                                                 WorkoutExercise workoutExercise = workoutExercises.get(j);
                                                 List<Set> sets = workoutExercise.getSets();
-                                                String joinedExerciseIds;
+                                                String joinedExerciseIds = "0";
                                                 String[] exerciseIdArray = {};
                                                 //if sets are already generated
                                                 if (sets != null && sets.size() > 0) {
@@ -295,18 +295,20 @@ public class MainActivity extends AppCompatActivity
                                                         String exerciseName = sets.get(k).getExerciseName();
                                                         Cursor exerciseCursor = activity.getContentResolver().query(UltimateFitProvider.Exercises.CONTENT_URI, null,
                                                                 ExerciseColumns.EXERCISE_NAME + " = '" + exerciseName + "'", null, null);
-                                                        exerciseCursor.moveToFirst();
-                                                        long exerciseId = exerciseCursor.getLong(exerciseCursor.getColumnIndex(ExerciseColumns.ID));
-                                                        exerciseIdArray[k] = String.valueOf(exerciseId);
+                                                        if(exerciseCursor.moveToFirst()) {
+                                                            long exerciseId = exerciseCursor.getLong(exerciseCursor.getColumnIndex(ExerciseColumns.ID));
+                                                            exerciseIdArray[k] = String.valueOf(exerciseId);
+                                                        }
                                                         exerciseCursor.close();
                                                     }
                                                     joinedExerciseIds = strJoin(exerciseIdArray, ",");
                                                 } else {//set is not generated
                                                     Cursor exerciseCursor = activity.getContentResolver().query(UltimateFitProvider.Exercises.CONTENT_URI, null,
                                                             ExerciseColumns.EXERCISE_NAME + " = '" + workoutExercise.getFirstExerciseName() + "'", null, null);
-                                                    exerciseCursor.moveToFirst();
-                                                    long exerciseId = exerciseCursor.getLong(exerciseCursor.getColumnIndex(ExerciseColumns.ID));
-                                                    joinedExerciseIds = String.valueOf(exerciseId);
+                                                    if(exerciseCursor.moveToFirst()) {
+                                                        long exerciseId = exerciseCursor.getLong(exerciseCursor.getColumnIndex(ExerciseColumns.ID));
+                                                        joinedExerciseIds = String.valueOf(exerciseId);
+                                                    }
                                                     exerciseCursor.close();
                                                 }
                                                 workoutExerciseContentValues[j] = new Workout_exercisesValuesBuilder()
