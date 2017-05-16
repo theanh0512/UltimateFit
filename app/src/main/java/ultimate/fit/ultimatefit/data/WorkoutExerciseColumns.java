@@ -33,4 +33,7 @@ public interface WorkoutExerciseColumns {
 
     @DataType(DataType.Type.INTEGER)
     String SET = "no_of_set";
+
+    @DataType(DataType.Type.TEXT)
+    String NOTE_OF_WORKOUT_EXERCISE = "note_of_workout_exercise";
 }

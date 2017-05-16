@@ -24,7 +24,7 @@ public interface SetColumns {
     @NotNull
     String WORKOUT_EXERCISE_ID = "workout_exercise_id";
 
-    @DataType(DataType.Type.INTEGER)
+    @DataType(DataType.Type.REAL)
     String WEIGHT = "weight";
 
     @DataType(DataType.Type.INTEGER)

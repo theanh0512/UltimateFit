@@ -1,12 +1,21 @@
 package ultimate.fit.ultimatefit.data;
 
+import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
+
 import net.simonvt.schematic.annotation.Database;
 import net.simonvt.schematic.annotation.IfNotExists;
+import net.simonvt.schematic.annotation.OnUpgrade;
 import net.simonvt.schematic.annotation.Table;
 
 @Database(version = UltimateFitDatabase.VERSION)
 public class UltimateFitDatabase {
-    public static final int VERSION = 1;
+    public static final int VERSION = 3;
+    public static final String[] _MIGRATIONS = {
+            // Put DDL/DML commands here, one string per VERSION increment
+            "ALTER TABLE " + "exercises"+ " ADD COLUMN " + ExerciseColumns.ONE_REP_MAX + " REAL;",
+            "ALTER TABLE " + "workout_exercises"+ " ADD COLUMN " + WorkoutExerciseColumns.NOTE_OF_WORKOUT_EXERCISE + " STRING;"
+    };
 
     @Table(WorkoutColumns.class)
     public static final String WORKOUTS = "workouts";
@@ -31,5 +40,22 @@ public class UltimateFitDatabase {
         @Table(SetColumns.class)
         @IfNotExists
         public static final String SETS = "sets";
+    }
+
+    @OnUpgrade
+    public synchronized void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+        for (int i = oldVersion; i < newVersion; i++) {
+            String migration = _MIGRATIONS[i];
+            db.beginTransaction();
+            try {
+                db.execSQL(migration);
+                db.setTransactionSuccessful();
+            } catch (Exception e) {
+                Log.e("Database", "Error executing database migration: " + migration);
+                break;
+            } finally {
+                db.endTransaction();
+            }
+        }
     }
 }

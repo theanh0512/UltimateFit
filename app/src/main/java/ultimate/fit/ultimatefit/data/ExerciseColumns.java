@@ -39,4 +39,7 @@ public interface ExerciseColumns {
     @DataType(DataType.Type.TEXT)
     @NotNull
     String DESCRIPTION = "description";
+
+    @DataType(DataType.Type.REAL)
+    String ONE_REP_MAX = "one_rep_max";
 }
