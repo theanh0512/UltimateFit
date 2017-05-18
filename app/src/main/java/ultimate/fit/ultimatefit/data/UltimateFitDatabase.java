@@ -14,7 +14,8 @@ public class UltimateFitDatabase {
     public static final String[] _MIGRATIONS = {
             // Put DDL/DML commands here, one string per VERSION increment
             "ALTER TABLE " + "exercises"+ " ADD COLUMN " + ExerciseColumns.ONE_REP_MAX + " REAL;",
-            "ALTER TABLE " + "workout_exercises"+ " ADD COLUMN " + WorkoutExerciseColumns.NOTE_OF_WORKOUT_EXERCISE + " STRING;"
+            "ALTER TABLE " + "workout_exercises"+ " ADD COLUMN " + WorkoutExerciseColumns.NOTE_OF_WORKOUT_EXERCISE + " STRING;",
+            "ALTER TABLE " + "workouts"+ " ADD COLUMN " + WorkoutColumns.NOTE_OF_WORKOUT + " STRING;"
     };
 
     @Table(WorkoutColumns.class)

@@ -33,4 +33,7 @@ public interface WorkoutColumns {
     @DataType(INTEGER)
     @References(table = Tables.PLANS, column = PlanColumns.ID)
     String PLAN_ID = "planId";
+
+    @DataType(DataType.Type.TEXT)
+    String NOTE_OF_WORKOUT = "note_of_workout";
 }
