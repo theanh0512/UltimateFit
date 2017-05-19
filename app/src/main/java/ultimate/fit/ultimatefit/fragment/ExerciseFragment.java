@@ -1,13 +1,16 @@
 package ultimate.fit.ultimatefit.fragment;
 
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -35,10 +38,15 @@ public class ExerciseFragment extends Fragment {
     ImageView imageViewExercise1;
     @BindView(R.id.image_view_exercise_2)
     ImageView imageViewExercise2;
+    @BindView(R.id.edit_text_one_rep_max)
+    EditText editTextOneRepMax;
+    @BindView(R.id.text_view_unit)
+    TextView textViewUnit;
     String exerciseName;
     String instruction;
     String exerciseImage1;
     String exerciseImage2;
+    double oneRepMax;
 
     public ExerciseFragment() {
         // Required empty public constructor
@@ -84,6 +92,7 @@ public class ExerciseFragment extends Fragment {
                     exerciseImage1 = exerciseCursor.getString(exerciseCursor.getColumnIndex(ExerciseColumns.IMAGE_PATH));
                     exerciseImage2 = exerciseCursor.getString(exerciseCursor.getColumnIndex(ExerciseColumns.IMAGE_2_PATH));
                     instruction = exerciseCursor.getString(exerciseCursor.getColumnIndex(ExerciseColumns.DESCRIPTION));
+                    oneRepMax = exerciseCursor.getDouble(exerciseCursor.getColumnIndex(ExerciseColumns.ONE_REP_MAX));
 
                     exerciseCursor.close();
                 } catch (Exception e) {
@@ -105,6 +114,12 @@ public class ExerciseFragment extends Fragment {
         textViewExerciseName.setText(exerciseName);
         textViewInstruction.setText(instruction);
         textViewInstruction.setMovementMethod(new ScrollingMovementMethod());
+        editTextOneRepMax.setText(String.valueOf(oneRepMax));
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        boolean isManuallyInput = preferences.getBoolean(getString(R.string.pref_orm_manual_input_key),true);
+        editTextOneRepMax.setEnabled(isManuallyInput);
+        String unit = preferences.getString(getString(R.string.pref_unit_key), getString(R.string.pref_unit_kg));
+        textViewUnit.setText(unit);
         try {
             Picasso.with(getActivity()).load(imagePath1).placeholder(R.drawable.ic_place_holder)
                     .error(R.drawable.ic_error_fallback).into(imageViewExercise1, new Callback() {

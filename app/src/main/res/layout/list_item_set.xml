@@ -93,7 +93,7 @@
 
     <EditText
         android:id="@+id/edit_text_set_weight"
-        android:layout_width="48dp"
+        android:layout_width="64dp"
         android:layout_height="wrap_content"
         android:layout_marginBottom="0dp"
         android:layout_marginStart="5dp"
@@ -102,12 +102,12 @@
         android:contentDescription="@string/cd_weight_for_this_set"
         android:gravity="center_horizontal"
         android:imeOptions="actionDone"
-        android:inputType="number"
-        android:maxLength="3"
+        android:inputType="numberDecimal"
+        android:maxLength="6"
         android:nextFocusLeft="@+id/edit_text_set_rep"
         app:layout_constraintBottom_toBottomOf="@+id/text_view_reps"
         app:layout_constraintLeft_toRightOf="@id/text_view_weight"
         app:layout_constraintTop_toBottomOf="@id/text_view_set_name"
         app:layout_constraintVertical_bias="1.0"
-        tools:text="0" />
+        tools:text="120.55" />
 </android.support.constraint.ConstraintLayout>

@@ -68,13 +68,13 @@
     <string name="cd_on_going_mark">on going mark</string>
     <string name="cd_workout_exercise_image">workout exercise image</string>
     <string name="toast_signed_in">Signed in!</string>
-    <string name="toast_signin_cancel">Sign in canceled</string>
+    <string name="toast_sign_in_cancel">Sign in canceled</string>
     <string name="toast_enter_plan_name">Please enter Plan\'s name</string>
     <string name="toast_enter_plan_goal">Please enter Plan\'s goal</string>
     <string name="toast_enter_plan_no_of_week">Please enter Plan\'s number of weeks</string>
     <string name="toast_enter_days_per_week">Please enter Plan\'s number of days per week</string>
     <string name="toast_plan_uploaded">Plan uploaded</string>
-    <string name="toast_signin_to_upload">Please sign-in to upload the plan</string>
+    <string name="toast_sign_in_to_upload">Please sign-in to upload the plan</string>
     <string name="cd_add_category">add category</string>
     <string name="format_set"><xliff:g id="set">%d</xliff:g></string>
     <string name="text_view_day">Day: </string>
@@ -83,4 +83,16 @@
     <string name="text_view_week"> week</string>
     <string name="text_view_super_set">Super Set</string>
     <string name="text_view_giant_set">Giant Set</string>
+    <string name="text_view_one_rep_max">One Rep Max:</string>
+    <string name="unit_kg">kg</string>
+    <string name="unit_lbs">lbs</string>
+    <string name="pref_unit_label">Unit</string>
+    <string name="pref_unit_key" translatable="false">units</string>
+    <string name="pref_unit_kg">kg</string>
+    <string name="pref_unit_lbs">lbs</string>
+    <string name="pref_orm_manual_input_key">pref_orm_input</string>
+    <string name="pref_orm_manual_input_label">ORM Manual Input</string>
+    <string name="title_activity_settings">Settings</string>
+    <string name="pref_is_pt_key">is_pt</string>
+    <string name="pref_is_pt_label">Personal Trainer Mode</string>
 </resources>

@@ -19,7 +19,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
-        android:layout_marginEnd="16dp"
+        android:layout_marginLeft="16dp"
         android:contentDescription="@string/cd_on_going_mark"
         android:src="@drawable/on_going_check"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -32,32 +32,32 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="4dp"
-        android:layout_marginEnd="16dp"
+        android:layout_marginLeft="16dp"
         android:layout_marginTop="8dp"
         android:textSize="18sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toTopOf="@+id/button_upload_plan"
         app:layout_constraintLeft_toRightOf="@+id/image_view_on_going_check"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.333"
-        tools:text="Bulking Plan" />
+        app:layout_constraintVertical_bias="0.0"
+        tools:text="Bulking Plan"/>
 
     <TextView
         android:id="@+id/text_view_plan_num_of_weeks"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="2dp"
-        android:layout_marginEnd="18dp"
+        android:layout_marginBottom="0dp"
+        android:layout_marginLeft="18dp"
         android:textSize="14sp"
         app:layout_constraintBottom_toTopOf="@+id/text_view_plan_goal"
         app:layout_constraintLeft_toRightOf="@+id/image_view_on_going_check"
-        tools:text="2 weeks" />
+        tools:text="2 weeks"/>
 
     <TextView
         android:id="@+id/text_view_plan_goal"
         android:layout_width="151dp"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="18dp"
+        android:layout_marginLeft="18dp"
         android:layout_marginTop="1dp"
         android:maxEms="2"
         android:textSize="14sp"
@@ -70,14 +70,14 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
-        android:layout_marginEnd="18dp"
+        android:layout_marginLeft="18dp"
         android:layout_marginTop="2dp"
         android:textSize="14sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toRightOf="@+id/image_view_on_going_check"
         app:layout_constraintTop_toBottomOf="@+id/text_view_plan_goal"
         app:layout_constraintVertical_bias="0.4"
-        tools:text="Creator: ntu.theanh@gmail.com" />
+        tools:text="Creator: ntu.theanh@gmail.com"/>
 
     <Button
         android:id="@+id/button_apply_plan"

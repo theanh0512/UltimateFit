@@ -216,6 +216,11 @@ public class MainActivity extends AppCompatActivity
                                         item.setChecked(true);
                                         AuthUI.getInstance().signOut(activity);
                                         break;
+
+                                    case R.id.navigation_view_item_setting:
+                                        item.setChecked(true);
+                                        startActivity(new Intent(MainActivity.this, SettingsActivity.class));
+                                        break;
                                 }
 
                                 return true;
@@ -329,9 +334,9 @@ public class MainActivity extends AppCompatActivity
                                                         String exerciseName = set.getExerciseName();
                                                         setContentValues[k] = new SetsValuesBuilder()
                                                                 .exerciseNumber(set.getExerciseNumber())
-                                                                .weight(0)
                                                                 .exerciseId(Long.parseLong(exerciseIdArray[k%exerciseIdArray.length]))
                                                                 .rep(set.getNoOfRep())
+                                                                .weight(set.getWeight())
                                                                 .setName(exerciseName)
                                                                 .workoutExerciseId(workoutExerciseId)
                                                                 .setNumber(set.getSetNumber()).values();
@@ -436,7 +441,7 @@ public class MainActivity extends AppCompatActivity
             if (resultCode == RESULT_OK) {
                 Toast.makeText(this, R.string.toast_signed_in, Toast.LENGTH_SHORT).show();
             } else if (resultCode == RESULT_CANCELED) {
-                Toast.makeText(this, R.string.toast_signin_cancel, Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, R.string.toast_sign_in_cancel, Toast.LENGTH_SHORT).show();
                 finish();
             }
         }

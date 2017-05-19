@@ -8,7 +8,7 @@ import java.text.DecimalFormat;
  */
 
 public class CalculationMethods {
-    public static double weightMaxForOneRep(double weight, double reps){
+    public static double weightMaxForOneRep(double weight, int reps){
         double oneRepMax = weight * reps * 0.0333 + weight;
         DecimalFormat twoDForm = new DecimalFormat("#.##");
         twoDForm.setRoundingMode(RoundingMode.DOWN);

@@ -149,7 +149,7 @@ public class PlanAdapter extends RecyclerView.Adapter<PlanAdapter.ViewHolder> {
                 if (updated)
                     Toast.makeText(context, R.string.toast_plan_uploaded, Toast.LENGTH_SHORT).show();
                 else
-                    Toast.makeText(context, R.string.toast_signin_to_upload, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(context, R.string.toast_sign_in_to_upload, Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -190,7 +190,8 @@ public class PlanAdapter extends RecyclerView.Adapter<PlanAdapter.ViewHolder> {
                     int exerciseNumber = setCursor.getInt(setCursor.getColumnIndex(SetColumns.EXERCISE_NUMBER));
                     int setNumber = setCursor.getInt(setCursor.getColumnIndex(SetColumns.SET_NUMBER));
                     int noOfRep = setCursor.getInt(setCursor.getColumnIndex(SetColumns.REP));
-                    Set set = new Set(exerciseName, setNumber, exerciseNumber, noOfRep);
+                    double weight = setCursor.getDouble(setCursor.getColumnIndex(SetColumns.WEIGHT));
+                    Set set = new Set(exerciseName, setNumber, exerciseNumber, noOfRep, weight);
                     sets.add(set);
                 }
                 setCursor.close();

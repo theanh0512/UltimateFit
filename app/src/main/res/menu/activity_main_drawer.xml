@@ -13,4 +13,11 @@
             android:title="@string/logout"
             android:visible="false" />
     </group>
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/navigation_view_item_setting"
+            android:icon="@drawable/settings"
+            android:title="@string/action_settings"
+            android:visible="true" />
+    </group>
 </menu>

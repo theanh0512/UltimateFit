@@ -205,7 +205,7 @@ public class GetDataTask extends AsyncTask<String, Void, List<String>> {
                             String videoPath = json.getString("video");
                             String description = json.getString("description");
                             exerciseValues[i] = new ExercisesValuesBuilder().categoryId(categoryId).imagePath(imagePath).image2Path(image2Path)
-                                    .description(description).exerciseName(name).videoPath(videoPath).values();
+                                    .description(description).exerciseName(name).videoPath(videoPath).oneRepMax(0.0).values();
                         }
                         mContext.getContentResolver().bulkInsert(UltimateFitProvider.Exercises.CONTENT_URI, exerciseValues);
                     } catch (Exception e) {

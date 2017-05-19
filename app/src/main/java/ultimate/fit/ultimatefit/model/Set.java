@@ -9,16 +9,26 @@ public class Set {
     private int setNumber;
     private int exerciseNumber;
     private int noOfRep;
+    private double weight;
 
-    public Set(String exerciseName, int setNumber, int exerciseNumber, int noOfRep) {
+    public Set(String exerciseName, int setNumber, int exerciseNumber, int noOfRep, double weight) {
 
         this.exerciseName = exerciseName;
         this.setNumber = setNumber;
         this.exerciseNumber = exerciseNumber;
         this.noOfRep = noOfRep;
+        this.weight = weight;
     }
 
     public Set() {
+    }
+
+    public double getWeight() {
+        return weight;
+    }
+
+    public void setWeight(double weight) {
+        this.weight = weight;
     }
 
     public int getNoOfRep() {
