@@ -3,6 +3,7 @@ package ultimate.fit.ultimatefit.utils;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
@@ -38,10 +39,11 @@ public class GetDataTask extends AsyncTask<String, Void, List<String>> {
     public static int totalPage = 1;
     private final String LOG_TAG = GetDataTask.class.getSimpleName();
     private final Context mContext;
-    int pageNum;
+    private int pageNum;
     private String result = "results";
     private String mUrlString = "";
     private String additionalUrl;
+    private boolean isCalledFromFirstPage = false;
 
     //currentUpdatedTime is for page from 2 onward. If this value is set then we ignore lastUpdatedTime
     //lastUpdatedTime is the time getting from SharedPreference
@@ -65,11 +67,12 @@ public class GetDataTask extends AsyncTask<String, Void, List<String>> {
         }
     }
 
-    public GetDataTask(Context context, String additionalUrl, int pageNum, long currentUpdatedTime) {
+    public GetDataTask(Context context, String additionalUrl, int pageNum, long currentUpdatedTime, boolean isCalledFromFirstPage) {
         mContext = context;
         this.currentUpdatedTime = currentUpdatedTime;
         this.additionalUrl = additionalUrl;
         this.pageNum = pageNum;
+        this.isCalledFromFirstPage = isCalledFromFirstPage;
         if (!isOnline()) {
             displayNoInternetDialog();
         }
@@ -230,10 +233,18 @@ public class GetDataTask extends AsyncTask<String, Void, List<String>> {
             SharedPreferenceHelper.getInstance().put(SharedPreferenceHelper.Key.LAST_CATEGORY_MODIFIED_DATE_LONG, lastUpdated);
         }
         if (Objects.equals(additionalUrl, Config.EXERCISE_URL) && totalPage > 1 && pageNum == 1) {
-            for (int i = 2; i <= totalPage; i++) {
-                GetDataTask getDataTask = new GetDataTask(mContext, Config.EXERCISE_URL, i, lastUpdatedTime);
+                GetDataTask getDataTask = new GetDataTask(mContext, Config.EXERCISE_URL, pageNum + 1, lastUpdatedTime, true);
+                getDataTask.execute();
+        }
+        else if (Objects.equals(additionalUrl, Config.EXERCISE_URL) && totalPage > 1 && isCalledFromFirstPage) {
+            if(pageNum != totalPage) {
+                GetDataTask getDataTask = new GetDataTask(mContext, Config.EXERCISE_URL, pageNum + 1, currentUpdatedTime, true);
                 getDataTask.execute();
             }
+        }
+        if (pageNum == totalPage) {
+            Intent intent = new Intent(MainActivity.DATA_DOWNLOADED);
+            mContext.sendBroadcast(intent);
         }
     }
 }
