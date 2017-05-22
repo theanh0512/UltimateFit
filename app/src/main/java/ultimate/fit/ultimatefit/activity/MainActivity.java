@@ -106,7 +106,8 @@ public class MainActivity extends AppCompatActivity
             if (intent.getAction().equals(DATA_DOWNLOADED)) {
                 isDataUpdated = true;
                 Log.d(TAG, "onReceive: data updated");
-                attachDatabaseReadListener();
+                if(!userName.equals(ANONYMOUS))
+                    attachDatabaseReadListener();
                 //ToDo: Notify plan tab
             }
         }
@@ -331,6 +332,26 @@ public class MainActivity extends AppCompatActivity
 
                                     //Workout Exercise is not guaranteed to be generated.
                                     //ensure creator set up the workoutExercise already
+                                    //Delete old workout exercises and sets
+                                    if(isUpdating) {
+                                        Cursor workoutExerciseCursor = activity.getContentResolver().query(UltimateFitProvider.WorkoutExercises.CONTENT_URI, null,
+                                                WorkoutExerciseColumns.WORKOUT_ID + " = " + workoutId, null, null);
+                                        if (workoutExerciseCursor != null) {
+                                            try {
+                                                while (workoutExerciseCursor.moveToNext()) {
+                                                    long workoutExerciseId = workoutExerciseCursor.getLong
+                                                            (workoutExerciseCursor.getColumnIndex(WorkoutExerciseColumns.ID));
+                                                    activity.getContentResolver().delete(UltimateFitProvider.Sets.CONTENT_URI,
+                                                            SetColumns.WORKOUT_EXERCISE_ID + " = " + workoutExerciseId, null);
+                                                }
+                                            } finally {
+                                                workoutExerciseCursor.close();
+                                            }
+                                        }
+                                        activity.getContentResolver().delete(UltimateFitProvider.WorkoutExercises.CONTENT_URI,
+                                                WorkoutExerciseColumns.WORKOUT_ID + " = " + workoutId, null);
+                                    }
+
                                     if (workoutExercises != null && workoutExercises.size() > 0) {
                                         //insert workoutExercise
                                         ContentValues[] workoutExerciseContentValues = new ContentValues[workoutExercises.size()];
@@ -361,6 +382,8 @@ public class MainActivity extends AppCompatActivity
                                                 if (exerciseCursor != null && exerciseCursor.moveToFirst()) {
                                                     long exerciseId = exerciseCursor.getLong(exerciseCursor.getColumnIndex(ExerciseColumns.ID));
                                                     joinedExerciseIds = String.valueOf(exerciseId);
+                                                    exerciseIdArray = new String[1];
+                                                    exerciseIdArray[0] = String.valueOf(exerciseId);
                                                     exerciseCursor.close();
                                                 }
 
@@ -372,24 +395,6 @@ public class MainActivity extends AppCompatActivity
                                                     .set(workoutExercise.getNoOfSets())
                                                     .workoutId(workoutId)
                                                     .exerciseIds(joinedExerciseIds).values();
-
-                                            //Delete old workout exercises and sets
-                                            Cursor workoutExerciseCursor = activity.getContentResolver().query(UltimateFitProvider.WorkoutExercises.CONTENT_URI, null,
-                                                    WorkoutExerciseColumns.WORKOUT_ID + " = " + workoutId, null, null);
-                                            if (workoutExerciseCursor != null) {
-                                                try {
-                                                    while (workoutExerciseCursor.moveToNext()) {
-                                                        long workoutExerciseId = workoutExerciseCursor.getLong
-                                                                (workoutExerciseCursor.getColumnIndex(WorkoutExerciseColumns.ID));
-                                                        activity.getContentResolver().delete(UltimateFitProvider.Sets.CONTENT_URI,
-                                                                SetColumns.WORKOUT_EXERCISE_ID + " = " + workoutExerciseId, null);
-                                                    }
-                                                } finally {
-                                                    workoutExerciseCursor.close();
-                                                }
-                                            }
-                                            activity.getContentResolver().delete(UltimateFitProvider.WorkoutExercises.CONTENT_URI,
-                                                    WorkoutExerciseColumns.WORKOUT_ID + " = " + workoutId, null);
 
                                             Uri workoutExerciseUri = activity.getContentResolver().insert(UltimateFitProvider.WorkoutExercises.CONTENT_URI,
                                                     workoutExerciseContentValues[j]);
@@ -421,6 +426,13 @@ public class MainActivity extends AppCompatActivity
                         }
                     });
                     thread.start();
+                    try {
+                        thread.join();
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    Intent intent = new Intent(TabPlanFragment.PLANS_LOADED);
+                    sendBroadcast(intent);
                 }
 
                 @Override

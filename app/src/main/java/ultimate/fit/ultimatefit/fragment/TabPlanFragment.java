@@ -1,7 +1,9 @@
 package ultimate.fit.ultimatefit.fragment;
 
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
@@ -37,7 +39,9 @@ import ultimate.fit.ultimatefit.data.UltimateFitProvider;
  */
 public class TabPlanFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
     private static final String LOG_TAG = TabPlanFragment.class.getSimpleName();
+    public static final String PLANS_LOADED = "fit.ultimate.plans_loaded";
     private static final int PLAN_LOADER = 1000;
+    private static final String TAG = "TabPlanFragment";
     ItemsListClickHandler handler;
     @BindView(R.id.fab_add_plan)
     FloatingActionButton fabAddPlan;
@@ -45,6 +49,16 @@ public class TabPlanFragment extends Fragment implements LoaderManager.LoaderCal
     RecyclerView recyclerViewPlan;
     private PlanAdapter planAdapter;
     private OnFragmentInteractionListener mListener;
+    private BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (intent.getAction().equals(PLANS_LOADED)) {
+                Log.d(TAG, "onReceive: data updated");
+                planAdapter.notifyDataSetChanged();
+                //ToDo: Notify plan tab
+            }
+        }
+    };
 
     public TabPlanFragment() {
         // Required empty public constructor
@@ -61,6 +75,9 @@ public class TabPlanFragment extends Fragment implements LoaderManager.LoaderCal
     public void onCreate(Bundle savedInstanceState) {
         if (savedInstanceState != null) {
         }
+        IntentFilter filter = new IntentFilter();
+        filter.addAction(PLANS_LOADED);
+        getActivity().registerReceiver(broadcastReceiver, filter);
         super.onCreate(savedInstanceState);
     }
 
@@ -133,6 +150,7 @@ public class TabPlanFragment extends Fragment implements LoaderManager.LoaderCal
     @Override
     public void onDestroy() {
         super.onDestroy();
+        getActivity().unregisterReceiver(broadcastReceiver);
     }
 
     @Override
