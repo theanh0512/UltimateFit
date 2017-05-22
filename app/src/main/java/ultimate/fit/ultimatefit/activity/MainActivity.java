@@ -277,11 +277,10 @@ public class MainActivity extends AppCompatActivity
                             String uploadedPlanName = uploadedPlan.getPlanName();
                             String creatorEmail = uploadedPlan.getCreatorEmail();
                             String planUuid = uploadedPlan.getPlanUuid();
+                            String[] args = {uploadedPlanName, uploadedPlanGoal, String.valueOf(uploadedPlanDayPerWeek), String.valueOf(uploadedPlanNumOfWeek)};
                             Cursor planCursor = activity.getContentResolver().query(UltimateFitProvider.Plans.CONTENT_URI, null,
-                                    PlanColumns.NAME + " = '" + uploadedPlanName + "' AND " +
-                                            PlanColumns.GOAL + " = '" + uploadedPlanGoal + "' AND " +
-                                            PlanColumns.DAY_PER_WEEK + " = " + uploadedPlanDayPerWeek + " AND " +
-                                            PlanColumns.NUM_OF_WEEK + " = " + uploadedPlanNumOfWeek, null, null);
+                                    PlanColumns.NAME + " = ? AND " + PlanColumns.GOAL + " = ? AND " + PlanColumns.DAY_PER_WEEK + " = ? AND " +
+                                            PlanColumns.NUM_OF_WEEK + " = ?", args, null);
                             boolean isUpdating = false;
                             if (planCursor.moveToFirst()) isUpdating = true;
                             ContentValues planContentValues = new ContentValues();
@@ -319,9 +318,9 @@ public class MainActivity extends AppCompatActivity
                                         workoutUri = activity.getContentResolver().insert(UltimateFitProvider.Workouts.CONTENT_URI, workoutContentValues[i]);
                                         workoutId = ContentUris.parseId(workoutUri);
                                     } else {
+                                        String[] argsWorkout = {String.valueOf(planId), String.valueOf(workouts.get(i).getDayNumber())};
                                         Cursor workoutCursor = activity.getContentResolver().query(UltimateFitProvider.Workouts.CONTENT_URI, null,
-                                                WorkoutColumns.PLAN_ID + " = " + planId + " AND " +
-                                                        WorkoutColumns.DAY_NUMBER + " = " + workouts.get(i).getDayNumber(), null, null);
+                                                WorkoutColumns.PLAN_ID + " = ? AND " + WorkoutColumns.DAY_NUMBER + " = ?", argsWorkout, null);
                                         workoutCursor.moveToFirst();
                                         workoutId = workoutCursor.getLong(workoutCursor.getColumnIndex(WorkoutColumns.ID));
                                         activity.getContentResolver().update(UltimateFitProvider.Workouts.CONTENT_URI, workoutContentValues[i],
@@ -367,8 +366,9 @@ public class MainActivity extends AppCompatActivity
                                                 exerciseIdArray = new String[noOfExercises];
                                                 for (int k = 0; k < noOfExercises; k++) {
                                                     String exerciseName = sets.get(k).getExerciseName();
+                                                    String[] argsExercise = {exerciseName};
                                                     Cursor exerciseCursor = activity.getContentResolver().query(UltimateFitProvider.Exercises.CONTENT_URI, null,
-                                                            ExerciseColumns.EXERCISE_NAME + " = '" + exerciseName + "'", null, null);
+                                                            ExerciseColumns.EXERCISE_NAME + " = ?", argsExercise, null);
                                                     if (exerciseCursor != null && exerciseCursor.moveToFirst()) {
                                                         long exerciseId = exerciseCursor.getLong(exerciseCursor.getColumnIndex(ExerciseColumns.ID));
                                                         exerciseIdArray[k] = String.valueOf(exerciseId);
@@ -377,8 +377,9 @@ public class MainActivity extends AppCompatActivity
                                                 }
                                                 joinedExerciseIds = strJoin(exerciseIdArray, ",");
                                             } else {//set is not generated
+                                                String[] argsExercise = {workoutExercise.getFirstExerciseName()};
                                                 Cursor exerciseCursor = activity.getContentResolver().query(UltimateFitProvider.Exercises.CONTENT_URI, null,
-                                                        ExerciseColumns.EXERCISE_NAME + " = '" + workoutExercise.getFirstExerciseName() + "'", null, null);
+                                                        ExerciseColumns.EXERCISE_NAME + " = ?", argsExercise, null);
                                                 if (exerciseCursor != null && exerciseCursor.moveToFirst()) {
                                                     long exerciseId = exerciseCursor.getLong(exerciseCursor.getColumnIndex(ExerciseColumns.ID));
                                                     joinedExerciseIds = String.valueOf(exerciseId);
