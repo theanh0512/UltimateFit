@@ -27,6 +27,9 @@ public interface SetColumns {
     @DataType(DataType.Type.REAL)
     String WEIGHT = "weight";
 
+    @DataType(DataType.Type.REAL)
+    String WEIGHT_RATIO = "weight_ratio";
+
     @DataType(DataType.Type.INTEGER)
     String REP = "rep_in_set";
 

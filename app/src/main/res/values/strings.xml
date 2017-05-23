@@ -90,9 +90,13 @@
     <string name="pref_unit_key" translatable="false">units</string>
     <string name="pref_unit_kg">kg</string>
     <string name="pref_unit_lbs">lbs</string>
-    <string name="pref_orm_manual_input_key">pref_orm_input</string>
+    <string name="pref_orm_manual_input_key" translatable="false">pref_orm_input</string>
     <string name="pref_orm_manual_input_label">ORM Manual Input</string>
     <string name="title_activity_settings">Settings</string>
-    <string name="pref_is_pt_key">is_pt</string>
+    <string name="pref_is_pt_key" translatable="false">is_pt</string>
     <string name="pref_is_pt_label">Personal Trainer Mode</string>
+    <string name="pref_is_weight_manually_input_key" translatable="false">weight_manual</string>
+    <string name="pref_is_weight_manually_input_label">User manually input weight</string>
+    <string name="pref_allow_sync_key">allow_sync</string>
+    <string name="pref_allow_sync_label">Allow to sync plan from server</string>
 </resources>

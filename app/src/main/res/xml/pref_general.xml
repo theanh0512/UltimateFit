@@ -20,4 +20,14 @@
         android:title="@string/pref_is_pt_label"
         android:defaultValue="false" />
 
+    <SwitchPreference
+        android:key="@string/pref_is_weight_manually_input_key"
+        android:title="@string/pref_is_weight_manually_input_label"
+        android:defaultValue="false" />
+
+    <SwitchPreference
+        android:key="@string/pref_allow_sync_key"
+        android:title="@string/pref_allow_sync_label"
+        android:defaultValue="false" />
+
 </PreferenceScreen>

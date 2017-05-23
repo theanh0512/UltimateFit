@@ -190,8 +190,8 @@ public class PlanAdapter extends RecyclerView.Adapter<PlanAdapter.ViewHolder> {
                     int exerciseNumber = setCursor.getInt(setCursor.getColumnIndex(SetColumns.EXERCISE_NUMBER));
                     int setNumber = setCursor.getInt(setCursor.getColumnIndex(SetColumns.SET_NUMBER));
                     int noOfRep = setCursor.getInt(setCursor.getColumnIndex(SetColumns.REP));
-                    double weight = setCursor.getDouble(setCursor.getColumnIndex(SetColumns.WEIGHT));
-                    Set set = new Set(exerciseName, setNumber, exerciseNumber, noOfRep, weight);
+                    double weightRatio = setCursor.getDouble(setCursor.getColumnIndex(SetColumns.WEIGHT_RATIO));
+                    Set set = new Set(exerciseName, setNumber, exerciseNumber, noOfRep, weightRatio);
                     sets.add(set);
                 }
                 setCursor.close();
