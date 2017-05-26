@@ -16,6 +16,9 @@ public interface WorkoutExerciseColumns {
     @NotNull
     String WORKOUT_ID = "workout_id";
 
+    @DataType(DataType.Type.INTEGER)
+    String WORKOUT_EXERCISE_NUMBER = "workout_exercise_number";
+
     @DataType(DataType.Type.TEXT)
     @NotNull
     String EXERCISE_IDS = "exercise_ids";

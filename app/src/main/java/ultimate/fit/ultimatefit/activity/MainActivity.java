@@ -346,11 +346,25 @@ public class MainActivity extends AppCompatActivity
                                                 WorkoutExerciseColumns.WORKOUT_ID + " = " + workoutId, null, null);
                                         if (workoutExerciseCursor != null) {
                                             try {
+                                                int countWorkoutExerciseNumber = 0;
+                                                int count = 0;
                                                 while (workoutExerciseCursor.moveToNext()) {
+                                                    WorkoutExercise workoutExercise = workoutExercises.get(count);
                                                     long workoutExerciseId = workoutExerciseCursor.getLong
                                                             (workoutExerciseCursor.getColumnIndex(WorkoutExerciseColumns.ID));
-                                                    activity.getContentResolver().delete(UltimateFitProvider.Sets.CONTENT_URI,
-                                                            SetColumns.WORKOUT_EXERCISE_ID + " = " + workoutExerciseId, null);
+                                                    int workoutExerciseNumber = workoutExerciseCursor.getInt
+                                                            (workoutExerciseCursor.getColumnIndex(WorkoutExerciseColumns.WORKOUT_EXERCISE_NUMBER));
+                                                    if (workoutExerciseNumber == -1){
+                                                        countWorkoutExerciseNumber++;
+                                                        workoutExerciseNumber = countWorkoutExerciseNumber;
+                                                    }
+                                                    ContentValues workoutExerciseContentValues = new Workout_exercisesValuesBuilder()
+                                                            .firstExerciseImage(workoutExercise.getFirstExerciseImage())
+                                                            .firstExerciseName(workoutExercise.getFirstExerciseName())
+                                                            .rep(workoutExercise.getRep())
+                                                            .set(workoutExercise.getNoOfSets())
+                                                            .workoutId(workoutId)
+                                                            .exerciseIds(joinedExerciseIds).values();
                                                 }
                                             } finally {
                                                 workoutExerciseCursor.close();
