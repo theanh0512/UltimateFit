@@ -11,17 +11,27 @@ public class WorkoutExercise {
     private String firstExerciseImage;
     private int noOfSets;
     private int rep;
+    private int workoutExerciseNumber;
     private List<Set> sets;
 
-    public WorkoutExercise(String firstExerciseName, String firstExerciseImage, int noOfSets, int rep, List<Set> sets) {
+    public WorkoutExercise(String firstExerciseName, String firstExerciseImage, int noOfSets, int rep, List<Set> sets, int workoutExerciseNumber) {
         this.firstExerciseName = firstExerciseName;
         this.firstExerciseImage = firstExerciseImage;
         this.noOfSets = noOfSets;
         this.rep = rep;
         this.sets = sets;
+        this.workoutExerciseNumber = workoutExerciseNumber;
     }
 
     public WorkoutExercise() {
+    }
+
+    public int getWorkoutExerciseNumber() {
+        return workoutExerciseNumber;
+    }
+
+    public void setWorkoutExerciseNumber(int workoutExerciseNumber) {
+        this.workoutExerciseNumber = workoutExerciseNumber;
     }
 
     public String getFirstExerciseName() {

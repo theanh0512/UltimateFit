@@ -44,6 +44,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -52,7 +53,6 @@ import ultimate.fit.ultimatefit.adapter.PagerAdapter;
 import ultimate.fit.ultimatefit.adapter.PlanAdapter;
 import ultimate.fit.ultimatefit.data.ExerciseColumns;
 import ultimate.fit.ultimatefit.data.PlanColumns;
-import ultimate.fit.ultimatefit.data.SetColumns;
 import ultimate.fit.ultimatefit.data.UltimateFitProvider;
 import ultimate.fit.ultimatefit.data.WorkoutColumns;
 import ultimate.fit.ultimatefit.data.WorkoutExerciseColumns;
@@ -68,6 +68,7 @@ import ultimate.fit.ultimatefit.model.WorkoutExercise;
 import ultimate.fit.ultimatefit.utils.Config;
 import ultimate.fit.ultimatefit.utils.GetDataTask;
 import ultimate.fit.ultimatefit.utils.SharedPreferenceHelper;
+import ultimate.fit.ultimatefit.utils.Utils.InternetVsLocalWorkoutExerciseSize;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, TabPlanFragment.OnFragmentInteractionListener,
@@ -346,26 +347,40 @@ public class MainActivity extends AppCompatActivity
                                                 WorkoutExerciseColumns.WORKOUT_ID + " = " + workoutId, null, null);
                                         if (workoutExerciseCursor != null) {
                                             try {
-                                                int countWorkoutExerciseNumber = 0;
                                                 int count = 0;
-                                                while (workoutExerciseCursor.moveToNext()) {
-                                                    WorkoutExercise workoutExercise = workoutExercises.get(count);
-                                                    long workoutExerciseId = workoutExerciseCursor.getLong
-                                                            (workoutExerciseCursor.getColumnIndex(WorkoutExerciseColumns.ID));
-                                                    int workoutExerciseNumber = workoutExerciseCursor.getInt
-                                                            (workoutExerciseCursor.getColumnIndex(WorkoutExerciseColumns.WORKOUT_EXERCISE_NUMBER));
-                                                    if (workoutExerciseNumber == -1){
-                                                        countWorkoutExerciseNumber++;
-                                                        workoutExerciseNumber = countWorkoutExerciseNumber;
-                                                    }
-                                                    ContentValues workoutExerciseContentValues = new Workout_exercisesValuesBuilder()
-                                                            .firstExerciseImage(workoutExercise.getFirstExerciseImage())
-                                                            .firstExerciseName(workoutExercise.getFirstExerciseName())
-                                                            .rep(workoutExercise.getRep())
-                                                            .set(workoutExercise.getNoOfSets())
-                                                            .workoutId(workoutId)
-                                                            .exerciseIds(joinedExerciseIds).values();
+                                                int toBeSavedWESize = workoutExercises.size();
+                                                int currentWESize = workoutExerciseCursor.getCount();
+                                                InternetVsLocalWorkoutExerciseSize comparedResult =
+                                                        toBeSavedWESize > currentWESize ? InternetVsLocalWorkoutExerciseSize.MORE :
+                                                                toBeSavedWESize == currentWESize ? InternetVsLocalWorkoutExerciseSize.EQUAL :
+                                                                        InternetVsLocalWorkoutExerciseSize.LESS;
+                                                switch (comparedResult) {
+                                                    case MORE:
+                                                        while (workoutExerciseCursor.moveToNext()) {
+                                                            long workoutExerciseId = workoutExerciseCursor.getLong
+                                                                    (workoutExerciseCursor.getColumnIndex(WorkoutExerciseColumns.ID));
+                                                            int workoutExerciseNumber = workoutExerciseCursor.getInt
+                                                                    (workoutExerciseCursor.getColumnIndex(WorkoutExerciseColumns.WORKOUT_EXERCISE_NUMBER));
+                                                            Optional<WorkoutExercise> workoutExerciseOptional = workoutExercises.
+                                                                    stream().
+                                                                    filter(w -> w.getWorkoutExerciseNumber() == workoutExerciseNumber).
+                                                                    findFirst();
+                                                            if (workoutExerciseOptional.isPresent()) {
+                                                                WorkoutExercise workoutExercise = workoutExerciseOptional.get();
+                                                                ContentValues workoutExerciseContentValues = new Workout_exercisesValuesBuilder()
+                                                                        .firstExerciseImage(workoutExercise.getFirstExerciseImage())
+                                                                        .firstExerciseName(workoutExercise.getFirstExerciseName())
+                                                                        .rep(workoutExercise.getRep())
+                                                                        .set(workoutExercise.getNoOfSets())
+                                                                        .workoutId(workoutId)
+                                                                        .workoutExerciseNumber(workoutExerciseNumber)
+                                                                        .exerciseIds(joinedExerciseIds).values();
+                                                            }
+                                                        }
+
+                                                        break;
                                                 }
+
                                             } finally {
                                                 workoutExerciseCursor.close();
                                             }
