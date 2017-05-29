@@ -53,6 +53,7 @@ import ultimate.fit.ultimatefit.adapter.PagerAdapter;
 import ultimate.fit.ultimatefit.adapter.PlanAdapter;
 import ultimate.fit.ultimatefit.data.ExerciseColumns;
 import ultimate.fit.ultimatefit.data.PlanColumns;
+import ultimate.fit.ultimatefit.data.SetColumns;
 import ultimate.fit.ultimatefit.data.UltimateFitProvider;
 import ultimate.fit.ultimatefit.data.WorkoutColumns;
 import ultimate.fit.ultimatefit.data.WorkoutExerciseColumns;
@@ -368,6 +369,12 @@ public class MainActivity extends AppCompatActivity
                                                                     findFirst();
                                                             if (workoutExerciseOptional.isPresent()) {
                                                                 WorkoutExercise workoutExercise = workoutExerciseOptional.get();
+                                                                Cursor setCursor = activity.getContentResolver().query(UltimateFitProvider.Sets.CONTENT_URI, null,
+                                                                        SetColumns.WORKOUT_EXERCISE_ID + " = " + workoutExerciseId, null, null);
+                                                                if(setCursor != null && setCursor.getCount() >0){
+                                                                    
+                                                                }
+
                                                                 ContentValues workoutExerciseContentValues = new Workout_exercisesValuesBuilder()
                                                                         .firstExerciseImage(workoutExercise.getFirstExerciseImage())
                                                                         .firstExerciseName(workoutExercise.getFirstExerciseName())
