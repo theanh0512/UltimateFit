@@ -1,17 +1,17 @@
 <resources>
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
-        <!-- Customize your theme here. -->
+    <style name="Base.V0.AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
         <item name="android:windowBackground">@drawable/default_background</item>
         <item name="android:textColorPrimary">@color/colorPrimaryText</item>
         <item name="android:buttonStyle">@style/AppTheme.ButtonStyle</item>
-    </style>
+        </style>
+    <style name="AppTheme" parent="Base.V0.AppTheme"/>
 
-    <style name="AppTheme.ButtonStyle" parent="android:style/Widget.Button">
+    <style name="Base.V0.AppTheme.ButtonStyle" parent="android:style/Widget.Button">
         <item name="android:background">@drawable/button_background_click</item>
         <item name="android:textColor">@drawable/button_text_click</item>
         <item name="android:minHeight">36dp</item>
@@ -20,11 +20,13 @@
         <item name="android:paddingStart">16dp</item>
         <item name="android:paddingEnd">16dp</item>
     </style>
+    <style name="AppTheme.ButtonStyle" parent="Base.V0.AppTheme.ButtonStyle"/>
 
-    <style name="AppTheme.NoActionBar">
+    <style name="Base.V0.AppTheme.NoActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
     </style>
+    <style name="AppTheme.NoActionBar" parent="Base.V0.AppTheme.NoActionBar"/>
 
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 
@@ -34,20 +36,13 @@
         <item name="android:textColor">@color/colorTextIcon</item>
     </style>
 
-    <!--&lt;!&ndash; Main activity theme. &ndash;&gt;-->
-    <!--<style name="MovieTheme" parent="AppTheme">-->
-    <!--<item name="actionBarStyle">@style/ActionBar.Solid.Movie.NoTitle</item>-->
-    <!--</style>-->
-
-    <!--&lt;!&ndash; main activity action bar styles &ndash;&gt;-->
-    <!--<style name="ActionBar.Solid.Movie.NoTitle" parent="@style/Widget.AppCompat.Light.ActionBar.Solid.Inverse">-->
-    <!--<item name="displayOptions">useLogo|showHome</item>-->
-    <!--<item name="logo">@mipmap/ic_launcher</item>-->
-    <!--</style>-->
-
-    <!-- Style for movie listview -->
-    <!--<style name="MovieGridStyle">-->
-    <!--&lt;!&ndash; Here it's a stub.  In screens of sufficient width, this style includes modifications-->
-    <!--for two-pane layout &ndash;&gt;-->
-    <!--</style>-->
+    <style name="BrownTheme" parent="FirebaseUI">
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+        <item name="colorControlNormal">@color/colorPrimary</item>
+        <item name="colorControlActivated">@color/material_orange_600</item>
+        <item name="colorControlHighlight">@color/material_orange_a200</item>
+        <item name="android:windowBackground">@color/material_brown_50</item>
+    </style>
 </resources>

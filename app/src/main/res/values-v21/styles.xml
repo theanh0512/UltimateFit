@@ -1,30 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
-    <style name="AppTheme.NoActionBar">
-        <item name="windowActionBar">false</item>
-        <item name="windowNoTitle">true</item>
+    <style name="Base.V21.AppTheme.NoActionBar" parent="Base.V0.AppTheme.NoActionBar">
         <item name="android:windowExitTransition">@transition/exit</item>
         <item name="android:windowReenterTransition">@transition/reenter</item>
         <item name="android:windowEnterTransition">@transition/reenter</item>
         <item name="android:windowTransitionBackgroundFadeDuration">500</item>
     </style>
+    <style name="AppTheme.NoActionBar" parent="Base.V21.AppTheme.NoActionBar"/>
 
-    <style name="AppTheme.NoActionBar2">
-        <item name="windowActionBar">false</item>
-        <item name="windowNoTitle">true</item>
+    <style name="Base.V21.AppTheme.NoActionBar2" parent="Base.V0.AppTheme.NoActionBar">
         <item name="android:windowEnterTransition">@transition/slide_right</item>
         <item name="android:windowTransitionBackgroundFadeDuration">500</item>
     </style>
+    <style name="AppTheme.NoActionBar2" parent="Base.V21.AppTheme.NoActionBar2"/>
 
-    <style name="AppTheme.ButtonStyle" parent="android:style/Widget.Button">
-        <item name="android:background">@drawable/button_background_click</item>
-        <item name="android:textColor">@drawable/button_text_click</item>
-        <item name="android:minHeight">36dp</item>
-        <item name="android:textStyle">bold</item>
-        <item name="android:radius">2dp</item>
-        <item name="android:paddingStart">16dp</item>
-        <item name="android:paddingEnd">16dp</item>
+    <style name="Base.V21.AppTheme.ButtonStyle" parent="Base.V0.AppTheme.ButtonStyle">
         <item name="android:elevation">2dp</item>
     </style>
+    <style name="AppTheme.ButtonStyle" parent="Base.V21.AppTheme.ButtonStyle"/>
 </resources>

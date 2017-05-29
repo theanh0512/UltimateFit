@@ -15,9 +15,6 @@ android {
         applicationId "ultimate.fit.ultimatefit"
         minSdkVersion 19
         targetSdkVersion 25
-        jackOptions {
-            enabled true
-        }
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"

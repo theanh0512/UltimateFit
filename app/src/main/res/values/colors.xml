@@ -11,4 +11,8 @@
 
     <color name="black_alpha_40">#66000000</color>
     <color name="black_alpha_60">#99000000</color>
+
+    <color name="material_orange_600">#FB8C00</color>
+    <color name="material_orange_a200">#FFAB40</color>
+    <color name="material_brown_50">#EFEBE9</color>
 </resources>
