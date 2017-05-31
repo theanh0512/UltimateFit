@@ -232,7 +232,7 @@ public class WorkoutExerciseActivityFragment extends Fragment implements LoaderM
                             int exerciseId = arrayListExercise.get(i).getExerciseId();
                             String exerciseName = arrayListExercise.get(i).getExerciseName();
                             setValues[count] = new SetsValuesBuilder().setName(exerciseName).exerciseId(exerciseId).workoutExerciseId(workoutExerciseId)
-                                    .exerciseNumber(i).setNumber(j).rep(0).weightRatio(0.0).weight(0.0).values();
+                                    .exerciseNumber(i).setNumber(j).rep(0).weightRatio(0.0).weight(0.0).setPosition(count).values();
                             count++;
                         }
                     }

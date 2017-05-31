@@ -177,6 +177,7 @@ public class PlanAdapter extends RecyclerView.Adapter<PlanAdapter.ViewHolder> {
             for (workoutExerciseCursor.moveToFirst(); !workoutExerciseCursor.isAfterLast(); workoutExerciseCursor.moveToNext()) {
                 int noOfSets = workoutExerciseCursor.getInt(workoutExerciseCursor.getColumnIndex(WorkoutExerciseColumns.SET));
                 int rep = workoutExerciseCursor.getInt(workoutExerciseCursor.getColumnIndex(WorkoutExerciseColumns.REP));
+                int workoutExerciseNumber = workoutExerciseCursor.getInt(workoutExerciseCursor.getColumnIndex(WorkoutExerciseColumns.WORKOUT_EXERCISE_NUMBER));
                 String firstExerciseName = workoutExerciseCursor.getString(workoutExerciseCursor.getColumnIndex(WorkoutExerciseColumns.FIRST_EXERCISE_NAME));
                 String firstExerciseImage = workoutExerciseCursor.getString(workoutExerciseCursor.getColumnIndex(WorkoutExerciseColumns.FIRST_EXERCISE_IMAGE));
                 int workoutExerciseId = workoutExerciseCursor.getInt(workoutCursor.getColumnIndex(WorkoutExerciseColumns.ID));
@@ -191,12 +192,13 @@ public class PlanAdapter extends RecyclerView.Adapter<PlanAdapter.ViewHolder> {
                     int setNumber = setCursor.getInt(setCursor.getColumnIndex(SetColumns.SET_NUMBER));
                     int noOfRep = setCursor.getInt(setCursor.getColumnIndex(SetColumns.REP));
                     double weightRatio = setCursor.getDouble(setCursor.getColumnIndex(SetColumns.WEIGHT_RATIO));
-                    Set set = new Set(exerciseName, setNumber, exerciseNumber, noOfRep, weightRatio);
+                    int setPosition = setCursor.getInt(setCursor.getColumnIndex(SetColumns.SET_POSITION));
+                    Set set = new Set(exerciseName, setNumber, exerciseNumber, noOfRep, weightRatio, setPosition);
                     sets.add(set);
                 }
                 setCursor.close();
 
-                WorkoutExercise workoutExercise = new WorkoutExercise(firstExerciseName, firstExerciseImage, noOfSets, rep, sets);
+                WorkoutExercise workoutExercise = new WorkoutExercise(firstExerciseName, firstExerciseImage, noOfSets, rep, sets, workoutExerciseNumber);
                 workoutExercises.add(workoutExercise);
             }
             workoutExerciseCursor.close();

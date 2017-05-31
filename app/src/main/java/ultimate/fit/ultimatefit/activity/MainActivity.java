@@ -69,7 +69,7 @@ import ultimate.fit.ultimatefit.model.WorkoutExercise;
 import ultimate.fit.ultimatefit.utils.Config;
 import ultimate.fit.ultimatefit.utils.GetDataTask;
 import ultimate.fit.ultimatefit.utils.SharedPreferenceHelper;
-import ultimate.fit.ultimatefit.utils.Utils.InternetVsLocalWorkoutExerciseSize;
+import ultimate.fit.ultimatefit.utils.Utils.InternetVsLocalSize;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, TabPlanFragment.OnFragmentInteractionListener,
@@ -347,18 +347,17 @@ public class MainActivity extends AppCompatActivity
                                     if (isUpdating && isSyncAllowed) {
                                         Cursor workoutExerciseCursor = activity.getContentResolver().query(UltimateFitProvider.WorkoutExercises.CONTENT_URI, null,
                                                 WorkoutExerciseColumns.WORKOUT_ID + " = " + workoutId, null, null);
-                                        if (workoutExerciseCursor != null) {
+                                        if (workoutExerciseCursor != null && workoutExerciseCursor.moveToFirst()) {
                                             try {
-                                                int count = 0;
                                                 int toBeSavedWESize = workoutExercises.size();
                                                 int currentWESize = workoutExerciseCursor.getCount();
-                                                InternetVsLocalWorkoutExerciseSize comparedResult =
-                                                        toBeSavedWESize > currentWESize ? InternetVsLocalWorkoutExerciseSize.MORE :
-                                                                toBeSavedWESize == currentWESize ? InternetVsLocalWorkoutExerciseSize.EQUAL :
-                                                                        InternetVsLocalWorkoutExerciseSize.LESS;
+                                                InternetVsLocalSize comparedResult =
+                                                        toBeSavedWESize > currentWESize ? InternetVsLocalSize.MORE :
+                                                                toBeSavedWESize == currentWESize ? InternetVsLocalSize.EQUAL : InternetVsLocalSize.LESS;
                                                 switch (comparedResult) {
                                                     case MORE:
                                                         while (workoutExerciseCursor.moveToNext()) {
+                                                            String[] exerciseIdArray = {};
                                                             long workoutExerciseId = workoutExerciseCursor.getLong
                                                                     (workoutExerciseCursor.getColumnIndex(WorkoutExerciseColumns.ID));
                                                             int workoutExerciseNumber = workoutExerciseCursor.getInt
@@ -367,13 +366,53 @@ public class MainActivity extends AppCompatActivity
                                                                     stream().
                                                                     filter(w -> w.getWorkoutExerciseNumber() == workoutExerciseNumber).
                                                                     findFirst();
+                                                            
                                                             if (workoutExerciseOptional.isPresent()) {
                                                                 WorkoutExercise workoutExercise = workoutExerciseOptional.get();
                                                                 Cursor setCursor = activity.getContentResolver().query(UltimateFitProvider.Sets.CONTENT_URI, null,
                                                                         SetColumns.WORKOUT_EXERCISE_ID + " = " + workoutExerciseId, null, null);
-                                                                if(setCursor != null && setCursor.getCount() >0){
-                                                                    
+                                                                if (setCursor != null && setCursor.moveToFirst()) {
+                                                                    List<Set> sets = workoutExercise.getSets();
+                                                                    if (sets.size() > 0) {
+                                                                        int noOfSet = workoutExercise.getNoOfSets();
+                                                                        int noOfExercises = sets.size() / noOfSet;
+                                                                        exerciseIdArray = new String[noOfExercises];
+                                                                        if (setCursor.getCount() > 0) {
+                                                                            int toBeSavedSetsSize = sets.size();
+                                                                            int currentSetsSize = setCursor.getCount();
+                                                                            InternetVsLocalSize comparedSetResult =
+                                                                                    toBeSavedSetsSize > currentSetsSize ? InternetVsLocalSize.MORE :
+                                                                                            toBeSavedSetsSize == currentSetsSize ? InternetVsLocalSize.EQUAL : InternetVsLocalSize.LESS;
+                                                                            switch (comparedSetResult) {
+                                                                                case MORE:
+                                                                                    int count = 0;
+                                                                                    while (setCursor.moveToNext()) {
+                                                                                        int setPosition = setCursor.getInt(setCursor.getColumnIndex(SetColumns.SET_POSITION));
+                                                                                        long setId = setCursor.getLong(setCursor.getColumnIndex(SetColumns.ID));
+                                                                                        Optional<Set> setOptional = sets.
+                                                                                                stream().
+                                                                                                filter(s -> s.getSetPosition() == setPosition).
+                                                                                                findFirst();
+                                                                                        if (setOptional.isPresent()) {
+                                                                                            Set set = setOptional.get();
+                                                                                            ContentValues setContentValues =
+                                                                                                    getSetContentValuesFromSet (set, count, noOfExercises, exerciseIdArray, workoutExerciseId, setPosition);
+                                                                                            if(setContentValues != null)
+                                                                                                activity.getContentResolver().update(UltimateFitProvider.Sets.CONTENT_URI, setContentValues,
+                                                                                                        SetColumns.ID + " = " + setId, null);
+                                                                                            }
+                                                                                        }
+                                                                                    }
+                                                                                    for (int j = currentSetsSize; j < sets.size(); j++) {
+                                                                                        Set set = sets.get(j);
+
+                                                                                    }
+                                                                                    break;
+                                                                            }
+                                                                        }
+                                                                    }
                                                                 }
+                                                                setCursor.close();
 
                                                                 ContentValues workoutExerciseContentValues = new Workout_exercisesValuesBuilder()
                                                                         .firstExerciseImage(workoutExercise.getFirstExerciseImage())
@@ -506,6 +545,33 @@ public class MainActivity extends AppCompatActivity
             };
             mPlanDatabaseReference.addChildEventListener(mChildEventListener);
         }
+    }
+
+    private ContentValues getSetContentValuesFromSet (Set set, int count, int noOfExercises, String[] exerciseIdArray, long workoutExerciseId, int setPosition) {
+        ContentValues setContentValues = null;
+        String exerciseName = set.getExerciseName();
+        String[] argsExercise = {exerciseName};
+        Cursor exerciseCursor = activity.getContentResolver().query(UltimateFitProvider.Exercises.CONTENT_URI, null,
+                ExerciseColumns.EXERCISE_NAME + " = ?", argsExercise, null);
+        long exerciseId;
+        if (exerciseCursor != null && exerciseCursor.moveToFirst()) {
+            exerciseId = exerciseCursor.getLong(exerciseCursor.getColumnIndex(ExerciseColumns.ID));
+            if (count < noOfExercises) {
+                exerciseIdArray[count] = String.valueOf(exerciseId);
+                count++;
+            }
+            exerciseCursor.close();
+            setContentValues = new SetsValuesBuilder()
+                    .exerciseNumber(set.getExerciseNumber())
+                    .exerciseId(exerciseId)
+                    .rep(set.getNoOfRep())
+                    .weightRatio(set.getWeightRatio())
+                    .setName(exerciseName)
+                    .workoutExerciseId(workoutExerciseId)
+                    .setPosition(setPosition)
+                    .setNumber(set.getSetNumber()).values();
+        }
+        return setContentValues;
     }
 
     private String strJoin(String[] stringArray, String separator) {

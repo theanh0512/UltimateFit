@@ -16,6 +16,10 @@ public interface SetColumns {
     @NotNull
     String EXERCISE_ID = "exercise_id";
 
+    @DataType(DataType.Type.INTEGER)
+    @NotNull
+    String SET_POSITION = "set_position";
+
     @DataType(DataType.Type.TEXT)
     @NotNull
     String SET_NAME = "set_name";
@@ -33,6 +37,8 @@ public interface SetColumns {
     @DataType(DataType.Type.INTEGER)
     String REP = "rep_in_set";
 
+    //Set number for single, super or giant set
+    //ex: super set 1
     @DataType(DataType.Type.INTEGER)
     @NotNull
     String SET_NUMBER = "set_number";

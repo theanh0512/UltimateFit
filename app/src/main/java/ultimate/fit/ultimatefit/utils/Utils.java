@@ -5,7 +5,7 @@ package ultimate.fit.ultimatefit.utils;
  */
 
 public class Utils {
-    public enum InternetVsLocalWorkoutExerciseSize {
+    public enum InternetVsLocalSize {
         MORE,
         EQUAL,
         LESS

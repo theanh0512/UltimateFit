@@ -8,19 +8,29 @@ public class Set {
     private String exerciseName;
     private int setNumber;
     private int exerciseNumber;
+    private int setPosition;
     private int noOfRep;
     private double weightRatio;
 
-    public Set(String exerciseName, int setNumber, int exerciseNumber, int noOfRep, double weightRatio) {
+    public Set(String exerciseName, int setNumber, int exerciseNumber, int noOfRep, double weightRatio, int setPosition) {
 
         this.exerciseName = exerciseName;
         this.setNumber = setNumber;
         this.exerciseNumber = exerciseNumber;
         this.noOfRep = noOfRep;
         this.weightRatio = weightRatio;
+        this.setPosition = setPosition;
     }
 
     public Set() {
+    }
+
+    public int getSetPosition() {
+        return setPosition;
+    }
+
+    public void setSetPosition(int setPosition) {
+        this.setPosition = setPosition;
     }
 
     public double getWeightRatio() {
