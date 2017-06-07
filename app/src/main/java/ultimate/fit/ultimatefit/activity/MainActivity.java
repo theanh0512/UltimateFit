@@ -215,14 +215,11 @@ public class MainActivity extends AppCompatActivity
         toggle.syncState();
         toggle.setDrawerIndicatorEnabled(false);
         toggle.setHomeAsUpIndicator(R.drawable.view_sequential);
-        toggle.setToolbarNavigationClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (drawer.isDrawerVisible(GravityCompat.START)) {
-                    drawer.closeDrawer(GravityCompat.START);
-                } else {
-                    drawer.openDrawer(GravityCompat.START);
-                }
+        toggle.setToolbarNavigationClickListener(v -> {
+            if (drawer.isDrawerVisible(GravityCompat.START)) {
+                drawer.closeDrawer(GravityCompat.START);
+            } else {
+                drawer.openDrawer(GravityCompat.START);
             }
         });
 
@@ -235,29 +232,26 @@ public class MainActivity extends AppCompatActivity
         imageViewAccount.setVisibility(View.GONE);
         navigationView.setNavigationItemSelectedListener
                 (
-                        new NavigationView.OnNavigationItemSelectedListener() {
-                            @Override
-                            public boolean onNavigationItemSelected(final MenuItem item) {
-                                drawer.closeDrawer(GravityCompat.START);
+                        item -> {
+                            drawer.closeDrawer(GravityCompat.START);
 
-                                switch (item.getItemId()) {
-                                    case R.id.navigation_view_item_login:
-                                        item.setChecked(true);
-                                        break;
+                            switch (item.getItemId()) {
+                                case R.id.navigation_view_item_login:
+                                    item.setChecked(true);
+                                    break;
 
-                                    case R.id.navigation_view_item_logout:
-                                        item.setChecked(true);
-                                        AuthUI.getInstance().signOut(activity);
-                                        break;
+                                case R.id.navigation_view_item_logout:
+                                    item.setChecked(true);
+                                    AuthUI.getInstance().signOut(activity);
+                                    break;
 
-                                    case R.id.navigation_view_item_setting:
-                                        item.setChecked(true);
-                                        startActivity(new Intent(MainActivity.this, SettingsActivity.class));
-                                        break;
-                                }
-
-                                return true;
+                                case R.id.navigation_view_item_setting:
+                                    item.setChecked(true);
+                                    startActivity(new Intent(MainActivity.this, SettingsActivity.class));
+                                    break;
                             }
+
+                            return true;
                         }
                 );
     }
@@ -276,242 +270,168 @@ public class MainActivity extends AppCompatActivity
 
                     //apply downloaded plans
                     //ToDo: need to ensure no duplicated plan downloaded
-                    Thread thread = new Thread(new Runnable() {
-                        @Override
-                        public void run() {
-                            String uploadedPlanGoal = uploadedPlan.getPlanGoal();
-                            int uploadedPlanNumOfWeek = uploadedPlan.getNumOfWeek();
-                            int uploadedPlanDayPerWeek = uploadedPlan.getDayPerWeek();
-                            String uploadedPlanName = uploadedPlan.getPlanName();
-                            String creatorEmail = uploadedPlan.getCreatorEmail();
-                            String planUuid = uploadedPlan.getPlanUuid();
-                            String[] args = {uploadedPlanName, uploadedPlanGoal, String.valueOf(uploadedPlanDayPerWeek), String.valueOf(uploadedPlanNumOfWeek)};
-                            Cursor planCursor = activity.getContentResolver().query(UltimateFitProvider.Plans.CONTENT_URI, null,
-                                    PlanColumns.NAME + " = ? AND " + PlanColumns.GOAL + " = ? AND " + PlanColumns.DAY_PER_WEEK + " = ? AND " +
-                                            PlanColumns.NUM_OF_WEEK + " = ?", args, null);
-                            boolean isUpdating = false;
-                            if (planCursor.moveToFirst()) isUpdating = true;
-                            ContentValues planContentValues = new ContentValues();
-                            planContentValues.put(PlanColumns.NAME, uploadedPlanName);
-                            planContentValues.put(PlanColumns.GOAL, uploadedPlanGoal);
-                            planContentValues.put(PlanColumns.NUM_OF_WEEK, uploadedPlanNumOfWeek);
-                            planContentValues.put(PlanColumns.DAY_PER_WEEK, uploadedPlanDayPerWeek);
-                            planContentValues.put(PlanColumns.CREATOR, creatorEmail);
-                            planContentValues.put(PlanColumns.PLAN_UUID, planUuid);
-                            Uri uri;
-                            long planId = 0;
-                            if (!isUpdating) {
-                                uri = activity.getContentResolver().insert(UltimateFitProvider.Plans.CONTENT_URI, planContentValues);
-                                planId = ContentUris.parseId(uri);
-                            } else {
-                                if (isSyncAllowed) {
-                                    planId = planCursor.getLong(planCursor.getColumnIndex(PlanColumns.ID));
-                                    activity.getContentResolver().update(UltimateFitProvider.Plans.CONTENT_URI, planContentValues,
-                                            PlanColumns.ID + " = " + planId, null);
-                                }
+                    Thread thread = new Thread(() -> {
+                        String uploadedPlanGoal = uploadedPlan.getPlanGoal();
+                        int uploadedPlanNumOfWeek = uploadedPlan.getNumOfWeek();
+                        int uploadedPlanDayPerWeek = uploadedPlan.getDayPerWeek();
+                        String uploadedPlanName = uploadedPlan.getPlanName();
+                        String creatorEmail = uploadedPlan.getCreatorEmail();
+                        String planUuid = uploadedPlan.getPlanUuid();
+                        String[] args = {uploadedPlanName, uploadedPlanGoal, String.valueOf(uploadedPlanDayPerWeek), String.valueOf(uploadedPlanNumOfWeek)};
+                        Cursor planCursor = activity.getContentResolver().query(UltimateFitProvider.Plans.CONTENT_URI, null,
+                                PlanColumns.NAME + " = ? AND " + PlanColumns.GOAL + " = ? AND " + PlanColumns.DAY_PER_WEEK + " = ? AND " +
+                                        PlanColumns.NUM_OF_WEEK + " = ?", args, null);
+                        boolean isUpdating = false;
+                        if (planCursor != null && planCursor.moveToFirst()) isUpdating = true;
+                        ContentValues planContentValues = new ContentValues();
+                        planContentValues.put(PlanColumns.NAME, uploadedPlanName);
+                        planContentValues.put(PlanColumns.GOAL, uploadedPlanGoal);
+                        planContentValues.put(PlanColumns.NUM_OF_WEEK, uploadedPlanNumOfWeek);
+                        planContentValues.put(PlanColumns.DAY_PER_WEEK, uploadedPlanDayPerWeek);
+                        planContentValues.put(PlanColumns.CREATOR, creatorEmail);
+                        planContentValues.put(PlanColumns.PLAN_UUID, planUuid);
+                        Uri uri;
+                        long planId = 0;
+                        if (!isUpdating) {
+                            uri = activity.getContentResolver().insert(UltimateFitProvider.Plans.CONTENT_URI, planContentValues);
+                            planId = ContentUris.parseId(uri);
+                        } else {
+                            if (isSyncAllowed) {
+                                planId = planCursor.getLong(planCursor.getColumnIndex(PlanColumns.ID));
+                                activity.getContentResolver().update(UltimateFitProvider.Plans.CONTENT_URI, planContentValues,
+                                        PlanColumns.ID + " = " + planId, null);
                             }
-                            List<Workout> workouts = uploadedPlan.getWorkouts();
+                        }
+                        List<Workout> workouts = uploadedPlan.getWorkouts();
 
-                            //ensure creator set up the workout already
-                            //workouts are generated with plan. They will never be null
-                            if (workouts != null && workouts.size() > 0) {
-                                //insert workout
-                                ContentValues[] workoutContentValues = new ContentValues[workouts.size()];
-                                for (int i = 0; i < workoutContentValues.length; i++) {
-                                    workoutContentValues[i] = new WorkoutsValuesBuilder()
-                                            .dayNumber(workouts.get(i).getDayNumber())
-                                            .planId(planId)
-                                            .bodyPart(workouts.get(i).getWorkoutBodyPart()).values();
-                                    Uri workoutUri;
-                                    long workoutId = 0;
-                                    if (!isUpdating) {
-                                        workoutUri = activity.getContentResolver().insert(UltimateFitProvider.Workouts.CONTENT_URI, workoutContentValues[i]);
-                                        workoutId = ContentUris.parseId(workoutUri);
-                                    } else {
-                                        if (isSyncAllowed) {
-                                            String[] argsWorkout = {String.valueOf(planId), String.valueOf(workouts.get(i).getDayNumber())};
-                                            Cursor workoutCursor = activity.getContentResolver().query(UltimateFitProvider.Workouts.CONTENT_URI, null,
-                                                    WorkoutColumns.PLAN_ID + " = ? AND " + WorkoutColumns.DAY_NUMBER + " = ?", argsWorkout, null);
-                                            workoutCursor.moveToFirst();
-                                            workoutId = workoutCursor.getLong(workoutCursor.getColumnIndex(WorkoutColumns.ID));
-                                            activity.getContentResolver().update(UltimateFitProvider.Workouts.CONTENT_URI, workoutContentValues[i],
-                                                    WorkoutColumns.ID + " = " + workoutId, null);
-                                            workoutCursor.close();
-                                        }
+                        //ensure creator set up the workout already
+                        //workouts are generated with plan. They will never be null
+                        if (workouts != null && workouts.size() > 0) {
+                            //insert workout
+                            ContentValues[] workoutContentValues = new ContentValues[workouts.size()];
+                            for (int i = 0; i < workoutContentValues.length; i++) {
+                                workoutContentValues[i] = new WorkoutsValuesBuilder()
+                                        .dayNumber(workouts.get(i).getDayNumber())
+                                        .planId(planId)
+                                        .bodyPart(workouts.get(i).getWorkoutBodyPart()).values();
+                                Uri workoutUri;
+                                long workoutId = 0;
+                                if (!isUpdating) {
+                                    workoutUri = activity.getContentResolver().insert(UltimateFitProvider.Workouts.CONTENT_URI, workoutContentValues[i]);
+                                    workoutId = ContentUris.parseId(workoutUri);
+                                } else {
+                                    if (isSyncAllowed) {
+                                        String[] argsWorkout = {String.valueOf(planId), String.valueOf(workouts.get(i).getDayNumber())};
+                                        Cursor workoutCursor = activity.getContentResolver().query(UltimateFitProvider.Workouts.CONTENT_URI, null,
+                                                WorkoutColumns.PLAN_ID + " = ? AND " + WorkoutColumns.DAY_NUMBER + " = ?", argsWorkout, null);
+                                        workoutCursor.moveToFirst();
+                                        workoutId = workoutCursor.getLong(workoutCursor.getColumnIndex(WorkoutColumns.ID));
+                                        activity.getContentResolver().update(UltimateFitProvider.Workouts.CONTENT_URI, workoutContentValues[i],
+                                                WorkoutColumns.ID + " = " + workoutId, null);
+                                        workoutCursor.close();
                                     }
-                                    List<WorkoutExercise> workoutExercises = workouts.get(i).getWorkoutExercises();
+                                }
+                                List<WorkoutExercise> workoutExercises = workouts.get(i).getWorkoutExercises();
 
-                                    //Workout Exercise is not guaranteed to be generated.
-                                    //ensure creator set up the workoutExercise already
-                                    //Delete old workout exercises and sets
-                                    if (isUpdating && isSyncAllowed) {
-                                        Cursor workoutExerciseCursor = activity.getContentResolver().query(UltimateFitProvider.WorkoutExercises.CONTENT_URI, null,
-                                                WorkoutExerciseColumns.WORKOUT_ID + " = " + workoutId, null, null);
-                                        if (workoutExerciseCursor != null && workoutExerciseCursor.moveToFirst()) {
-                                            try {
-                                                int toBeSavedWESize = workoutExercises.size();
-                                                int currentWESize = workoutExerciseCursor.getCount();
-                                                InternetVsLocalSize comparedResult =
-                                                        toBeSavedWESize > currentWESize ? InternetVsLocalSize.MORE :
-                                                                toBeSavedWESize == currentWESize ? InternetVsLocalSize.EQUAL : InternetVsLocalSize.LESS;
-                                                switch (comparedResult) {
-                                                    case MORE:
-                                                        while (workoutExerciseCursor.moveToNext()) {
-                                                            String[] exerciseIdArray = {};
-                                                            long workoutExerciseId = workoutExerciseCursor.getLong
-                                                                    (workoutExerciseCursor.getColumnIndex(WorkoutExerciseColumns.ID));
-                                                            int workoutExerciseNumber = workoutExerciseCursor.getInt
-                                                                    (workoutExerciseCursor.getColumnIndex(WorkoutExerciseColumns.WORKOUT_EXERCISE_NUMBER));
-                                                            Optional<WorkoutExercise> workoutExerciseOptional = workoutExercises.
-                                                                    stream().
-                                                                    filter(w -> w.getWorkoutExerciseNumber() == workoutExerciseNumber).
-                                                                    findFirst();
-                                                            
-                                                            if (workoutExerciseOptional.isPresent()) {
-                                                                WorkoutExercise workoutExercise = workoutExerciseOptional.get();
-                                                                Cursor setCursor = activity.getContentResolver().query(UltimateFitProvider.Sets.CONTENT_URI, null,
-                                                                        SetColumns.WORKOUT_EXERCISE_ID + " = " + workoutExerciseId, null, null);
-                                                                if (setCursor != null && setCursor.moveToFirst()) {
-                                                                    List<Set> sets = workoutExercise.getSets();
-                                                                    if (sets.size() > 0) {
-                                                                        int noOfSet = workoutExercise.getNoOfSets();
-                                                                        int noOfExercises = sets.size() / noOfSet;
-                                                                        exerciseIdArray = new String[noOfExercises];
-                                                                        if (setCursor.getCount() > 0) {
-                                                                            int toBeSavedSetsSize = sets.size();
-                                                                            int currentSetsSize = setCursor.getCount();
-                                                                            InternetVsLocalSize comparedSetResult =
-                                                                                    toBeSavedSetsSize > currentSetsSize ? InternetVsLocalSize.MORE :
-                                                                                            toBeSavedSetsSize == currentSetsSize ? InternetVsLocalSize.EQUAL : InternetVsLocalSize.LESS;
-                                                                            switch (comparedSetResult) {
-                                                                                case MORE:
-                                                                                    int count = 0;
-                                                                                    while (setCursor.moveToNext()) {
-                                                                                        int setPosition = setCursor.getInt(setCursor.getColumnIndex(SetColumns.SET_POSITION));
-                                                                                        long setId = setCursor.getLong(setCursor.getColumnIndex(SetColumns.ID));
-                                                                                        Optional<Set> setOptional = sets.
-                                                                                                stream().
-                                                                                                filter(s -> s.getSetPosition() == setPosition).
-                                                                                                findFirst();
-                                                                                        if (setOptional.isPresent()) {
-                                                                                            Set set = setOptional.get();
-                                                                                            ContentValues setContentValues =
-                                                                                                    getSetContentValuesFromSet (set, count, noOfExercises, exerciseIdArray, workoutExerciseId, setPosition);
-                                                                                            if(setContentValues != null)
-                                                                                                activity.getContentResolver().update(UltimateFitProvider.Sets.CONTENT_URI, setContentValues,
-                                                                                                        SetColumns.ID + " = " + setId, null);
-                                                                                            }
-                                                                                        }
-                                                                                    }
-                                                                                    for (int j = currentSetsSize; j < sets.size(); j++) {
-                                                                                        Set set = sets.get(j);
-
-                                                                                    }
-                                                                                    break;
-                                                                            }
-                                                                        }
-                                                                    }
-                                                                }
-                                                                setCursor.close();
-
-                                                                ContentValues workoutExerciseContentValues = new Workout_exercisesValuesBuilder()
-                                                                        .firstExerciseImage(workoutExercise.getFirstExerciseImage())
-                                                                        .firstExerciseName(workoutExercise.getFirstExerciseName())
-                                                                        .rep(workoutExercise.getRep())
-                                                                        .set(workoutExercise.getNoOfSets())
-                                                                        .workoutId(workoutId)
-                                                                        .workoutExerciseNumber(workoutExerciseNumber)
-                                                                        .exerciseIds(joinedExerciseIds).values();
+                                //Workout Exercise is not guaranteed to be generated.
+                                //ensure creator set up the workoutExercise already
+                                //Delete old workout exercises and sets
+                                if (isUpdating && isSyncAllowed) {
+                                    Cursor workoutExerciseCursor = activity.getContentResolver().query(UltimateFitProvider.WorkoutExercises.CONTENT_URI, null,
+                                            WorkoutExerciseColumns.WORKOUT_ID + " = " + workoutId, null, null);
+                                    if (workoutExerciseCursor != null && workoutExerciseCursor.moveToFirst()) {
+                                        int toBeSavedWESize = workoutExercises.size();
+                                        int currentWESize = workoutExerciseCursor.getCount();
+                                        InternetVsLocalSize comparedResult =
+                                                toBeSavedWESize > currentWESize ? InternetVsLocalSize.MORE :
+                                                        toBeSavedWESize == currentWESize ? InternetVsLocalSize.EQUAL : InternetVsLocalSize.LESS;
+                                        switch (comparedResult) {
+                                            case MORE:
+                                                updateWorkoutExercise(workoutId, workoutExercises, workoutExerciseCursor);
+                                                //workout exercise is not in local database
+                                                for (int j = currentWESize; j < toBeSavedWESize; j++) {
+                                                    WorkoutExercise workoutExercise = workoutExercises.get(j);
+                                                    String[] exerciseIdArray = {};
+                                                    List<Set> sets = workoutExercise.getSets();
+                                                    String joinedExerciseIds = "0";
+                                                    //if sets are already generated
+                                                    if (sets != null && sets.size() > 0) {
+                                                        int noOfSet = workoutExercise.getNoOfSets();
+                                                        int noOfExercises = sets.size() / noOfSet;
+                                                        exerciseIdArray = new String[noOfExercises];
+                                                        for (int k = 0; k < noOfExercises; k++) {
+                                                            String exerciseName = sets.get(k).getExerciseName();
+                                                            String[] argsExercise = {exerciseName};
+                                                            Cursor exerciseCursor = activity.getContentResolver().query(UltimateFitProvider.Exercises.CONTENT_URI, null,
+                                                                    ExerciseColumns.EXERCISE_NAME + " = ?", argsExercise, null);
+                                                            if (exerciseCursor != null && exerciseCursor.moveToFirst()) {
+                                                                long exerciseId = exerciseCursor.getLong(exerciseCursor.getColumnIndex(ExerciseColumns.ID));
+                                                                exerciseIdArray[k] = String.valueOf(exerciseId);
+                                                                exerciseCursor.close();
                                                             }
                                                         }
+                                                        joinedExerciseIds = strJoin(exerciseIdArray, ",");
+                                                    } else {//set is not generated
+                                                        String[] argsExercise = {workoutExercise.getFirstExerciseName()};
+                                                        Cursor exerciseCursor = activity.getContentResolver().query(UltimateFitProvider.Exercises.CONTENT_URI, null,
+                                                                ExerciseColumns.EXERCISE_NAME + " = ?", argsExercise, null);
+                                                        if (exerciseCursor != null && exerciseCursor.moveToFirst()) {
+                                                            long exerciseId = exerciseCursor.getLong(exerciseCursor.getColumnIndex(ExerciseColumns.ID));
+                                                            joinedExerciseIds = String.valueOf(exerciseId);
+                                                            exerciseIdArray = new String[1];
+                                                            exerciseIdArray[0] = String.valueOf(exerciseId);
+                                                            exerciseCursor.close();
+                                                        }
 
-                                                        break;
-                                                }
+                                                    }
+                                                    ContentValues workoutExerciseContentValues = new Workout_exercisesValuesBuilder()
+                                                            .firstExerciseImage(workoutExercise.getFirstExerciseImage())
+                                                            .firstExerciseName(workoutExercise.getFirstExerciseName())
+                                                            .rep(workoutExercise.getRep())
+                                                            .set(workoutExercise.getNoOfSets())
+                                                            .workoutId(workoutId)
+                                                            .workoutExerciseNumber(j)
+                                                            .exerciseIds(joinedExerciseIds).values();
+                                                    if (isSyncAllowed) {
+                                                        Uri workoutExerciseUri = activity.getContentResolver().insert(UltimateFitProvider.WorkoutExercises.CONTENT_URI,
+                                                                workoutExerciseContentValues);
+                                                        long workoutExerciseId = ContentUris.parseId(workoutExerciseUri);
 
-                                            } finally {
-                                                workoutExerciseCursor.close();
-                                            }
-                                        }
-                                        activity.getContentResolver().delete(UltimateFitProvider.WorkoutExercises.CONTENT_URI,
-                                                WorkoutExerciseColumns.WORKOUT_ID + " = " + workoutId, null);
-                                    }
-
-                                    if (workoutExercises != null && workoutExercises.size() > 0) {
-                                        //insert workoutExercise
-                                        ContentValues[] workoutExerciseContentValues = new ContentValues[workoutExercises.size()];
-                                        for (int j = 0; j < workoutExerciseContentValues.length; j++) {
-                                            WorkoutExercise workoutExercise = workoutExercises.get(j);
-                                            List<Set> sets = workoutExercise.getSets();
-                                            String joinedExerciseIds = "0";
-                                            String[] exerciseIdArray = {};
-                                            //if sets are already generated
-                                            if (sets != null && sets.size() > 0) {
-                                                int noOfSet = workoutExercise.getNoOfSets();
-                                                int noOfExercises = sets.size() / noOfSet;
-                                                exerciseIdArray = new String[noOfExercises];
-                                                for (int k = 0; k < noOfExercises; k++) {
-                                                    String exerciseName = sets.get(k).getExerciseName();
-                                                    String[] argsExercise = {exerciseName};
-                                                    Cursor exerciseCursor = activity.getContentResolver().query(UltimateFitProvider.Exercises.CONTENT_URI, null,
-                                                            ExerciseColumns.EXERCISE_NAME + " = ?", argsExercise, null);
-                                                    if (exerciseCursor != null && exerciseCursor.moveToFirst()) {
-                                                        long exerciseId = exerciseCursor.getLong(exerciseCursor.getColumnIndex(ExerciseColumns.ID));
-                                                        exerciseIdArray[k] = String.valueOf(exerciseId);
-                                                        exerciseCursor.close();
+                                                        //insert sets if they are already generated
+                                                        if (sets != null && sets.size() > 0) {
+                                                            ContentValues[] setContentValues = new ContentValues[sets.size()];
+                                                            for (int k = 0; k < sets.size(); k++) {
+                                                                Set set = sets.get(k);
+                                                                String exerciseName = set.getExerciseName();
+                                                                setContentValues[k] = new SetsValuesBuilder()
+                                                                        .exerciseNumber(set.getExerciseNumber())
+                                                                        .exerciseId(Long.parseLong(exerciseIdArray[k % exerciseIdArray.length]))
+                                                                        .rep(set.getNoOfRep())
+                                                                        .weightRatio(set.getWeightRatio())
+                                                                        .setName(exerciseName)
+                                                                        .workoutExerciseId(workoutExerciseId)
+                                                                        .setNumber(set.getSetNumber()).values();
+                                                                activity.getContentResolver().insert(UltimateFitProvider.Sets.CONTENT_URI, setContentValues[k]);
+                                                            }
+                                                        }
                                                     }
                                                 }
-                                                joinedExerciseIds = strJoin(exerciseIdArray, ",");
-                                            } else {//set is not generated
-                                                String[] argsExercise = {workoutExercise.getFirstExerciseName()};
-                                                Cursor exerciseCursor = activity.getContentResolver().query(UltimateFitProvider.Exercises.CONTENT_URI, null,
-                                                        ExerciseColumns.EXERCISE_NAME + " = ?", argsExercise, null);
-                                                if (exerciseCursor != null && exerciseCursor.moveToFirst()) {
-                                                    long exerciseId = exerciseCursor.getLong(exerciseCursor.getColumnIndex(ExerciseColumns.ID));
-                                                    joinedExerciseIds = String.valueOf(exerciseId);
-                                                    exerciseIdArray = new String[1];
-                                                    exerciseIdArray[0] = String.valueOf(exerciseId);
-                                                    exerciseCursor.close();
-                                                }
+                                                break;
 
-                                            }
-                                            workoutExerciseContentValues[j] = new Workout_exercisesValuesBuilder()
-                                                    .firstExerciseImage(workoutExercise.getFirstExerciseImage())
-                                                    .firstExerciseName(workoutExercise.getFirstExerciseName())
-                                                    .rep(workoutExercise.getRep())
-                                                    .set(workoutExercise.getNoOfSets())
-                                                    .workoutId(workoutId)
-                                                    .exerciseIds(joinedExerciseIds).values();
-
-                                            if (isSyncAllowed || !isUpdating) {
-                                                Uri workoutExerciseUri = activity.getContentResolver().insert(UltimateFitProvider.WorkoutExercises.CONTENT_URI,
-                                                        workoutExerciseContentValues[j]);
-                                                long workoutExerciseId = ContentUris.parseId(workoutExerciseUri);
-
-                                                //insert sets if they are already generated
-                                                if (sets != null && sets.size() > 0) {
-                                                    ContentValues[] setContentValues = new ContentValues[sets.size()];
-                                                    for (int k = 0; k < sets.size(); k++) {
-                                                        Set set = sets.get(k);
-                                                        String exerciseName = set.getExerciseName();
-                                                        setContentValues[k] = new SetsValuesBuilder()
-                                                                .exerciseNumber(set.getExerciseNumber())
-                                                                .exerciseId(Long.parseLong(exerciseIdArray[k % exerciseIdArray.length]))
-                                                                .rep(set.getNoOfRep())
-                                                                .weightRatio(set.getWeightRatio())
-                                                                .setName(exerciseName)
-                                                                .workoutExerciseId(workoutExerciseId)
-                                                                .setNumber(set.getSetNumber()).values();
-                                                        activity.getContentResolver().insert(UltimateFitProvider.Sets.CONTENT_URI, setContentValues[k]);
-                                                    }
-                                                }
-                                            }
+                                            case EQUAL:
+                                                updateWorkoutExercise(workoutId, workoutExercises, workoutExerciseCursor);
+                                                break;
+                                            case LESS:
+                                                updateWorkoutExercise(workoutId, workoutExercises, workoutExerciseCursor);
+                                                break;
                                         }
                                     }
+                                    if (workoutExerciseCursor != null)
+                                        workoutExerciseCursor.close();
                                 }
                             }
-
-                            planCursor.close();
                         }
+                        planCursor.close();
                     });
                     thread.start();
                     try {
@@ -545,9 +465,145 @@ public class MainActivity extends AppCompatActivity
             };
             mPlanDatabaseReference.addChildEventListener(mChildEventListener);
         }
+
     }
 
-    private ContentValues getSetContentValuesFromSet (Set set, int count, int noOfExercises, String[] exerciseIdArray, long workoutExerciseId, int setPosition) {
+    private void updateWorkoutExercise(long workoutId, List<WorkoutExercise> workoutExercises, Cursor workoutExerciseCursor) {
+        while (workoutExerciseCursor.moveToNext()) {
+            String[] exerciseIdArray = {};
+            long workoutExerciseId = workoutExerciseCursor.getLong
+                    (workoutExerciseCursor.getColumnIndex(WorkoutExerciseColumns.ID));
+            int workoutExerciseNumber = workoutExerciseCursor.getInt
+                    (workoutExerciseCursor.getColumnIndex(WorkoutExerciseColumns.WORKOUT_EXERCISE_NUMBER));
+            Optional<WorkoutExercise> workoutExerciseOptional = workoutExercises.
+                    stream().
+                    filter(w -> w.getWorkoutExerciseNumber() == workoutExerciseNumber).
+                    findFirst();
+
+            if (workoutExerciseOptional.isPresent()) {
+                WorkoutExercise workoutExercise = workoutExerciseOptional.get();
+                Cursor setCursor = activity.getContentResolver().query(UltimateFitProvider.Sets.CONTENT_URI, null,
+                        SetColumns.WORKOUT_EXERCISE_ID + " = " + workoutExerciseId, null, null);
+                if (setCursor != null && setCursor.moveToFirst()) {
+                    List<Set> sets = workoutExercise.getSets();
+                    if (sets.size() > 0) {
+                        int noOfSet = workoutExercise.getNoOfSets();
+                        int noOfExercises = sets.size() / noOfSet;
+                        exerciseIdArray = new String[noOfExercises];
+                        if (setCursor.getCount() > 0) {
+                            int toBeSavedSetsSize = sets.size();
+                            int currentSetsSize = setCursor.getCount();
+                            InternetVsLocalSize comparedSetResult =
+                                    toBeSavedSetsSize > currentSetsSize ? InternetVsLocalSize.MORE :
+                                            toBeSavedSetsSize == currentSetsSize ? InternetVsLocalSize.EQUAL : InternetVsLocalSize.LESS;
+                            switch (comparedSetResult) {
+                                case MORE:
+                                    int count = 0;
+                                    while (setCursor.moveToNext()) {
+                                        int setPosition = setCursor.getInt(setCursor.getColumnIndex(SetColumns.SET_POSITION));
+                                        long setId = setCursor.getLong(setCursor.getColumnIndex(SetColumns.ID));
+                                        Optional<Set> setOptional = sets.
+                                                stream().
+                                                filter(s -> s.getSetPosition() == setPosition).
+                                                findFirst();
+                                        if (setOptional.isPresent()) {
+                                            Set set = setOptional.get();
+                                            ContentValues setContentValues =
+                                                    getSetContentValuesFromSet(set, count, noOfExercises, exerciseIdArray, workoutExerciseId, setPosition);
+                                            if (setContentValues != null)
+                                                activity.getContentResolver().update(UltimateFitProvider.Sets.CONTENT_URI, setContentValues,
+                                                        SetColumns.ID + " = " + setId, null);
+                                        }
+                                    }
+                                    for (int j = currentSetsSize; j < sets.size(); j++) {
+                                        Set set = sets.get(j);
+                                        ContentValues setContentValues =
+                                                getSetContentValuesFromSet(set, count, noOfExercises, exerciseIdArray, workoutExerciseId, j);
+                                        if (setContentValues != null)
+                                            activity.getContentResolver().insert(UltimateFitProvider.Sets.CONTENT_URI, setContentValues);
+                                    }
+                                    break;
+                                case LESS:
+                                    int count_less = 0;
+                                    while (setCursor.moveToNext()) {
+                                        int setPosition = setCursor.getInt(setCursor.getColumnIndex(SetColumns.SET_POSITION));
+                                        long setId = setCursor.getLong(setCursor.getColumnIndex(SetColumns.ID));
+                                        Optional<Set> setOptional = sets.
+                                                stream().
+                                                filter(s -> s.getSetPosition() == setPosition).
+                                                findFirst();
+                                        if (setOptional.isPresent()) {
+                                            Set set = setOptional.get();
+                                            ContentValues setContentValues =
+                                                    getSetContentValuesFromSet(set, count_less, noOfExercises, exerciseIdArray, workoutExerciseId, setPosition);
+                                            if (setContentValues != null)
+                                                activity.getContentResolver().update(UltimateFitProvider.Sets.CONTENT_URI, setContentValues,
+                                                        SetColumns.ID + " = " + setId, null);
+                                        } else {
+                                            activity.getContentResolver().delete(UltimateFitProvider.Sets.CONTENT_URI,
+                                                    SetColumns.ID + " = " + setId, null);
+                                        }
+                                    }
+                                    break;
+                                case EQUAL:
+                                    int count_equal = 0;
+                                    while (setCursor.moveToNext()) {
+                                        int setPosition = setCursor.getInt(setCursor.getColumnIndex(SetColumns.SET_POSITION));
+                                        long setId = setCursor.getLong(setCursor.getColumnIndex(SetColumns.ID));
+                                        Optional<Set> setOptional = sets.
+                                                stream().
+                                                filter(s -> s.getSetPosition() == setPosition).
+                                                findFirst();
+                                        if (setOptional.isPresent()) {
+                                            Set set = setOptional.get();
+                                            ContentValues setContentValues =
+                                                    getSetContentValuesFromSet(set, count_equal, noOfExercises, exerciseIdArray, workoutExerciseId, setPosition);
+                                            if (setContentValues != null)
+                                                activity.getContentResolver().update(UltimateFitProvider.Sets.CONTENT_URI, setContentValues,
+                                                        SetColumns.ID + " = " + setId, null);
+                                        }
+                                    }
+                                    break;
+                            }
+                        } else//no set for this workout exercise
+                        {
+                            int count = 0;
+                            for (int j = 0; j < sets.size(); j++) {
+                                Set set = sets.get(j);
+                                ContentValues setContentValues =
+                                        getSetContentValuesFromSet(set, count, noOfExercises, exerciseIdArray, workoutExerciseId, j);
+                                if (setContentValues != null)
+                                    activity.getContentResolver().insert(UltimateFitProvider.Sets.CONTENT_URI, setContentValues);
+                            }
+                        }
+                    }
+                }
+                if (setCursor != null)
+                    setCursor.close();
+
+                String joinedExerciseIds = strJoin(exerciseIdArray, ",");
+                ContentValues workoutExerciseContentValues = new Workout_exercisesValuesBuilder()
+                        .firstExerciseImage(workoutExercise.getFirstExerciseImage())
+                        .firstExerciseName(workoutExercise.getFirstExerciseName())
+                        .rep(workoutExercise.getRep())
+                        .set(workoutExercise.getNoOfSets())
+                        .workoutId(workoutId)
+                        .workoutExerciseNumber(workoutExerciseNumber)
+                        .exerciseIds(joinedExerciseIds).values();
+                if (isSyncAllowed) {
+                    activity.getContentResolver().update(UltimateFitProvider.WorkoutExercises.CONTENT_URI, workoutExerciseContentValues,
+                            WorkoutExerciseColumns.ID + " = " + workoutExerciseId, null);
+                }
+            } else {
+                activity.getContentResolver().delete(UltimateFitProvider.Sets.CONTENT_URI,
+                        SetColumns.WORKOUT_EXERCISE_ID + " = " + workoutExerciseId, null);
+                activity.getContentResolver().delete(UltimateFitProvider.WorkoutExercises.CONTENT_URI,
+                        WorkoutExerciseColumns.ID + " = " + workoutExerciseId, null);
+            }
+        }
+    }
+
+    private ContentValues getSetContentValuesFromSet(Set set, int count, int noOfExercises, String[] exerciseIdArray, long workoutExerciseId, int setPosition) {
         ContentValues setContentValues = null;
         String exerciseName = set.getExerciseName();
         String[] argsExercise = {exerciseName};
