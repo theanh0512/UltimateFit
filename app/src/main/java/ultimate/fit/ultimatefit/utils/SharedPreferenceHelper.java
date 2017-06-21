@@ -237,6 +237,7 @@ public class SharedPreferenceHelper {
          */
         CURRENT_APPLIED_PLANID_INT,
         LAST_EXERCISE_MODIFIED_DATE_LONG,
-        LAST_CATEGORY_MODIFIED_DATE_LONG
+        LAST_CATEGORY_MODIFIED_DATE_LONG,
+        LAST_UPDATED_PLAN_TIME
     }
 }
