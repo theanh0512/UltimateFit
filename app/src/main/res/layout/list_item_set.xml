@@ -31,8 +31,8 @@
             android:id="@+id/text_view_header"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingStart="4dp"
             android:paddingEnd="4dp"
+            android:paddingStart="4dp"
             android:textColor="#ffffff" />
     </FrameLayout>
 
@@ -52,19 +52,17 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="7dp"
         android:text="@string/reps"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/text_view_set_name" />
+        app:layout_constraintLeft_toLeftOf="parent" />
 
     <EditText
         android:id="@+id/edit_text_set_rep"
         android:layout_width="48dp"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="0dp"
+        android:layout_marginBottom="8dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="7dp"
+        android:layout_marginTop="32dp"
         android:background="@drawable/custom_edit_text"
         android:contentDescription="@string/cd_rep_per_set"
         android:gravity="center_horizontal"
@@ -73,31 +71,27 @@
         android:maxLength="3"
         android:nextFocusForward="@+id/edit_text_set_weight"
         android:nextFocusRight="@+id/edit_text_set_weight"
-        app:layout_constraintBottom_toBottomOf="@+id/text_view_reps"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toRightOf="@id/text_view_reps"
-        app:layout_constraintTop_toBottomOf="@id/text_view_set_name"
-        app:layout_constraintVertical_bias="1.0"
+        app:layout_constraintTop_toBottomOf="@+id/separatorContainer"
         tools:text="0" />
 
     <TextView
         android:id="@+id/text_view_weight"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="0dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginStart="8dp"
         android:text="@string/text_view_weight"
-        app:layout_constraintBottom_toBottomOf="@+id/text_view_reps"
-        app:layout_constraintLeft_toRightOf="@id/edit_text_set_rep"
-        app:layout_constraintTop_toBottomOf="@id/text_view_set_name" />
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toRightOf="@id/edit_text_set_rep" />
 
     <EditText
         android:id="@+id/edit_text_set_weight"
         android:layout_width="64dp"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="0dp"
-        android:layout_marginStart="5dp"
-        android:layout_marginTop="7dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginStart="8dp"
         android:background="@drawable/custom_edit_text"
         android:contentDescription="@string/cd_weight_for_this_set"
         android:gravity="center_horizontal"
@@ -105,9 +99,27 @@
         android:inputType="numberDecimal"
         android:maxLength="6"
         android:nextFocusLeft="@+id/edit_text_set_rep"
-        app:layout_constraintBottom_toBottomOf="@+id/text_view_reps"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toRightOf="@id/text_view_weight"
-        app:layout_constraintTop_toBottomOf="@id/text_view_set_name"
-        app:layout_constraintVertical_bias="1.0"
         tools:text="120.55" />
+
+    <TextView
+        android:id="@+id/text_view_target"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:layout_marginStart="16dp"
+        android:text="@string/text_view_target"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/edit_text_set_weight" />
+
+    <TextView
+        android:id="@+id/text_view_target_weight"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:layout_marginStart="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/text_view_target"
+        tools:text="120" />
 </android.support.constraint.ConstraintLayout>

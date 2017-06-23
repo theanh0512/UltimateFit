@@ -86,80 +86,71 @@ public class WorkoutExerciseActivityFragment extends Fragment implements LoaderM
             noOfSet = bundle.getInt("set");
             editTextSet.setText(String.valueOf(noOfSet));
             final Fragment fragment = this;
-            setAdapter = new SetAdapter(getActivity(), new SetAdapter.SetAdapterOnClickHandler() {
-                @Override
-                public void onClick(int exerciseId) {
-                    ExerciseFragment exerciseFragment = ExerciseFragment.newInstance(exerciseId);
-                    fragment.getFragmentManager().beginTransaction()
-                            .replace(R.id.container, exerciseFragment, TAG_FRAGMENT)
-                            .addToBackStack(null)
-                            .commit();
-                }
+            setAdapter = new SetAdapter(getActivity(), exerciseId -> {
+                ExerciseFragment exerciseFragment = ExerciseFragment.newInstance(exerciseId);
+                fragment.getFragmentManager().beginTransaction()
+                        .replace(R.id.container, exerciseFragment, TAG_FRAGMENT)
+                        .addToBackStack(null)
+                        .commit();
             });
 
             recyclerViewSet.setHasFixedSize(true);
             recyclerViewSet.setLayoutManager(new LinearLayoutManager(getActivity()));
             recyclerViewSet.setAdapter(setAdapter);
 
-            exerciseArrayListAdapter = new ExerciseArrayListAdapter(getActivity(), new ExerciseArrayListAdapter.ExerciseArrayListAdapterOnClickHandler() {
-                @Override
-                public void onClick(final int exerciseId) {
-                    Iterator<Exercise> iterator = arrayListExercise.iterator();
-                    boolean deleted = false;
-                    while (iterator.hasNext()) {
-                        if (arrayListExercise.size() == 1) {
-                            Toast.makeText(getActivity(), R.string.warning_one_exercise, Toast.LENGTH_SHORT).show();
-                            break;
-                        }
-                        Exercise exercise = iterator.next();
-                        if (exercise.getExerciseId() == exerciseId) {
-                            iterator.remove();
-                            deleted = true;
-                            break;
-                        }
+            exerciseArrayListAdapter = new ExerciseArrayListAdapter(getActivity(), exerciseId -> {
+                Iterator<Exercise> iterator = arrayListExercise.iterator();
+                boolean deleted = false;
+                while (iterator.hasNext()) {
+                    if (arrayListExercise.size() == 1) {
+                        Toast.makeText(getActivity(), R.string.warning_one_exercise, Toast.LENGTH_SHORT).show();
+                        break;
                     }
-                    exerciseArrayListAdapter.swapArrayList(arrayListExercise);
+                    Exercise exercise = iterator.next();
+                    if (exercise.getExerciseId() == exerciseId) {
+                        iterator.remove();
+                        deleted = true;
+                        break;
+                    }
+                }
+                exerciseArrayListAdapter.swapArrayList(arrayListExercise);
 
-                    //remove exerciseId in workoutExercise
-                    if (deleted) {
-                        Thread thread = new Thread(new Runnable() {
-                            @Override
-                            public void run() {
-                                try {
-                                    ArrayList<String> currentExerciseIds = new ArrayList<>(Arrays.asList(exerciseIds.split(",")));
-                                    Iterator<String> iterator = currentExerciseIds.iterator();
+                //remove exerciseId in workoutExercise
+                if (deleted) {
+                    Thread thread = new Thread(() -> {
+                        try {
+                            ArrayList<String> currentExerciseIds = new ArrayList<>(Arrays.asList(exerciseIds.split(",")));
+                            Iterator<String> iterator1 = currentExerciseIds.iterator();
 
-                                    while (iterator.hasNext()) {
-                                        String exercise = iterator.next();
-                                        if (Integer.parseInt(exercise) == exerciseId) {
-                                            iterator.remove();
-                                            break;
-                                        }
-                                    }
-                                    String newExerciseIds = strJoin(currentExerciseIds.toArray(new String[currentExerciseIds.size()]), ",");
-                                    exerciseIds = newExerciseIds;
-                                    ContentValues contentValues;
-                                    if (currentExerciseIds.size() == 1) {
-                                        Cursor exerciseCursor = getActivity().getContentResolver().query(UltimateFitProvider.Exercises.withId(Integer.parseInt(newExerciseIds))
-                                                , null, null, null, null);
-                                        exerciseCursor.moveToFirst();
-                                        String exerciseName = exerciseCursor.getString(exerciseCursor.getColumnIndex(ExerciseColumns.EXERCISE_NAME));
-                                        String exerciseImage = exerciseCursor.getString(exerciseCursor.getColumnIndex(ExerciseColumns.IMAGE_PATH));
-                                        contentValues = new Workout_exercisesValuesBuilder().exerciseIds(newExerciseIds).firstExerciseName(exerciseName)
-                                                .firstExerciseImage(exerciseImage).values();
-                                        exerciseCursor.close();
-                                    } else
-                                        contentValues = new Workout_exercisesValuesBuilder().exerciseIds(newExerciseIds).values();
-                                    getActivity().getContentResolver().update(UltimateFitProvider.WorkoutExercises.CONTENT_URI,
-                                            contentValues, UltimateFitDatabase.Tables.WORKOUT_EXERCISES + "." + WorkoutExerciseColumns.ID + "=" + workoutExerciseId, null);
-                                } catch (Exception e) {
-                                    // TODO: handle exception
-                                    Log.e("log_tag", "Error Parsing Data " + e.toString());
+                            while (iterator1.hasNext()) {
+                                String exercise = iterator1.next();
+                                if (Integer.parseInt(exercise) == exerciseId) {
+                                    iterator1.remove();
+                                    break;
                                 }
                             }
-                        });
-                        thread.start();
-                    }
+                            String newExerciseIds = strJoin(currentExerciseIds.toArray(new String[currentExerciseIds.size()]), ",");
+                            exerciseIds = newExerciseIds;
+                            ContentValues contentValues;
+                            if (currentExerciseIds.size() == 1) {
+                                Cursor exerciseCursor = getActivity().getContentResolver().query(UltimateFitProvider.Exercises.withId(Integer.parseInt(newExerciseIds))
+                                        , null, null, null, null);
+                                exerciseCursor.moveToFirst();
+                                String exerciseName = exerciseCursor.getString(exerciseCursor.getColumnIndex(ExerciseColumns.EXERCISE_NAME));
+                                String exerciseImage = exerciseCursor.getString(exerciseCursor.getColumnIndex(ExerciseColumns.IMAGE_PATH));
+                                contentValues = new Workout_exercisesValuesBuilder().exerciseIds(newExerciseIds).firstExerciseName(exerciseName)
+                                        .firstExerciseImage(exerciseImage).values();
+                                exerciseCursor.close();
+                            } else
+                                contentValues = new Workout_exercisesValuesBuilder().exerciseIds(newExerciseIds).values();
+                            getActivity().getContentResolver().update(UltimateFitProvider.WorkoutExercises.CONTENT_URI,
+                                    contentValues, UltimateFitDatabase.Tables.WORKOUT_EXERCISES + "." + WorkoutExerciseColumns.ID + "=" + workoutExerciseId, null);
+                        } catch (Exception e) {
+                            // TODO: handle exception
+                            Log.e("log_tag", "Error Parsing Data " + e.toString());
+                        }
+                    });
+                    thread.start();
                 }
             });
             recyclerViewArrayListExercise.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));

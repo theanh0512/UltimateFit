@@ -7,22 +7,30 @@
     android:orientation="vertical"
     tools:context="ultimate.fit.ultimatefit.fragment.TabPlanFragment">
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/recyclerview_plan"
+    <android.support.design.widget.CoordinatorLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent">
 
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/fab_add_plan"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom|end"
-        android:layout_margin="16dp"
-        android:contentDescription="@string/action_add_plan"
-        android:src="@drawable/fab_plus"
-        app:borderWidth="0dp"
-        app:elevation="6dp"
-        app:fabSize="normal"
-        app:layout_anchor="@id/recyclerview_plan"
-        app:pressedTranslationZ="6dp" />
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recyclerview_plan"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/fab_add_plan"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|end"
+            android:layout_margin="16dp"
+            android:contentDescription="@string/action_add_plan"
+            android:src="@drawable/fab_plus"
+            app:borderWidth="0dp"
+            app:elevation="6dp"
+            app:fabSize="normal"
+            app:layout_anchor="@id/recyclerview_plan"
+            app:layout_anchorGravity="bottom|right|end"
+            app:layout_behavior="ultimate.fit.ultimatefit.utils.ScrollAwareFABBehavior"
+            app:pressedTranslationZ="6dp" />
+    </android.support.design.widget.CoordinatorLayout>
+
 </FrameLayout>
