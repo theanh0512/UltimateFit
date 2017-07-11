@@ -26,17 +26,17 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import ultimate.fit.ultimatefit.R;
 import ultimate.fit.ultimatefit.UltimateFitWidgetProvider;
-import ultimate.fit.ultimatefit.ui.MainActivity;
 import ultimate.fit.ultimatefit.data.PlanColumns;
 import ultimate.fit.ultimatefit.data.SetColumns;
 import ultimate.fit.ultimatefit.data.UltimateFitProvider;
 import ultimate.fit.ultimatefit.data.WorkoutColumns;
 import ultimate.fit.ultimatefit.data.WorkoutExerciseColumns;
-import ultimate.fit.ultimatefit.ui.fragment.TabWorkoutFragment;
 import ultimate.fit.ultimatefit.model.Plan;
 import ultimate.fit.ultimatefit.model.Set;
 import ultimate.fit.ultimatefit.model.Workout;
 import ultimate.fit.ultimatefit.model.WorkoutExercise;
+import ultimate.fit.ultimatefit.ui.MainActivity;
+import ultimate.fit.ultimatefit.ui.fragment.TabWorkoutFragment;
 import ultimate.fit.ultimatefit.utils.SharedPreferenceHelper;
 
 /**
@@ -169,6 +169,7 @@ public class PlanAdapter extends RecyclerView.Adapter<PlanAdapter.ViewHolder> {
             int dayNumber = workoutCursor.getInt(workoutCursor.getColumnIndex(WorkoutColumns.DAY_NUMBER));
             String workoutBodyPart = workoutCursor.getString(workoutCursor.getColumnIndex(WorkoutColumns.BODY_PART));
             long workoutId = workoutCursor.getInt(workoutCursor.getColumnIndex(WorkoutColumns.ID));
+            String note = workoutCursor.getString(workoutCursor.getColumnIndex(WorkoutColumns.NOTE_OF_WORKOUT));
 
             List<WorkoutExercise> workoutExercises = new ArrayList<>();
             //query workoutExercise
@@ -203,7 +204,7 @@ public class PlanAdapter extends RecyclerView.Adapter<PlanAdapter.ViewHolder> {
             }
             workoutExerciseCursor.close();
 
-            Workout workout = new Workout(workoutBodyPart, dayNumber, workoutExercises);
+            Workout workout = new Workout(workoutBodyPart, dayNumber, workoutExercises, note);
             workouts.add(workout);
         }
         workoutCursor.close();

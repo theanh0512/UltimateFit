@@ -10,14 +10,24 @@ public class Workout {
     private String workoutBodyPart;
     private int dayNumber;
     private List<WorkoutExercise> workoutExercises;
+    private String note;
 
     public Workout() {
     }
 
-    public Workout(String workoutBodyPart, int dayNumber, List<WorkoutExercise> workoutExercises) {
+    public Workout(String workoutBodyPart, int dayNumber, List<WorkoutExercise> workoutExercises, String note) {
         this.workoutBodyPart = workoutBodyPart;
         this.dayNumber = dayNumber;
         this.workoutExercises = workoutExercises;
+        this.note = note;
+    }
+
+    public String getNote() {
+        return note;
+    }
+
+    public void setNote(String note) {
+        this.note = note;
     }
 
     public String getWorkoutBodyPart() {

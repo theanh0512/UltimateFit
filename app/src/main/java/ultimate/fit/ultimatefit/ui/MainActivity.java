@@ -63,12 +63,12 @@ import ultimate.fit.ultimatefit.data.WorkoutExerciseColumns;
 import ultimate.fit.ultimatefit.data.generated.values.SetsValuesBuilder;
 import ultimate.fit.ultimatefit.data.generated.values.Workout_exercisesValuesBuilder;
 import ultimate.fit.ultimatefit.data.generated.values.WorkoutsValuesBuilder;
-import ultimate.fit.ultimatefit.ui.fragment.TabPlanFragment;
-import ultimate.fit.ultimatefit.ui.fragment.TabWorkoutFragment;
 import ultimate.fit.ultimatefit.model.Plan;
 import ultimate.fit.ultimatefit.model.Set;
 import ultimate.fit.ultimatefit.model.Workout;
 import ultimate.fit.ultimatefit.model.WorkoutExercise;
+import ultimate.fit.ultimatefit.ui.fragment.TabPlanFragment;
+import ultimate.fit.ultimatefit.ui.fragment.TabWorkoutFragment;
 import ultimate.fit.ultimatefit.utils.Config;
 import ultimate.fit.ultimatefit.utils.GetDataTask;
 import ultimate.fit.ultimatefit.utils.SharedPreferenceHelper;
@@ -322,6 +322,7 @@ public class MainActivity extends AppCompatActivity
                                 workoutContentValues[i] = new WorkoutsValuesBuilder()
                                         .dayNumber(workouts.get(i).getDayNumber())
                                         .planId(planId)
+                                        .noteOfWorkout(workouts.get(i).getNote())
                                         .bodyPart(workouts.get(i).getWorkoutBodyPart()).values();
                                 Uri workoutUri;
                                 long workoutId = 0;
