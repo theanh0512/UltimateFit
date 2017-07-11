@@ -104,4 +104,7 @@
     <string name="button_done">Done</string>
     <string name="menu_item_note">Note</string>
     <string name="button_save">Save</string>
+    <string name="menu_item_calculate_orm">Find ORM</string>
+    <string name="text_view_orm">ORM: </string>
+    <string name="button_calculate">Calculate</string>
 </resources>

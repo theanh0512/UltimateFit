@@ -5,36 +5,11 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginBottom="4dp"
-    android:layout_marginLeft="4dp"
-    android:layout_marginRight="4dp"
     android:layout_marginTop="4dp"
-    android:background="@color/colorPrimaryDark"
     android:clickable="true"
     android:focusable="true"
-    android:foreground="?android:attr/selectableItemBackground"
-    android:orientation="horizontal">
+    android:foreground="?android:attr/selectableItemBackground">
 
-    <FrameLayout
-        android:id="@+id/separatorContainer"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="0dp"
-        android:layout_marginRight="0dp"
-        android:layout_marginTop="0dp"
-        android:background="@android:color/darker_gray"
-        android:visible="false"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
-
-        <TextView
-            android:id="@+id/text_view_header"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:paddingEnd="4dp"
-            android:paddingStart="4dp"
-            android:textColor="#ffffff" />
-    </FrameLayout>
 
     <TextView
         android:id="@+id/text_view_set_name"
@@ -43,7 +18,7 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="8dp"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/separatorContainer"
+        app:layout_constraintTop_toTopOf="parent"
         tools:text="Dumbbell Fly" />
 
     <TextView
@@ -53,7 +28,7 @@
         android:layout_marginBottom="8dp"
         android:layout_marginStart="16dp"
         android:text="@string/reps"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/view"
         app:layout_constraintLeft_toLeftOf="parent" />
 
     <EditText
@@ -61,8 +36,6 @@
         android:layout_width="48dp"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="32dp"
         android:background="@drawable/custom_edit_text"
         android:contentDescription="@string/cd_rep_per_set"
         android:gravity="center_horizontal"
@@ -71,9 +44,8 @@
         android:maxLength="3"
         android:nextFocusForward="@+id/edit_text_set_weight"
         android:nextFocusRight="@+id/edit_text_set_weight"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/view"
         app:layout_constraintLeft_toRightOf="@id/text_view_reps"
-        app:layout_constraintTop_toBottomOf="@+id/separatorContainer"
         tools:text="0" />
 
     <TextView
@@ -83,7 +55,7 @@
         android:layout_marginBottom="8dp"
         android:layout_marginStart="8dp"
         android:text="@string/text_view_weight"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/view"
         app:layout_constraintLeft_toRightOf="@id/edit_text_set_rep" />
 
     <EditText
@@ -99,26 +71,56 @@
         android:inputType="numberDecimal"
         android:maxLength="6"
         android:nextFocusLeft="@+id/edit_text_set_rep"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/view"
         app:layout_constraintLeft_toRightOf="@id/text_view_weight"
         tools:text="120.55" />
 
     <TextView
-        android:id="@+id/text_view_label_target"
+        android:id="@+id/text_view_label_orm"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
+        android:layout_marginStart="32dp"
         android:layout_marginTop="8dp"
-        android:text="@string/text_view_target"
+        android:text="@string/text_view_orm"
         app:layout_constraintStart_toEndOf="@+id/text_view_set_name"
-        app:layout_constraintTop_toBottomOf="@+id/separatorContainer" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/text_view_target_weight"
+        android:id="@+id/text_view_orm"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
-        app:layout_constraintStart_toEndOf="@+id/text_view_label_target"
-        app:layout_constraintTop_toBottomOf="@+id/separatorContainer"
+        app:layout_constraintStart_toEndOf="@+id/text_view_label_orm"
+        app:layout_constraintTop_toTopOf="parent"
         tools:text="120" />
+
+    <View
+        android:id="@+id/view"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="80dp"
+        android:background="@color/colorPrimary"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/button_save"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="32dp"
+        android:layout_marginTop="16dp"
+        android:text="@string/button_save"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/view" />
+
+    <Button
+        android:id="@+id/button_calculate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="16dp"
+        android:text="@string/button_calculate"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/view" />
 </android.support.constraint.ConstraintLayout>

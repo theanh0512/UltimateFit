@@ -8,6 +8,7 @@
         <item name="android:windowBackground">@drawable/default_background</item>
         <item name="android:textColorPrimary">@color/colorPrimaryText</item>
         <item name="android:buttonStyle">@style/AppTheme.ButtonStyle</item>
+        <item name="actionButtonStyle">@style/AppTheme.Widget.ActionButton</item>
     </style>
 
     <style name="AppTheme" parent="Base.V0.AppTheme" />
@@ -37,6 +38,10 @@
 
     <style name="AppTheme.Primary">
         <item name="android:textColor">@color/colorTextIcon</item>
+    </style>
+
+    <style name="AppTheme.Widget.ActionButton" parent="@style/Widget.AppCompat.ActionButton">
+        <item name="textAllCaps">false</item>
     </style>
 
     <style name="BrownTheme" parent="FirebaseUI">

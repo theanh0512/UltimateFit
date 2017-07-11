@@ -1,5 +1,7 @@
 package ultimate.fit.ultimatefit.ui.fragment;
 
+import android.app.AlertDialog;
+import android.content.ContentValues;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.os.Bundle;
@@ -8,8 +10,12 @@ import android.support.v4.app.Fragment;
 import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -21,7 +27,12 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import ultimate.fit.ultimatefit.R;
 import ultimate.fit.ultimatefit.data.ExerciseColumns;
+import ultimate.fit.ultimatefit.data.UltimateFitDatabase;
 import ultimate.fit.ultimatefit.data.UltimateFitProvider;
+import ultimate.fit.ultimatefit.data.WorkoutColumns;
+import ultimate.fit.ultimatefit.data.generated.values.ExercisesValuesBuilder;
+import ultimate.fit.ultimatefit.data.generated.values.WorkoutsValuesBuilder;
+import ultimate.fit.ultimatefit.utils.CalculationMethods;
 
 
 public class ExerciseFragment extends Fragment {
@@ -74,6 +85,7 @@ public class ExerciseFragment extends Fragment {
         if (getArguments() != null) {
             exerciseId = getArguments().getLong(ARG_PARAM1);
         }
+        this.setHasOptionsMenu(true);
     }
 
     @Override
@@ -177,4 +189,61 @@ public class ExerciseFragment extends Fragment {
 
         return rootView;
     }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.menu_calculate_orm, menu);
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.menu_item_calculate_orm:
+                AlertDialog.Builder builderSingle = new AlertDialog.Builder(getActivity());
+
+                LayoutInflater inflater_actionbar = LayoutInflater.from(getActivity());
+                View v = inflater_actionbar.inflate(R.layout.dialog_calculate_orm, null);
+                builderSingle.setView(v);
+                AlertDialog alertDialog;
+                alertDialog = builderSingle.create();
+
+                EditText editTextRep = (EditText) v.findViewById(R.id.edit_text_set_rep);
+                EditText editTextWeight = (EditText) v.findViewById(R.id.edit_text_set_weight);
+                TextView textViewORM = (TextView) v.findViewById(R.id.text_view_orm);
+                TextView textViewExerciseName = (TextView) v.findViewById(R.id.text_view_set_name);
+                textViewExerciseName.setText(exerciseName);
+                Button buttonCalculate = (Button) v.findViewById(R.id.button_calculate);
+                buttonCalculate.setOnClickListener(view -> {
+                    double orm = getOrm(editTextRep, editTextWeight);
+                    textViewORM.setText(String.valueOf(orm));
+                });
+                Button buttonSave = (Button) v.findViewById(R.id.button_save);
+                buttonSave.setOnClickListener(view -> {
+                            new Thread(() -> {
+                                double orm = getOrm(editTextRep, editTextWeight);
+                                ContentValues exerciseContentValues = new ExercisesValuesBuilder().oneRepMax(orm).values();
+                                getActivity().getContentResolver().update(UltimateFitProvider.Exercises.CONTENT_URI,
+                                        exerciseContentValues, UltimateFitDatabase.EXERCISES + "." + ExerciseColumns.ID + "=" + exerciseId, null);
+                            }).start();
+                            alertDialog.cancel();
+                    editTextOneRepMax.setText(String.valueOf(getOrm(editTextRep, editTextWeight)));
+                        }
+                );
+
+                alertDialog.setCanceledOnTouchOutside(true);
+                alertDialog.show();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    private double getOrm(EditText editTextRep, EditText editTextWeight) {
+        int rep = 0;
+        double weight = 0;
+        if(!editTextRep.getText().toString().isEmpty()) rep = Integer.valueOf(editTextRep.getText().toString());
+        if(!editTextWeight.getText().toString().isEmpty()) weight = Double.valueOf(editTextWeight.getText().toString());
+        return CalculationMethods.weightMaxForOneRep(weight, rep);
+    }
+
 }

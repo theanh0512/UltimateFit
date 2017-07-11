@@ -30,6 +30,7 @@ import ultimate.fit.ultimatefit.data.UltimateFitProvider;
 import ultimate.fit.ultimatefit.data.generated.values.ExercisesValuesBuilder;
 import ultimate.fit.ultimatefit.data.generated.values.SetsValuesBuilder;
 import ultimate.fit.ultimatefit.utils.CalculationMethods;
+import ultimate.fit.ultimatefit.utils.Utils;
 
 /**
  * Created by Pham on 18/2/2017.
@@ -95,10 +96,11 @@ public class SetAdapter extends RecyclerView.Adapter<SetAdapter.ViewHolder> {
             e.printStackTrace();
         }
         double targetWeight = oneRepMax * weightRatio;
-        holder.textViewTargetWeight.setText(String.valueOf(targetWeight));
-        if(isPersonalTrainerMode) weight = weightRatio; //personal trainer mode. PT will be editing weight ratio instead of weight
+        holder.textViewTargetWeight.setText(String.valueOf(Utils.round(targetWeight, 2)));
+        if (isPersonalTrainerMode)
+            weight = weightRatio; //personal trainer mode. PT will be editing weight ratio instead of weight
         holder.editTextRep.setText(String.valueOf(rep));
-        holder.editTextWeight.setText(String.valueOf(weight));
+        holder.editTextWeight.setText(String.valueOf(String.valueOf(Utils.round(weight, 2))));
     }
 
     @Override
