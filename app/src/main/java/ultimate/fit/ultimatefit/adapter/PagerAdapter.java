@@ -7,8 +7,8 @@ import android.support.v4.app.FragmentStatePagerAdapter;
 import android.util.SparseArray;
 import android.view.ViewGroup;
 
-import ultimate.fit.ultimatefit.fragment.TabPlanFragment;
-import ultimate.fit.ultimatefit.fragment.TabWorkoutFragment;
+import ultimate.fit.ultimatefit.ui.fragment.TabPlanFragment;
+import ultimate.fit.ultimatefit.ui.fragment.TabWorkoutFragment;
 
 /**
  * Created by Administrator PC on 3/31/2016.

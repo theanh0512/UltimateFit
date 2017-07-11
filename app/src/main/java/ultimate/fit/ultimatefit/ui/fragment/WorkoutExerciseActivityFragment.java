@@ -1,4 +1,4 @@
-package ultimate.fit.ultimatefit.fragment;
+package ultimate.fit.ultimatefit.ui.fragment;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -33,7 +33,7 @@ import butterknife.OnClick;
 import butterknife.OnEditorAction;
 import butterknife.OnFocusChange;
 import ultimate.fit.ultimatefit.R;
-import ultimate.fit.ultimatefit.activity.CategoryActivity;
+import ultimate.fit.ultimatefit.ui.CategoryActivity;
 import ultimate.fit.ultimatefit.adapter.ExerciseArrayListAdapter;
 import ultimate.fit.ultimatefit.adapter.SetAdapter;
 import ultimate.fit.ultimatefit.data.ExerciseColumns;

@@ -1,6 +1,7 @@
-package ultimate.fit.ultimatefit.activity;
+package ultimate.fit.ultimatefit.ui;
 
 import android.app.ActivityOptions;
+import android.app.AlertDialog;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
@@ -16,8 +17,13 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.KeyEvent;
+import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -146,6 +152,51 @@ public class WorkoutActivity extends AppCompatActivity implements LoaderManager.
                 }
             }).start();
         }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu_note, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.menu_item_note:
+                AlertDialog.Builder builderSingle = new AlertDialog.Builder(this);
+
+                LayoutInflater inflater_actionbar = LayoutInflater.from(this);
+                View v = inflater_actionbar.inflate(R.layout.dialog_note, null);
+                builderSingle.setView(v);
+                AlertDialog alertDialog;
+                alertDialog = builderSingle.create();
+
+                Cursor workoutCursor = getContentResolver().query(UltimateFitProvider.Workouts.withId(workoutId), null, null, null, null);
+                workoutCursor.moveToFirst();
+                String originalNote = workoutCursor.getString(workoutCursor.getColumnIndex(WorkoutColumns.NOTE_OF_WORKOUT));
+                EditText editTextNote = (EditText) v.findViewById(R.id.edit_text_note);
+                editTextNote.setText(originalNote);
+                workoutCursor.close();
+
+                Button buttonSave = (Button) v.findViewById(R.id.button_save);
+                buttonSave.setOnClickListener(v1 -> {
+                            new Thread(() -> {
+                                String note = editTextNote.getText().toString();
+                                ContentValues workoutContentValues = new WorkoutsValuesBuilder().noteOfWorkout(note).values();
+                                getContentResolver().update(UltimateFitProvider.Workouts.CONTENT_URI,
+                                        workoutContentValues, UltimateFitDatabase.WORKOUTS + "." + WorkoutColumns.ID + "=" + workoutId, null);
+                            }).start();
+                            alertDialog.cancel();
+                        }
+                );
+
+                alertDialog.setCanceledOnTouchOutside(true);
+                alertDialog.show();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     @Override

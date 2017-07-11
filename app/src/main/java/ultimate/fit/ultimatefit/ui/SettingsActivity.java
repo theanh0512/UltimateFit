@@ -1,4 +1,4 @@
-package ultimate.fit.ultimatefit.activity;
+package ultimate.fit.ultimatefit.ui;
 
 import android.app.Activity;
 import android.content.Intent;

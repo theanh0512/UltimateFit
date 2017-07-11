@@ -1,4 +1,4 @@
-package ultimate.fit.ultimatefit.fragment;
+package ultimate.fit.ultimatefit.ui.fragment;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -24,7 +24,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import ultimate.fit.ultimatefit.R;
-import ultimate.fit.ultimatefit.activity.AddPlanActivity;
+import ultimate.fit.ultimatefit.ui.AddPlanActivity;
 import ultimate.fit.ultimatefit.adapter.PlanAdapter;
 import ultimate.fit.ultimatefit.data.UltimateFitProvider;
 

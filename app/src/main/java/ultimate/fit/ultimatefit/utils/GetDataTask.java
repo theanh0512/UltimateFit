@@ -27,7 +27,7 @@ import java.util.List;
 import java.util.Objects;
 
 import ultimate.fit.ultimatefit.R;
-import ultimate.fit.ultimatefit.activity.MainActivity;
+import ultimate.fit.ultimatefit.ui.MainActivity;
 import ultimate.fit.ultimatefit.data.UltimateFitProvider;
 import ultimate.fit.ultimatefit.data.generated.values.CategoriesValuesBuilder;
 import ultimate.fit.ultimatefit.data.generated.values.ExercisesValuesBuilder;

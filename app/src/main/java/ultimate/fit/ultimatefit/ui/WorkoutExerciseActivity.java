@@ -1,4 +1,4 @@
-package ultimate.fit.ultimatefit.activity;
+package ultimate.fit.ultimatefit.ui;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -7,7 +7,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 
 import ultimate.fit.ultimatefit.R;
-import ultimate.fit.ultimatefit.fragment.WorkoutExerciseActivityFragment;
+import ultimate.fit.ultimatefit.ui.fragment.WorkoutExerciseActivityFragment;
 
 public class WorkoutExerciseActivity extends AppCompatActivity {
     WorkoutExerciseActivityFragment workoutExerciseActivityFragment;

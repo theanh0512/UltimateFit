@@ -9,7 +9,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".activity.MainActivity"
+            android:name=".ui.MainActivity"
             android:label="Ultimate Fit"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
@@ -18,25 +18,23 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <activity
-            android:name=".activity.SettingsActivity"
+            android:name=".ui.SettingsActivity"
             android:label="@string/title_activity_settings"
-            android:parentActivityName=".activity.MainActivity"
+            android:parentActivityName=".ui.MainActivity"
             android:theme="@style/AppTheme">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activity.MainActivity" />
+                android:value=".ui.MainActivity" />
         </activity>
-
         <activity
-            android:name=".activity.AddPlanActivity"
+            android:name=".ui.AddPlanActivity"
             android:label="@string/add_plan_label"
-            android:parentActivityName=".activity.MainActivity"
+            android:parentActivityName=".ui.MainActivity"
             android:theme="@style/AppTheme">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".activity.MainActivity" />
+                android:value=".ui.MainActivity" />
         </activity>
 
         <provider
@@ -45,31 +43,31 @@
             android:exported="false" />
 
         <activity
-            android:name=".activity.WorkoutActivity"
+            android:name=".ui.WorkoutActivity"
             android:label="@string/title_activity_workout"
-            android:parentActivityName=".activity.MainActivity"
+            android:parentActivityName=".ui.MainActivity"
             android:theme="@style/AppTheme.NoActionBar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="ultimate.fit.ultimatefit.activity.MainActivity" />
+                android:value="ultimate.fit.ultimatefit.ui.MainActivity" />
         </activity>
         <activity
-            android:name=".activity.CategoryActivity"
+            android:name=".ui.CategoryActivity"
             android:label="@string/title_activity_category"
-            android:parentActivityName=".activity.WorkoutActivity"
+            android:parentActivityName=".ui.WorkoutActivity"
             android:theme="@style/AppTheme.NoActionBar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="ultimate.fit.ultimatefit.activity.WorkoutActivity" />
+                android:value="ultimate.fit.ultimatefit.ui.WorkoutActivity" />
         </activity>
         <activity
-            android:name=".activity.WorkoutExerciseActivity"
+            android:name=".ui.WorkoutExerciseActivity"
             android:label="@string/title_activity_workout_exercise2"
-            android:parentActivityName=".activity.WorkoutActivity"
+            android:parentActivityName=".ui.WorkoutActivity"
             android:theme="@style/AppTheme.NoActionBar2">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="ultimate.fit.ultimatefit.activity.WorkoutActivity" />
+                android:value="ultimate.fit.ultimatefit.ui.WorkoutActivity" />
         </activity>
 
         <receiver android:name=".UltimateFitWidgetProvider">
@@ -81,6 +79,7 @@
                 android:name="android.appwidget.provider"
                 android:resource="@xml/ultimate_fit_widget_provider_info" />
         </receiver>
+
     </application>
 
 </manifest>

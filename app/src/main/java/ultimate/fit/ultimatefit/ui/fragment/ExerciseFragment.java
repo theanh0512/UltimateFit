@@ -1,4 +1,4 @@
-package ultimate.fit.ultimatefit.fragment;
+package ultimate.fit.ultimatefit.ui.fragment;
 
 import android.content.SharedPreferences;
 import android.database.Cursor;

@@ -1,4 +1,4 @@
-package ultimate.fit.ultimatefit.activity;
+package ultimate.fit.ultimatefit.ui;
 
 import android.app.ActivityOptions;
 import android.content.BroadcastReceiver;
@@ -63,8 +63,8 @@ import ultimate.fit.ultimatefit.data.WorkoutExerciseColumns;
 import ultimate.fit.ultimatefit.data.generated.values.SetsValuesBuilder;
 import ultimate.fit.ultimatefit.data.generated.values.Workout_exercisesValuesBuilder;
 import ultimate.fit.ultimatefit.data.generated.values.WorkoutsValuesBuilder;
-import ultimate.fit.ultimatefit.fragment.TabPlanFragment;
-import ultimate.fit.ultimatefit.fragment.TabWorkoutFragment;
+import ultimate.fit.ultimatefit.ui.fragment.TabPlanFragment;
+import ultimate.fit.ultimatefit.ui.fragment.TabWorkoutFragment;
 import ultimate.fit.ultimatefit.model.Plan;
 import ultimate.fit.ultimatefit.model.Set;
 import ultimate.fit.ultimatefit.model.Workout;

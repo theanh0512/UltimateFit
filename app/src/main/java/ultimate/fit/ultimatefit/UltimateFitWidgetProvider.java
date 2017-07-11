@@ -11,7 +11,7 @@ import android.widget.RemoteViews;
 
 import java.util.Locale;
 
-import ultimate.fit.ultimatefit.activity.WorkoutActivity;
+import ultimate.fit.ultimatefit.ui.WorkoutActivity;
 import ultimate.fit.ultimatefit.adapter.PlanAdapter;
 import ultimate.fit.ultimatefit.data.UltimateFitProvider;
 import ultimate.fit.ultimatefit.data.WorkoutColumns;

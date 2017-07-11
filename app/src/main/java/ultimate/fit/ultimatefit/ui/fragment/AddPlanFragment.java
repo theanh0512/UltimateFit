@@ -1,4 +1,4 @@
-package ultimate.fit.ultimatefit.fragment;
+package ultimate.fit.ultimatefit.ui.fragment;
 
 import android.content.ContentUris;
 import android.content.ContentValues;
@@ -22,10 +22,10 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import ultimate.fit.ultimatefit.R;
-import ultimate.fit.ultimatefit.activity.MainActivity;
 import ultimate.fit.ultimatefit.data.PlanColumns;
 import ultimate.fit.ultimatefit.data.UltimateFitProvider;
 import ultimate.fit.ultimatefit.data.generated.values.WorkoutsValuesBuilder;
+import ultimate.fit.ultimatefit.ui.MainActivity;
 
 /**
  * Created by User on 12/10/2016.

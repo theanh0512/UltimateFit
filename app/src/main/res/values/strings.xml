@@ -100,4 +100,8 @@
     <string name="pref_allow_sync_key">allow_sync</string>
     <string name="pref_allow_sync_label">Allow to sync plan from server</string>
     <string name="text_view_target">Target:</string>
+    <string name="title_activity_note">NoteActivity</string>
+    <string name="button_done">Done</string>
+    <string name="menu_item_note">Note</string>
+    <string name="button_save">Save</string>
 </resources>

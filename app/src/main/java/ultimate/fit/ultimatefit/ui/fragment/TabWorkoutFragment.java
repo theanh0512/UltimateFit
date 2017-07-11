@@ -1,4 +1,4 @@
-package ultimate.fit.ultimatefit.fragment;
+package ultimate.fit.ultimatefit.ui.fragment;
 
 import android.content.Context;
 import android.database.Cursor;
@@ -56,12 +56,7 @@ public class TabWorkoutFragment extends Fragment implements LoaderManager.Loader
         View rootView = inflater.inflate(R.layout.fragment_tab_workout, container, false);
         ButterKnife.bind(this, rootView);
 
-        workoutAdapter = new WorkoutAdapter(getContext(), new WorkoutAdapter.WorkoutAdapterOnClickHandler() {
-            @Override
-            public void onClick(int workoutId, int dayNumber, String bodyPart) {
-                handler.onHandleItemClickFromTabWorkout(workoutId, dayNumber, bodyPart);
-            }
-        });
+        workoutAdapter = new WorkoutAdapter(getContext(), (workoutId, dayNumber, bodyPart) -> handler.onHandleItemClickFromTabWorkout(workoutId, dayNumber, bodyPart));
         recyclerViewWorkout.setAdapter(workoutAdapter);
         recyclerViewWorkout.setHasFixedSize(true);
         recyclerViewWorkout.setLayoutManager(new LinearLayoutManager(getContext()));

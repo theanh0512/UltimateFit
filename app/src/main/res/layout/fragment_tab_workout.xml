@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:background="@color/colorPrimaryLight"
     android:orientation="vertical"
-    tools:context="ultimate.fit.ultimatefit.fragment.TabWorkoutFragment">
+    tools:context="ultimate.fit.ultimatefit.ui.fragment.TabWorkoutFragment">
 
     <android.support.design.widget.CoordinatorLayout
         android:layout_width="match_parent"
