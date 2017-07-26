@@ -20,4 +20,11 @@
             android:title="@string/action_settings"
             android:visible="true" />
     </group>
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/navigation_view_item_sync"
+            android:icon="@drawable/sync"
+            android:title="@string/nav_view_item_sync_plan"
+            android:visible="true" />
+    </group>
 </menu>

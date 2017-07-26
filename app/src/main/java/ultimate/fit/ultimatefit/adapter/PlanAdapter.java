@@ -109,7 +109,7 @@ public class PlanAdapter extends RecyclerView.Adapter<PlanAdapter.ViewHolder> {
                     e.printStackTrace();
                 }
                 TabWorkoutFragment tabWorkoutFragment = (TabWorkoutFragment) MainActivity.adapter.getRegisteredFragment(0);
-                if (tabWorkoutFragment != null) {
+                if (tabWorkoutFragment != null && tabWorkoutFragment.isAdded()) {
                     tabWorkoutFragment.getLoaderManager().restartLoader(2000, null, tabWorkoutFragment);
                 }
                 holder.imageViewOnGoingCheck.setVisibility(View.VISIBLE);

@@ -107,4 +107,6 @@
     <string name="menu_item_calculate_orm">Find ORM</string>
     <string name="text_view_orm">ORM: </string>
     <string name="button_calculate">Calculate</string>
+    <string name="nav_view_item_sync_plan">Sync Plan</string>
+    <string name="toast_synced">Synced!</string>
 </resources>

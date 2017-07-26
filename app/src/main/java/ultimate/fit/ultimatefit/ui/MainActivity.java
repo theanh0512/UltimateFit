@@ -42,7 +42,6 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
-import io.fabric.sdk.android.Fabric;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
 
@@ -53,6 +52,7 @@ import java.util.Optional;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import io.fabric.sdk.android.Fabric;
 import ultimate.fit.ultimatefit.R;
 import ultimate.fit.ultimatefit.adapter.PagerAdapter;
 import ultimate.fit.ultimatefit.adapter.PlanAdapter;
@@ -157,28 +157,25 @@ public class MainActivity extends AppCompatActivity
 
         setupTabLayout();
 
-        mAuthStateListener = new FirebaseAuth.AuthStateListener() {
-            @Override
-            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-                FirebaseUser user = firebaseAuth.getCurrentUser();
-                if (user != null) {
-                    //user is signed in
-                    onSignedInInitialize(user.getDisplayName(), user.getEmail());
-                } else {
-                    //user is signed out
-                    onSignedOutCleanup();
-                    //setIsSmartLockEnabled to false will disable the ability to auto sign in user on subsequent attempts
-                    startActivityForResult(
-                            AuthUI.getInstance()
-                                    .createSignInIntentBuilder()
-                                    .setIsSmartLockEnabled(false)
-                                    .setProviders(Arrays.asList(new AuthUI.IdpConfig.Builder(AuthUI.EMAIL_PROVIDER).build(),
-                                            new AuthUI.IdpConfig.Builder(AuthUI.FACEBOOK_PROVIDER).build(),
-                                            new AuthUI.IdpConfig.Builder(AuthUI.GOOGLE_PROVIDER).build()))
-                                    .setTheme(R.style.BrownTheme)
-                                    .build(),
-                            RC_SIGN_IN);
-                }
+        mAuthStateListener = firebaseAuth -> {
+            FirebaseUser user = firebaseAuth.getCurrentUser();
+            if (user != null) {
+                //user is signed in
+                onSignedInInitialize(user.getDisplayName(), user.getEmail());
+            } else {
+                //user is signed out
+                onSignedOutCleanup();
+                //setIsSmartLockEnabled to false will disable the ability to auto sign in user on subsequent attempts
+                startActivityForResult(
+                        AuthUI.getInstance()
+                                .createSignInIntentBuilder()
+                                .setIsSmartLockEnabled(false)
+                                .setProviders(Arrays.asList(new AuthUI.IdpConfig.Builder(AuthUI.EMAIL_PROVIDER).build(),
+                                        new AuthUI.IdpConfig.Builder(AuthUI.FACEBOOK_PROVIDER).build(),
+                                        new AuthUI.IdpConfig.Builder(AuthUI.GOOGLE_PROVIDER).build()))
+                                .setTheme(R.style.BrownTheme)
+                                .build(),
+                        RC_SIGN_IN);
             }
         };
 
@@ -259,6 +256,12 @@ public class MainActivity extends AppCompatActivity
                                 case R.id.navigation_view_item_setting:
                                     item.setChecked(true);
                                     startActivity(new Intent(MainActivity.this, SettingsActivity.class));
+                                    break;
+
+                                case R.id.navigation_view_item_sync:
+                                    item.setChecked(true);
+                                    attachDatabaseReadListener();
+                                    Toast.makeText(this, R.string.toast_synced, Toast.LENGTH_SHORT).show();
                                     break;
                             }
 

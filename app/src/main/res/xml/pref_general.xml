@@ -28,6 +28,6 @@
     <SwitchPreference
         android:key="@string/pref_allow_sync_key"
         android:title="@string/pref_allow_sync_label"
-        android:defaultValue="false" />
+        android:defaultValue="true" />
 
 </PreferenceScreen>
