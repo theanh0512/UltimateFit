@@ -26,3 +26,26 @@ allprojects {
 task clean(type: Delete) {
     delete rootProject.buildDir
 }
+
+ext {
+    buildToolsVersion = "25.0.3"
+    supportLibVersion = "25.4.0"
+    runnerVersion = "0.5"
+    rulesVersion = "0.5"
+    espressoVersion = "2.2.2"
+    archLifecycleVersion = "1.0.0-alpha3"
+    archRoomVersion = "1.0.0-alpha3"
+    constraintLayoutVersion = "1.0.2"
+    butterKnifeVersion = "8.5.1"
+    bottomBarVersion = "2.3.1"
+    retrofitVersion = "2.3.0"
+    keyboardEventVersion = "2.1.0"
+    picassoVersion  = "2.5.2"
+    firebaseVersion = "11.0.1"
+    firebaseUIVersion = "2.0.1"
+    dagger2Version = "2.9"
+    schematiceVersion = "0.7.0"
+    jodaTimeVersion = "2.9.7"
+    javaxAnnotationVersion = "1.0"
+    fbSDKVersion = "4.24.0"
+}
