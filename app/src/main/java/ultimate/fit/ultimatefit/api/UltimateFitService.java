@@ -4,7 +4,7 @@ import android.arch.lifecycle.LiveData;
 
 import retrofit2.http.GET;
 import retrofit2.http.Path;
-import ultimate.fit.ultimatefit.model.Category;
+import ultimate.fit.ultimatefit.entity.Category;
 
 /**
  * Created by Pham on 27/7/17.

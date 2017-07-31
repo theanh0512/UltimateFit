@@ -13,6 +13,10 @@ import ultimate.fit.ultimatefit.ui.MainActivity;
 @Component(modules={AppModule.class, NetModule.class})
 public interface NetComponent {
     void inject(MainActivity activity);
+
     // void inject(MyFragment fragment);
     // void inject(MyService service);
+    interface Injectable {
+        void inject(NetComponent netComponent);
+    }
 }
