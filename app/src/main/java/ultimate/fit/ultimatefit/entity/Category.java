@@ -13,19 +13,19 @@ import com.google.gson.annotations.SerializedName;
 public class Category {
     @SerializedName("_id")
     @PrimaryKey(autoGenerate = true)
-    public final String ID;
+    public final long ID;
     @SerializedName("image_path")
     private final String imagePath;
     @SerializedName("category_name")
     private final String categoryName;
 
-    public Category(String ID, String imagePath, String categoryName) {
+    public Category(long ID, String imagePath, String categoryName) {
         this.ID = ID;
         this.imagePath = imagePath;
         this.categoryName = categoryName;
     }
 
-    public String getID() {
+    public long getID() {
         return ID;
     }
 

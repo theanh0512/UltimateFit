@@ -13,7 +13,7 @@ import com.google.gson.annotations.SerializedName;
 public class Exercise {
     @SerializedName("_id")
     @PrimaryKey(autoGenerate = true)
-    public final String ID;
+    public final long ID;
     @SerializedName("exercise_image_path")
     private final String imagePath;
     @SerializedName("exercise_image_2_path")
@@ -29,7 +29,7 @@ public class Exercise {
     @SerializedName("category_id")
     private final String categoryId;
 
-    public Exercise(String ID, String imagePath, String imagePath2, String videoPath, String exerciseName, String description, String oneRepMax, String categoryId) {
+    public Exercise(long ID, String imagePath, String imagePath2, String videoPath, String exerciseName, String description, String oneRepMax, String categoryId) {
         this.ID = ID;
         this.imagePath = imagePath;
         this.imagePath2 = imagePath2;
@@ -40,7 +40,7 @@ public class Exercise {
         this.categoryId = categoryId;
     }
 
-    public String getID() {
+    public long getID() {
         return ID;
     }
 

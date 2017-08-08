@@ -4,14 +4,28 @@ import android.arch.lifecycle.LiveData;
 
 import java.util.List;
 
+import javax.inject.Inject;
+
+import ultimate.fit.ultimatefit.api.UltimateFitService;
 import ultimate.fit.ultimatefit.entity.Exercise;
 
 /**
  * Created by Pham on 31/7/17.
  */
 
-public interface ExerciseRepository {
-    LiveData<List<Exercise>> getExercises();
+public class ExerciseRepository {
+    UltimateFitService ultimateFitService;
 
-    void addExercise(Exercise exercise);
+    @Inject
+    public ExerciseRepository(UltimateFitService ultimateFitService){
+        this.ultimateFitService = ultimateFitService;
+    }
+
+    LiveData<List<Exercise>> getExercises() {
+        return null;
+    }
+
+    public void addExercise(Exercise exercise) {
+
+    }
 }

@@ -17,6 +17,7 @@ import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.TabLayout;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
@@ -50,8 +51,13 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
+import javax.inject.Inject;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import dagger.android.AndroidInjector;
+import dagger.android.DispatchingAndroidInjector;
+import dagger.android.support.HasSupportFragmentInjector;
 import io.fabric.sdk.android.Fabric;
 import ultimate.fit.ultimatefit.R;
 import ultimate.fit.ultimatefit.adapter.PagerAdapter;
@@ -78,7 +84,7 @@ import ultimate.fit.ultimatefit.utils.Utils.InternetVsLocalSize;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, TabPlanFragment.OnFragmentInteractionListener,
-        TabWorkoutFragment.OnFragmentInteractionListener, TabPlanFragment.ItemsListClickHandler, TabWorkoutFragment.ItemsListClickHandler {
+        TabWorkoutFragment.OnFragmentInteractionListener, TabPlanFragment.ItemsListClickHandler, TabWorkoutFragment.ItemsListClickHandler, HasSupportFragmentInjector {
 
     public static final String ANONYMOUS = "anonymous";
     public static final String DATA_DOWNLOADED = "fit.ultimate.data_downloaded";
@@ -90,6 +96,8 @@ public class MainActivity extends AppCompatActivity
     public static String userName;
     public static String userEmail;
     public static List<Plan> uploadedPlans;
+    @Inject
+    DispatchingAndroidInjector<Fragment> dispatchingAndroidInjector;
     ActionBarDrawerToggle toggle;
     @BindView(R.id.drawer_layout)
     DrawerLayout drawer;
@@ -802,5 +810,10 @@ public class MainActivity extends AppCompatActivity
     protected void onDestroy() {
         super.onDestroy();
         unregisterReceiver(broadcastReceiver);
+    }
+
+    @Override
+    public AndroidInjector<Fragment> supportFragmentInjector() {
+        return dispatchingAndroidInjector;
     }
 }

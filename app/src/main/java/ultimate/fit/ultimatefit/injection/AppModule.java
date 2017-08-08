@@ -17,23 +17,49 @@
 package ultimate.fit.ultimatefit.injection;
 
 import android.app.Application;
+import android.arch.lifecycle.ViewModelProvider;
+import android.arch.persistence.room.Room;
+import android.content.Context;
 
 import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
+import ultimate.fit.ultimatefit.api.UltimateFitService;
+import ultimate.fit.ultimatefit.db.UltimateFitDatabase;
+import ultimate.fit.ultimatefit.viewmodel.UltimateFitViewModelFactory;
 
-@Module()
+@Module(subcomponents = ViewModelSubComponent.class)
 public class AppModule {
-    Application application;
+    @Provides
+    @Singleton
+    Context provideContext(Application application) {
+        return application;
+    }
 
-    public AppModule(Application application) {
-        this.application = application;
+    @Singleton
+    @Provides
+    UltimateFitService provideUltimateFitService() {
+        return new Retrofit.Builder()
+                .baseUrl("http://ultimatefitbackend.azurewebsites.net/")
+                .addConverterFactory(GsonConverterFactory.create())
+                .build()
+                .create(UltimateFitService.class);
+    }
+
+    @Singleton
+    @Provides
+    ViewModelProvider.Factory provideViewModelFactory(
+            ViewModelSubComponent.Builder viewModelSubComponent) {
+
+        return new UltimateFitViewModelFactory(viewModelSubComponent.build());
     }
 
     @Provides
     @Singleton
-    Application provideApplication() {
-        return application;
+    UltimateFitDatabase providesUltimateFitDatabase(Context context) {
+        return Room.databaseBuilder(context.getApplicationContext(), UltimateFitDatabase.class, "ultimate_fit.db").build();
     }
 }

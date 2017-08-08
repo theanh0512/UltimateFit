@@ -1,11 +1,13 @@
 package ultimate.fit.ultimatefit.ui;
 
+import android.app.Activity;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
@@ -16,9 +18,14 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 
+import javax.inject.Inject;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import dagger.android.AndroidInjector;
+import dagger.android.DispatchingAndroidInjector;
+import dagger.android.HasActivityInjector;
 import ultimate.fit.ultimatefit.R;
 import ultimate.fit.ultimatefit.adapter.CategoryAdapter;
 import ultimate.fit.ultimatefit.adapter.ExerciseAdapter;
@@ -27,7 +34,9 @@ import ultimate.fit.ultimatefit.data.UltimateFitProvider;
 import ultimate.fit.ultimatefit.data.WorkoutExerciseColumns;
 import ultimate.fit.ultimatefit.data.generated.values.Workout_exercisesValuesBuilder;
 
-public class CategoryActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> {
+public class CategoryActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor>, HasActivityInjector {
+    @Inject
+    DispatchingAndroidInjector<Activity> dispatchingAndroidInjector;
     private static final String LOG_TAG = CategoryActivity.class.getSimpleName();
     private static final int CATEGORY_LOADER = 3;
     private static final int EXERCISE_LOADER = 4;
@@ -161,4 +170,8 @@ public class CategoryActivity extends AppCompatActivity implements LoaderManager
         }
     }
 
+    @Override
+    public AndroidInjector<Activity> activityInjector() {
+        return dispatchingAndroidInjector;
+    }
 }
