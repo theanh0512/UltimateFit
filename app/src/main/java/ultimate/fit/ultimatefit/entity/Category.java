@@ -15,9 +15,9 @@ public class Category {
     @PrimaryKey(autoGenerate = true)
     public final long ID;
     @SerializedName("image_path")
-    private final String imagePath;
+    public final String imagePath;
     @SerializedName("category_name")
-    private final String categoryName;
+    public final String categoryName;
 
     public Category(long ID, String imagePath, String categoryName) {
         this.ID = ID;

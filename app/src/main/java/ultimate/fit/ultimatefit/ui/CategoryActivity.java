@@ -5,24 +5,18 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
+import android.databinding.DataBindingUtil;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 
 import javax.inject.Inject;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
-import butterknife.OnClick;
 import dagger.android.AndroidInjector;
 import dagger.android.DispatchingAndroidInjector;
 import dagger.android.HasActivityInjector;
@@ -33,21 +27,14 @@ import ultimate.fit.ultimatefit.data.UltimateFitDatabase;
 import ultimate.fit.ultimatefit.data.UltimateFitProvider;
 import ultimate.fit.ultimatefit.data.WorkoutExerciseColumns;
 import ultimate.fit.ultimatefit.data.generated.values.Workout_exercisesValuesBuilder;
+import ultimate.fit.ultimatefit.databinding.ActivityCategoryBinding;
 
 public class CategoryActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor>, HasActivityInjector {
-    @Inject
-    DispatchingAndroidInjector<Activity> dispatchingAndroidInjector;
     private static final String LOG_TAG = CategoryActivity.class.getSimpleName();
     private static final int CATEGORY_LOADER = 3;
     private static final int EXERCISE_LOADER = 4;
-    @BindView(R.id.fab_add_category)
-    FloatingActionButton fabAddCategory;
-    @BindView(R.id.recyclerview_category)
-    RecyclerView recyclerViewCategory;
-    @BindView(R.id.recyclerview_exercise)
-    RecyclerView recyclerViewExercise;
-    @BindView(R.id.toolbarCategory)
-    Toolbar toolbarCategory;
+    @Inject
+    DispatchingAndroidInjector<Activity> dispatchingAndroidInjector;
     int clickedCategoryId = 1;
     int workoutId = -1;
     int workoutExerciseId = -1;
@@ -58,9 +45,8 @@ public class CategoryActivity extends AppCompatActivity implements LoaderManager
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_category);
-        ButterKnife.bind(this);
-        setSupportActionBar(toolbarCategory);
+        ActivityCategoryBinding binding = DataBindingUtil.setContentView(this, R.layout.activity_category);
+        setSupportActionBar(binding.toolbarCategory);
 
         Intent intent = getIntent();
         if (intent.hasExtra("workoutId"))
@@ -74,62 +60,49 @@ public class CategoryActivity extends AppCompatActivity implements LoaderManager
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(false);
 
-        categoryAdapter = new CategoryAdapter(this, new CategoryAdapter.CategoryAdapterOnClickHandler() {
-            @Override
-            public void onClick(int categoryId) {
-                Log.i(LOG_TAG, "category ID: " + categoryId);
-                clickedCategoryId = categoryId;
-                recyclerViewCategory.setVisibility(View.INVISIBLE);
-                recyclerViewExercise.setVisibility(View.VISIBLE);
-                getSupportLoaderManager().restartLoader(EXERCISE_LOADER, null, callbacks);
-            }
+        categoryAdapter = new CategoryAdapter(this, categoryId -> {
+            Log.i(LOG_TAG, "category ID: " + categoryId);
+            clickedCategoryId = categoryId;
+            binding.included.recyclerviewCategory.setVisibility(View.INVISIBLE);
+            binding.included.recyclerviewExercise.setVisibility(View.VISIBLE);
+            getSupportLoaderManager().restartLoader(EXERCISE_LOADER, null, callbacks);
         });
-        recyclerViewCategory.setAdapter(categoryAdapter);
-        recyclerViewCategory.setHasFixedSize(true);
-        recyclerViewCategory.setLayoutManager(new LinearLayoutManager(this));
+        binding.included.recyclerviewCategory.setAdapter(categoryAdapter);
+        binding.included.recyclerviewCategory.setHasFixedSize(true);
+        binding.included.recyclerviewCategory.setLayoutManager(new LinearLayoutManager(this));
         final Context context = this;
 
-        exerciseAdapter = new ExerciseAdapter(this, new ExerciseAdapter.ExerciseAdapterOnClickHandler() {
-            @Override
-            public void onClick(final int exerciseId, final String exerciseImagePath, final String exerciseName) {
-                Log.i(LOG_TAG, "exercise ID: " + exerciseId);
-                new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        if (workoutId != -1) {
-                            ContentValues workoutExerciseContentValues = new Workout_exercisesValuesBuilder().exerciseIds(String.valueOf(exerciseId)).firstExerciseName(exerciseName)
-                                    .firstExerciseImage(exerciseImagePath).workoutId(workoutId).rep(8).set(4).values();
-                            context.getContentResolver().insert(UltimateFitProvider.WorkoutExercises.CONTENT_URI, workoutExerciseContentValues);
-                        } else {
-                            ContentValues workoutExerciseContentValues = new Workout_exercisesValuesBuilder().exerciseIds(exerciseIds + "," + String.valueOf(exerciseId)).values();
-                            context.getContentResolver().update(UltimateFitProvider.WorkoutExercises.CONTENT_URI, workoutExerciseContentValues,
-                                    UltimateFitDatabase.Tables.WORKOUT_EXERCISES + "." + WorkoutExerciseColumns.ID + "=" + workoutExerciseId, null);
-                        }
-                    }
-                }).start();
-
-                Intent data = new Intent();
-                if (getParent() == null) {
-                    setResult(RESULT_OK, data);
+        exerciseAdapter = new ExerciseAdapter(this, (exerciseId, exerciseImagePath, exerciseName) -> {
+            Log.i(LOG_TAG, "exercise ID: " + exerciseId);
+            new Thread(() -> {
+                if (workoutId != -1) {
+                    ContentValues workoutExerciseContentValues = new Workout_exercisesValuesBuilder().exerciseIds(String.valueOf(exerciseId)).firstExerciseName(exerciseName)
+                            .firstExerciseImage(exerciseImagePath).workoutId(workoutId).rep(8).set(4).values();
+                    context.getContentResolver().insert(UltimateFitProvider.WorkoutExercises.CONTENT_URI, workoutExerciseContentValues);
                 } else {
-                    getParent().setResult(RESULT_OK, data);
+                    ContentValues workoutExerciseContentValues = new Workout_exercisesValuesBuilder().exerciseIds(exerciseIds + "," + String.valueOf(exerciseId)).values();
+                    context.getContentResolver().update(UltimateFitProvider.WorkoutExercises.CONTENT_URI, workoutExerciseContentValues,
+                            UltimateFitDatabase.Tables.WORKOUT_EXERCISES + "." + WorkoutExerciseColumns.ID + "=" + workoutExerciseId, null);
                 }
-                finish();
+            }).start();
+
+            Intent data = new Intent();
+            if (getParent() == null) {
+                setResult(RESULT_OK, data);
+            } else {
+                getParent().setResult(RESULT_OK, data);
+            }
+            finish();
 
 //                recyclerViewCategory.setVisibility(View.VISIBLE);
 //                recyclerViewExercise.setVisibility(View.INVISIBLE);
-            }
         });
-        recyclerViewExercise.setAdapter(exerciseAdapter);
-        recyclerViewExercise.setHasFixedSize(true);
-        recyclerViewExercise.setLayoutManager(new LinearLayoutManager(this));
+        binding.included.recyclerviewExercise.setAdapter(exerciseAdapter);
+        binding.included.recyclerviewExercise.setHasFixedSize(true);
+        binding.included.recyclerviewExercise.setLayoutManager(new LinearLayoutManager(this));
 
         getSupportLoaderManager().initLoader(CATEGORY_LOADER, null, this);
         getSupportLoaderManager().initLoader(EXERCISE_LOADER, null, this);
-    }
-
-    @OnClick(R.id.fab_add_category)
-    public void onClickAddExercise(View view) {
     }
 
 

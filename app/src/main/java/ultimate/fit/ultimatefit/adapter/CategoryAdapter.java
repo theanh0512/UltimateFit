@@ -6,18 +6,18 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.TextView;
 
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
+import java.util.List;
 import java.util.Locale;
 
-import butterknife.BindView;
 import butterknife.ButterKnife;
 import ultimate.fit.ultimatefit.R;
 import ultimate.fit.ultimatefit.data.CategoryColumns;
+import ultimate.fit.ultimatefit.databinding.ListItemCategoryBinding;
+import ultimate.fit.ultimatefit.entity.Category;
 
 /**
  * Created by Pham on 18/2/2017.
@@ -26,6 +26,7 @@ import ultimate.fit.ultimatefit.data.CategoryColumns;
 public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.ViewHolder> {
     private static final String LOG_TAG = CategoryAdapter.class.getSimpleName();
     final private CategoryAdapterOnClickHandler clickHandler;
+    List<Category> categories;
     private Cursor cursor;
     private Context context;
 
@@ -38,23 +39,23 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.ViewHo
     public CategoryAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         context = parent.getContext();
         LayoutInflater inflater = LayoutInflater.from(context);
-
-        View view = inflater.inflate(R.layout.list_item_category, parent, false);
-
-        return new ViewHolder(view);
+        ListItemCategoryBinding listItemCategoryBinding = ListItemCategoryBinding.inflate(inflater, parent, false);
+        return new ViewHolder(listItemCategoryBinding);
     }
 
     @Override
     public void onBindViewHolder(final CategoryAdapter.ViewHolder holder, int position) {
+        Category category = categories.get(position);
+        holder.bind(category);
         cursor.moveToPosition(position);
         String categoryName = cursor.getString(cursor.getColumnIndex(CategoryColumns.CATEGORY_NAME));
-        holder.textViewCategoryName.setText(String.format(Locale.ENGLISH, "%s", categoryName));
+        holder.binding.textViewCategoryName.setText(String.format(Locale.ENGLISH, "%s", categoryName));
         String originalImagePath = cursor.getString(cursor.getColumnIndex(CategoryColumns.IMAGE_PATH));
         CharSequence http = "http://";
         final String imagePath = originalImagePath.contains(http) ? originalImagePath.replace("http://", "https://") : originalImagePath;
         try {
             Picasso.with(context).load(imagePath).placeholder(R.drawable.ic_place_holder)
-                    .error(R.drawable.ic_error_fallback).into(holder.imageViewCategoryImage, new Callback() {
+                    .error(R.drawable.ic_error_fallback).into(holder.binding.imageViewCategoryImage, new Callback() {
                 @Override
                 public void onSuccess() {
 
@@ -64,7 +65,7 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.ViewHo
                 public void onError() {
                     Picasso.with(context)
                             .load(imagePath)
-                            .into(holder.imageViewCategoryImage, new Callback() {
+                            .into(holder.binding.imageViewCategoryImage, new Callback() {
                                 @Override
                                 public void onSuccess() {
 
@@ -99,17 +100,19 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.ViewHo
     }
 
     class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+        private final ListItemCategoryBinding binding;
 
-        @BindView(R.id.imageViewCategoryImage)
-        ImageView imageViewCategoryImage;
-        @BindView(R.id.textViewCategoryName)
-        TextView textViewCategoryName;
-
-        ViewHolder(final View itemView) {
-            super(itemView);
+        ViewHolder(ListItemCategoryBinding binding) {
+            super(binding.getRoot());
+            this.binding = binding;
             ButterKnife.bind(this, itemView);
             itemView.setClickable(true);
             itemView.setOnClickListener(this);
+        }
+
+        public void bind(Category category) {
+            binding.setCategory(category);
+            binding.executePendingBindings();
         }
 
         @Override

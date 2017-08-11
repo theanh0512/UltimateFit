@@ -24,6 +24,9 @@ allprojects {
 }
 
 android {
+    dataBinding {
+        enabled = true
+    }
     signingConfigs {
         config {
             keyAlias 'MyUltimateFitKey'
