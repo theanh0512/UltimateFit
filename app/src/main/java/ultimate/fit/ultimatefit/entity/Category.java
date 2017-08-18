@@ -15,25 +15,25 @@ public class Category {
     @PrimaryKey(autoGenerate = true)
     public final long ID;
     @SerializedName("image_path")
-    public final String imagePath;
+    public final String image;
     @SerializedName("category_name")
-    public final String categoryName;
+    public final String name;
 
-    public Category(long ID, String imagePath, String categoryName) {
+    public Category(long ID, String image, String name) {
         this.ID = ID;
-        this.imagePath = imagePath;
-        this.categoryName = categoryName;
+        this.image = image;
+        this.name = name;
     }
 
     public long getID() {
         return ID;
     }
 
-    public String getImagePath() {
-        return imagePath;
+    public String getImage() {
+        return image;
     }
 
-    public String getCategoryName() {
-        return categoryName;
+    public String getName() {
+        return name;
     }
 }

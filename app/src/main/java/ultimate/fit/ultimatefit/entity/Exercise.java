@@ -15,26 +15,26 @@ public class Exercise {
     @PrimaryKey(autoGenerate = true)
     public final long ID;
     @SerializedName("exercise_image_path")
-    private final String imagePath;
+    public final String image;
     @SerializedName("exercise_image_2_path")
-    private final String imagePath2;
+    public final String image2;
     @SerializedName("video_path")
-    private final String videoPath;
+    public final String video;
     @SerializedName("exercise_name")
-    private final String exerciseName;
+    public final String name;
     @SerializedName("description")
-    private final String description;
+    public final String description;
     @SerializedName("one_rep_max")
-    private final String oneRepMax;
+    public final String oneRepMax;
     @SerializedName("category_id")
-    private final String categoryId;
+    public final String categoryId;
 
-    public Exercise(long ID, String imagePath, String imagePath2, String videoPath, String exerciseName, String description, String oneRepMax, String categoryId) {
+    public Exercise(long ID, String image, String image2, String video, String name, String description, String oneRepMax, String categoryId) {
         this.ID = ID;
-        this.imagePath = imagePath;
-        this.imagePath2 = imagePath2;
-        this.videoPath = videoPath;
-        this.exerciseName = exerciseName;
+        this.image = image;
+        this.image2 = image2;
+        this.video = video;
+        this.name = name;
         this.description = description;
         this.oneRepMax = oneRepMax;
         this.categoryId = categoryId;
@@ -44,20 +44,20 @@ public class Exercise {
         return ID;
     }
 
-    public String getImagePath() {
-        return imagePath;
+    public String getImage() {
+        return image;
     }
 
-    public String getExerciseName() {
-        return exerciseName;
+    public String getName() {
+        return name;
     }
 
-    public String getImagePath2() {
-        return imagePath2;
+    public String getImage2() {
+        return image2;
     }
 
-    public String getVideoPath() {
-        return videoPath;
+    public String getVideo() {
+        return video;
     }
 
     public String getDescription() {

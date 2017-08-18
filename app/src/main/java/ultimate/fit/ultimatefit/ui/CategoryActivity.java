@@ -21,8 +21,8 @@ import dagger.android.AndroidInjector;
 import dagger.android.DispatchingAndroidInjector;
 import dagger.android.HasActivityInjector;
 import ultimate.fit.ultimatefit.R;
-import ultimate.fit.ultimatefit.adapter.CategoryAdapter;
-import ultimate.fit.ultimatefit.adapter.ExerciseAdapter;
+import ultimate.fit.ultimatefit.adapter.CategoryAdapter1;
+import ultimate.fit.ultimatefit.adapter.ExerciseAdapter1;
 import ultimate.fit.ultimatefit.data.UltimateFitDatabase;
 import ultimate.fit.ultimatefit.data.UltimateFitProvider;
 import ultimate.fit.ultimatefit.data.WorkoutExerciseColumns;
@@ -39,8 +39,8 @@ public class CategoryActivity extends AppCompatActivity implements LoaderManager
     int workoutId = -1;
     int workoutExerciseId = -1;
     String exerciseIds;
-    private CategoryAdapter categoryAdapter;
-    private ExerciseAdapter exerciseAdapter;
+    private CategoryAdapter1 categoryAdapter1;
+    private ExerciseAdapter1 exerciseAdapter1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,19 +60,19 @@ public class CategoryActivity extends AppCompatActivity implements LoaderManager
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(false);
 
-        categoryAdapter = new CategoryAdapter(this, categoryId -> {
+        categoryAdapter1 = new CategoryAdapter1(this, categoryId -> {
             Log.i(LOG_TAG, "category ID: " + categoryId);
             clickedCategoryId = categoryId;
             binding.included.recyclerviewCategory.setVisibility(View.INVISIBLE);
             binding.included.recyclerviewExercise.setVisibility(View.VISIBLE);
             getSupportLoaderManager().restartLoader(EXERCISE_LOADER, null, callbacks);
         });
-        binding.included.recyclerviewCategory.setAdapter(categoryAdapter);
+        binding.included.recyclerviewCategory.setAdapter(categoryAdapter1);
         binding.included.recyclerviewCategory.setHasFixedSize(true);
         binding.included.recyclerviewCategory.setLayoutManager(new LinearLayoutManager(this));
         final Context context = this;
 
-        exerciseAdapter = new ExerciseAdapter(this, (exerciseId, exerciseImagePath, exerciseName) -> {
+        exerciseAdapter1 = new ExerciseAdapter1(this, (exerciseId, exerciseImagePath, exerciseName) -> {
             Log.i(LOG_TAG, "exercise ID: " + exerciseId);
             new Thread(() -> {
                 if (workoutId != -1) {
@@ -97,7 +97,7 @@ public class CategoryActivity extends AppCompatActivity implements LoaderManager
 //                recyclerViewCategory.setVisibility(View.VISIBLE);
 //                recyclerViewExercise.setVisibility(View.INVISIBLE);
         });
-        binding.included.recyclerviewExercise.setAdapter(exerciseAdapter);
+        binding.included.recyclerviewExercise.setAdapter(exerciseAdapter1);
         binding.included.recyclerviewExercise.setHasFixedSize(true);
         binding.included.recyclerviewExercise.setLayoutManager(new LinearLayoutManager(this));
 
@@ -122,10 +122,10 @@ public class CategoryActivity extends AppCompatActivity implements LoaderManager
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
         switch (loader.getId()) {
             case CATEGORY_LOADER:
-                categoryAdapter.swapCursor(data);
+                categoryAdapter1.swapCursor(data);
                 break;
             case EXERCISE_LOADER:
-                exerciseAdapter.swapCursor(data);
+                exerciseAdapter1.swapCursor(data);
                 break;
         }
 
@@ -135,10 +135,10 @@ public class CategoryActivity extends AppCompatActivity implements LoaderManager
     public void onLoaderReset(Loader<Cursor> loader) {
         switch (loader.getId()) {
             case CATEGORY_LOADER:
-                categoryAdapter.swapCursor(null);
+                categoryAdapter1.swapCursor(null);
                 break;
             case EXERCISE_LOADER:
-                exerciseAdapter.swapCursor(null);
+                exerciseAdapter1.swapCursor(null);
                 break;
         }
     }
