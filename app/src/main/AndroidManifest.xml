@@ -57,7 +57,7 @@
                 android:value="ultimate.fit.ultimatefit.ui.MainActivity" />
         </activity>
         <activity
-            android:name=".ui.CategoryActivity"
+            android:name=".ui.category.CategoryActivity"
             android:label="@string/title_activity_category"
             android:parentActivityName=".ui.WorkoutActivity"
             android:theme="@style/AppTheme.NoActionBar">

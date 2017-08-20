@@ -38,6 +38,7 @@ import ultimate.fit.ultimatefit.data.UltimateFitDatabase;
 import ultimate.fit.ultimatefit.data.UltimateFitProvider;
 import ultimate.fit.ultimatefit.data.WorkoutColumns;
 import ultimate.fit.ultimatefit.data.generated.values.WorkoutsValuesBuilder;
+import ultimate.fit.ultimatefit.ui.category.CategoryActivity;
 
 public class WorkoutActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> {
     private static final String LOG_TAG = WorkoutActivity.class.getSimpleName();

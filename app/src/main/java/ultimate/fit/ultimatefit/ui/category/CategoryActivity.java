@@ -1,4 +1,4 @@
-package ultimate.fit.ultimatefit.ui;
+package ultimate.fit.ultimatefit.ui.category;
 
 import android.app.Activity;
 import android.content.ContentValues;

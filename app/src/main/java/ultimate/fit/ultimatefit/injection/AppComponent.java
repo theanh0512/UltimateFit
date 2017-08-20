@@ -12,6 +12,7 @@ import ultimate.fit.ultimatefit.UltimateFitApplication;
         /* Use AndroidInjectionModule.class if you're not using support library */
         AndroidSupportInjectionModule.class,
         AppModule.class,
+        CategoryActivityModule.class,
         MainActivityModule.class})
 public interface AppComponent {
     void inject(UltimateFitApplication app);

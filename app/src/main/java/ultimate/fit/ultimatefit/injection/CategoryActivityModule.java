@@ -2,7 +2,7 @@ package ultimate.fit.ultimatefit.injection;
 
 import dagger.Module;
 import dagger.android.ContributesAndroidInjector;
-import ultimate.fit.ultimatefit.ui.CategoryActivity;
+import ultimate.fit.ultimatefit.ui.category.CategoryActivity;
 
 /**
  * Created by Pham on 3/8/17.

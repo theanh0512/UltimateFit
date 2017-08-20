@@ -17,7 +17,6 @@
 package ultimate.fit.ultimatefit.injection;
 
 import android.app.Application;
-import android.arch.lifecycle.ViewModelProvider;
 import android.arch.persistence.room.Room;
 import android.content.Context;
 
@@ -28,38 +27,47 @@ import dagger.Provides;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 import ultimate.fit.ultimatefit.api.UltimateFitService;
+import ultimate.fit.ultimatefit.db.CategoryDao;
+import ultimate.fit.ultimatefit.db.ExerciseDao;
 import ultimate.fit.ultimatefit.db.UltimateFitDatabase;
-import ultimate.fit.ultimatefit.viewmodel.UltimateFitViewModelFactory;
+import ultimate.fit.ultimatefit.utils.LiveDataCallAdapterFactory;
 
-@Module(subcomponents = ViewModelSubComponent.class)
-public class AppModule {
-    @Provides
-    @Singleton
-    Context provideContext(Application application) {
-        return application;
-    }
+@Module(includes = ViewModelModule.class)
+class AppModule {
+  @Singleton
+  @Provides
+  Context provideContext(Application application) {
+    return application;
+  }
 
-    @Singleton
-    @Provides
-    UltimateFitService provideUltimateFitService() {
-        return new Retrofit.Builder()
-                .baseUrl("http://ultimatefitbackend.azurewebsites.net/")
-                .addConverterFactory(GsonConverterFactory.create())
-                .build()
-                .create(UltimateFitService.class);
-    }
+  @Singleton
+  @Provides
+  UltimateFitService provideUltimateFitService() {
+    return new Retrofit.Builder()
+        .baseUrl("http://ultimatefitbackend.azurewebsites.net/")
+        .addConverterFactory(GsonConverterFactory.create())
+        .addCallAdapterFactory(new LiveDataCallAdapterFactory())
+        .build()
+        .create(UltimateFitService.class);
+  }
 
-    @Singleton
-    @Provides
-    ViewModelProvider.Factory provideViewModelFactory(
-            ViewModelSubComponent.Builder viewModelSubComponent) {
+  @Singleton
+  @Provides
+  UltimateFitDatabase providesUltimateFitDatabase(Context context) {
+    return Room.databaseBuilder(
+            context.getApplicationContext(), UltimateFitDatabase.class, "ultimate_fit.db")
+        .build();
+  }
 
-        return new UltimateFitViewModelFactory(viewModelSubComponent.build());
-    }
+  @Singleton
+  @Provides
+  CategoryDao provideCategoryDao(UltimateFitDatabase db) {
+    return db.categoryDao();
+  }
 
-    @Provides
-    @Singleton
-    UltimateFitDatabase providesUltimateFitDatabase(Context context) {
-        return Room.databaseBuilder(context.getApplicationContext(), UltimateFitDatabase.class, "ultimate_fit.db").build();
-    }
+  @Singleton
+  @Provides
+  ExerciseDao provideExerciseDao(UltimateFitDatabase db) {
+    return db.exerciseDao();
+  }
 }

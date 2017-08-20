@@ -1,4 +1,4 @@
-package ultimate.fit.ultimatefit.adapter;
+package ultimate.fit.ultimatefit.ui.category;
 
 import android.databinding.DataBindingUtil;
 import android.view.LayoutInflater;
@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import java.util.Objects;
 
 import ultimate.fit.ultimatefit.R;
+import ultimate.fit.ultimatefit.adapter.DataBoundListAdapter;
 import ultimate.fit.ultimatefit.databinding.ListItemCategoryBinding;
 import ultimate.fit.ultimatefit.entity.Category;
 
