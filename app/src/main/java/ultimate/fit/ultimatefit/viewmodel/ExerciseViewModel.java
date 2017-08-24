@@ -1,14 +1,17 @@
 package ultimate.fit.ultimatefit.viewmodel;
 
-import android.app.Application;
-import android.arch.lifecycle.AndroidViewModel;
+import android.arch.lifecycle.ViewModel;
+
+import javax.inject.Inject;
+
+import ultimate.fit.ultimatefit.repository.ExerciseRepository;
 
 /**
  * Created by Pham on 7/8/17.
  */
 
-public class ExerciseViewModel extends AndroidViewModel {
-    public ExerciseViewModel(Application application) {
-        super(application);
+public class ExerciseViewModel extends ViewModel {
+    @Inject
+    public ExerciseViewModel(ExerciseRepository repository) {
     }
 }

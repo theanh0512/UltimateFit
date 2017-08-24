@@ -1,5 +1,9 @@
 package ultimate.fit.ultimatefit.injection;
 
+import android.app.Application;
+
+import javax.inject.Singleton;
+
 import dagger.BindsInstance;
 import dagger.Component;
 import dagger.android.support.AndroidSupportInjectionModule;
@@ -8,6 +12,7 @@ import ultimate.fit.ultimatefit.UltimateFitApplication;
 /**
  * Created by Pham on 27/7/17.
  */
+@Singleton
 @Component(modules = {
         /* Use AndroidInjectionModule.class if you're not using support library */
         AndroidSupportInjectionModule.class,
@@ -20,7 +25,7 @@ public interface AppComponent {
     @Component.Builder
     interface Builder {
         @BindsInstance
-        Builder application(UltimateFitApplication application);
+        Builder application(Application application);
 
         AppComponent build();
     }

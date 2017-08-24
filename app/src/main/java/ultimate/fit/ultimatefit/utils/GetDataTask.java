@@ -27,10 +27,10 @@ import java.util.List;
 import java.util.Objects;
 
 import ultimate.fit.ultimatefit.R;
-import ultimate.fit.ultimatefit.ui.MainActivity;
 import ultimate.fit.ultimatefit.data.UltimateFitProvider;
 import ultimate.fit.ultimatefit.data.generated.values.CategoriesValuesBuilder;
 import ultimate.fit.ultimatefit.data.generated.values.ExercisesValuesBuilder;
+import ultimate.fit.ultimatefit.ui.MainActivity;
 
 /**
  * Created by Pham on 12/24/2015.
@@ -175,7 +175,7 @@ public class GetDataTask extends AsyncTask<String, Void, List<String>> {
                         for (int i = 0; i < len; i++) {
                             JSONObject json = jsonArrayMain.getJSONObject(i);
                             int categoryId = json.getInt("pk");
-                            JSONObject jsonFields = json.getJSONObject("fields");
+                            JSONObject jsonFields = json.getJSONObject("category");
                             String name = jsonFields.getString("name");
                             String imagePath = jsonFields.getString("image");
                             categoryValues[i] = new CategoriesValuesBuilder().id(categoryId).categoryName(name).imagePath(imagePath).values();

@@ -8,7 +8,6 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 
 import dagger.android.AndroidInjection;
-import dagger.android.HasActivityInjector;
 import dagger.android.support.AndroidSupportInjection;
 import dagger.android.support.HasSupportFragmentInjector;
 import ultimate.fit.ultimatefit.UltimateFitApplication;
@@ -64,7 +63,10 @@ public class AppInjector {
     }
 
     private static void handleActivity(Activity activity) {
-        if (activity instanceof HasSupportFragmentInjector || activity instanceof HasActivityInjector) {
+        if (activity instanceof HasSupportFragmentInjector) {
+            AndroidInjection.inject(activity);
+        }
+        if (activity instanceof Injectable) {
             AndroidInjection.inject(activity);
         }
         if (activity instanceof FragmentActivity) {

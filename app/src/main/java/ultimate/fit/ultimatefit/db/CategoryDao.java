@@ -8,7 +8,8 @@ import android.arch.persistence.room.Query;
 
 import java.util.List;
 
-import ultimate.fit.ultimatefit.entity.Category;
+import ultimate.fit.ultimatefit.entity.CategoryApiResponse;
+
 
 /**
  * Created by Pham on 31/7/17.
@@ -16,8 +17,11 @@ import ultimate.fit.ultimatefit.entity.Category;
 @Dao
 public interface CategoryDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    void insert(Category category);
+    void insert(CategoryApiResponse categoryApiResponse);
 
-    @Query("SELECT * FROM categories")
-    LiveData<List<Category>> loadAllCategories();
+    @Query("SELECT * FROM category_response")
+    LiveData<List<CategoryApiResponse>> loadAllCategories();
+
+    @Query("SELECT * FROM category_response")
+    List<CategoryApiResponse> loadListCategories();
 }

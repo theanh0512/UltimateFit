@@ -1,14 +1,16 @@
 package ultimate.fit.ultimatefit.api;
 
+import java.util.List;
+
 /**
  * Created by Pham on 17/8/17.
  */
 
 public class ExerciseApiResponse {
-    private ExerciseResponse[] array;
+    private List<ExerciseResponse> array;
     private int page;
 
-    public ExerciseResponse[] getArray() {
+    public List<ExerciseResponse> getArray() {
         return array;
     }
 

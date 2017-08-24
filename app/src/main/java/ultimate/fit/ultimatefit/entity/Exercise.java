@@ -1,7 +1,6 @@
 package ultimate.fit.ultimatefit.entity;
 
 import android.arch.persistence.room.Entity;
-import android.arch.persistence.room.PrimaryKey;
 
 import com.google.gson.annotations.SerializedName;
 
@@ -9,66 +8,30 @@ import com.google.gson.annotations.SerializedName;
  * Created by Pham on 27/7/17.
  */
 
-@Entity(tableName = "exercises")
+@Entity(tableName = "exercises", primaryKeys = {"name"})
 public class Exercise {
-    @SerializedName("_id")
-    @PrimaryKey(autoGenerate = true)
-    public final long ID;
-    @SerializedName("exercise_image_path")
+    @SerializedName("image")
     public final String image;
-    @SerializedName("exercise_image_2_path")
+    @SerializedName("image2")
     public final String image2;
-    @SerializedName("video_path")
+    @SerializedName("video")
     public final String video;
-    @SerializedName("exercise_name")
+    @SerializedName("name")
     public final String name;
     @SerializedName("description")
     public final String description;
     @SerializedName("one_rep_max")
     public final String oneRepMax;
-    @SerializedName("category_id")
-    public final String categoryId;
+    @SerializedName("category")
+    public final int categoryPk;
 
-    public Exercise(long ID, String image, String image2, String video, String name, String description, String oneRepMax, String categoryId) {
-        this.ID = ID;
+    public Exercise(String image, String image2, String video, String name, String description, String oneRepMax, int categoryPk) {
         this.image = image;
         this.image2 = image2;
         this.video = video;
         this.name = name;
         this.description = description;
         this.oneRepMax = oneRepMax;
-        this.categoryId = categoryId;
-    }
-
-    public long getID() {
-        return ID;
-    }
-
-    public String getImage() {
-        return image;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public String getImage2() {
-        return image2;
-    }
-
-    public String getVideo() {
-        return video;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public String getOneRepMax() {
-        return oneRepMax;
-    }
-
-    public String getCategoryId() {
-        return categoryId;
+        this.categoryPk = categoryPk;
     }
 }

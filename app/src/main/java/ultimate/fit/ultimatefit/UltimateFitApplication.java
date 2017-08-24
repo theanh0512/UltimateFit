@@ -13,10 +13,7 @@ import ultimate.fit.ultimatefit.injection.AppInjector;
  * Created by Pham on 27/7/17.
  */
 
-public class UltimateFitApplication extends Application
-        implements HasActivityInjector
-
-{
+public class UltimateFitApplication extends Application implements HasActivityInjector {
     @Inject
     DispatchingAndroidInjector<Activity> dispatchingAndroidInjector;
 

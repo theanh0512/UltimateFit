@@ -6,6 +6,7 @@ import java.util.List;
 
 import retrofit2.http.GET;
 import retrofit2.http.Path;
+import ultimate.fit.ultimatefit.entity.CategoryApiResponse;
 
 /**
  * Created by Pham on 27/7/17.

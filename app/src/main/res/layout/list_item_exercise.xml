@@ -32,10 +32,10 @@
             android:layout_marginStart="24dp"
             android:layout_marginTop="8dp"
             android:paddingBottom="@dimen/view_padding"
-
             android:paddingEnd="@dimen/view_padding"
             android:paddingStart="@dimen/view_padding"
             android:paddingTop="@dimen/view_padding"
+            android:text="@{exercise.name}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toLeftOf="@+id/imageViewExerciseImage"
