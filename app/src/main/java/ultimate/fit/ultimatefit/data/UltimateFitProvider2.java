@@ -7,9 +7,9 @@ import net.simonvt.schematic.annotation.ContentUri;
 import net.simonvt.schematic.annotation.InexactContentUri;
 import net.simonvt.schematic.annotation.TableEndpoint;
 
-@ContentProvider(authority = UltimateFitProvider.AUTHORITY, database = UltimateFitDatabase.class)
-public class UltimateFitProvider {
-    public static final String AUTHORITY = "ultimate.fit.ultimatefit.data.UltimateFitProvider";
+@ContentProvider(authority = UltimateFitProvider2.AUTHORITY, database = UltimateFitDatabase.class)
+public class UltimateFitProvider2 {
+    public static final String AUTHORITY = "ultimate.fit.ultimatefit.data.UltimateFitProvider2";
     static final Uri BASE_CONTENT_URI = Uri.parse("content://" + AUTHORITY);
 
     private static Uri buildUri(String... paths) {

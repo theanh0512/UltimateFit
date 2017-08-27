@@ -1,5 +1,5 @@
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
-    <string name="app_name">Ultimate Fit</string>
+    <string name="app_name">Ultimate Fit mvvm</string>
     <string name="app_logo">App Logo</string>
 
     <string name="navigation_drawer_open">Open navigation drawer</string>

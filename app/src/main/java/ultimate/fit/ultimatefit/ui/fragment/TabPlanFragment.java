@@ -26,7 +26,7 @@ import butterknife.OnClick;
 import ultimate.fit.ultimatefit.R;
 import ultimate.fit.ultimatefit.ui.AddPlanActivity;
 import ultimate.fit.ultimatefit.adapter.PlanAdapter;
-import ultimate.fit.ultimatefit.data.UltimateFitProvider;
+import ultimate.fit.ultimatefit.data.UltimateFitProvider2;
 
 
 /**
@@ -155,7 +155,7 @@ public class TabPlanFragment extends Fragment implements LoaderManager.LoaderCal
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-        return new CursorLoader(getActivity(), UltimateFitProvider.Plans.CONTENT_URI, null, null, null, null);
+        return new CursorLoader(getActivity(), UltimateFitProvider2.Plans.CONTENT_URI, null, null, null, null);
     }
 
     @Override

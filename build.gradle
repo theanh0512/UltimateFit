@@ -47,6 +47,8 @@ ext {
     jodaTimeVersion = "2.9.7"
     javaxAnnotationVersion = "1.0"
     fbSDKVersion = "4.24.0"
+    rxJavaVersion = "2.1.0"
+    rxAndroidVersion = "2.0.1"
 }
 repositories {
     mavenCentral()

@@ -87,10 +87,10 @@ public class CategoryActivity extends LifecycleActivity implements Injectable {
 //                if (workoutId != -1) {
 //                    ContentValues workoutExerciseContentValues = new Workout_exercisesValuesBuilder().exerciseIds(String.valueOf(exerciseId)).firstExerciseName(exerciseName)
 //                            .firstExerciseImage(exerciseImagePath).workoutId(workoutId).rep(8).set(4).values();
-//                    context.getContentResolver().insert(UltimateFitProvider.WorkoutExercises.CONTENT_URI, workoutExerciseContentValues);
+//                    context.getContentResolver().insert(UltimateFitProvider2.WorkoutExercises.CONTENT_URI, workoutExerciseContentValues);
 //                } else {
 //                    ContentValues workoutExerciseContentValues = new Workout_exercisesValuesBuilder().exerciseIds(exerciseIds + "," + String.valueOf(exerciseId)).values();
-//                    context.getContentResolver().update(UltimateFitProvider.WorkoutExercises.CONTENT_URI, workoutExerciseContentValues,
+//                    context.getContentResolver().update(UltimateFitProvider2.WorkoutExercises.CONTENT_URI, workoutExerciseContentValues,
 //                            UltimateFitDatabase.Tables.WORKOUT_EXERCISES + "." + WorkoutExerciseColumns.ID + "=" + workoutExerciseId, null);
 //                }
 //            }).start();
@@ -115,9 +115,9 @@ public class CategoryActivity extends LifecycleActivity implements Injectable {
 //    public Loader<Cursor> onCreateLoader(int id, Bundle args) {
 //        switch (id) {
 //            case CATEGORY_LOADER:
-//                return new CursorLoader(this, UltimateFitProvider.Categories.CONTENT_URI, null, null, null, null);
+//                return new CursorLoader(this, UltimateFitProvider2.Categories.CONTENT_URI, null, null, null, null);
 //            case EXERCISE_LOADER:
-//                return new CursorLoader(this, UltimateFitProvider.Exercises.fromCategory(clickedCategoryId), null, null, null, null);
+//                return new CursorLoader(this, UltimateFitProvider2.Exercises.fromCategory(clickedCategoryId), null, null, null, null);
 //            default:
 //                return null;
 //        }

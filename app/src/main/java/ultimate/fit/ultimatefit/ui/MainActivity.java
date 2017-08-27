@@ -65,7 +65,7 @@ import ultimate.fit.ultimatefit.adapter.PlanAdapter;
 import ultimate.fit.ultimatefit.data.ExerciseColumns;
 import ultimate.fit.ultimatefit.data.PlanColumns;
 import ultimate.fit.ultimatefit.data.SetColumns;
-import ultimate.fit.ultimatefit.data.UltimateFitProvider;
+import ultimate.fit.ultimatefit.data.UltimateFitProvider2;
 import ultimate.fit.ultimatefit.data.WorkoutColumns;
 import ultimate.fit.ultimatefit.data.WorkoutExerciseColumns;
 import ultimate.fit.ultimatefit.data.generated.values.SetsValuesBuilder;
@@ -301,7 +301,7 @@ public class MainActivity extends AppCompatActivity
                         String creatorEmail = uploadedPlan.getCreatorEmail();
                         String planUuid = uploadedPlan.getPlanUuid();
                         String[] args = {uploadedPlanName, uploadedPlanGoal, String.valueOf(uploadedPlanDayPerWeek), String.valueOf(uploadedPlanNumOfWeek)};
-                        Cursor planCursor = activity.getContentResolver().query(UltimateFitProvider.Plans.CONTENT_URI, null,
+                        Cursor planCursor = activity.getContentResolver().query(UltimateFitProvider2.Plans.CONTENT_URI, null,
                                 PlanColumns.NAME + " = ? AND " + PlanColumns.GOAL + " = ? AND " + PlanColumns.DAY_PER_WEEK + " = ? AND " +
                                         PlanColumns.NUM_OF_WEEK + " = ?", args, null);
                         boolean isUpdating = false;
@@ -316,12 +316,12 @@ public class MainActivity extends AppCompatActivity
                         Uri uri;
                         long planId = 0;
                         if (!isUpdating) {
-                            uri = activity.getContentResolver().insert(UltimateFitProvider.Plans.CONTENT_URI, planContentValues);
+                            uri = activity.getContentResolver().insert(UltimateFitProvider2.Plans.CONTENT_URI, planContentValues);
                             planId = ContentUris.parseId(uri);
                         } else {
                             if (isSyncAllowed) {
                                 planId = planCursor.getLong(planCursor.getColumnIndex(PlanColumns.ID));
-                                activity.getContentResolver().update(UltimateFitProvider.Plans.CONTENT_URI, planContentValues,
+                                activity.getContentResolver().update(UltimateFitProvider2.Plans.CONTENT_URI, planContentValues,
                                         PlanColumns.ID + " = " + planId, null);
                             }
                         }
@@ -341,16 +341,16 @@ public class MainActivity extends AppCompatActivity
                                 Uri workoutUri;
                                 long workoutId = 0;
                                 if (!isUpdating) {
-                                    workoutUri = activity.getContentResolver().insert(UltimateFitProvider.Workouts.CONTENT_URI, workoutContentValues[i]);
+                                    workoutUri = activity.getContentResolver().insert(UltimateFitProvider2.Workouts.CONTENT_URI, workoutContentValues[i]);
                                     workoutId = ContentUris.parseId(workoutUri);
                                 } else {
                                     if (isSyncAllowed) {
                                         String[] argsWorkout = {String.valueOf(planId), String.valueOf(workouts.get(i).getDayNumber())};
-                                        Cursor workoutCursor = activity.getContentResolver().query(UltimateFitProvider.Workouts.CONTENT_URI, null,
+                                        Cursor workoutCursor = activity.getContentResolver().query(UltimateFitProvider2.Workouts.CONTENT_URI, null,
                                                 WorkoutColumns.PLAN_ID + " = ? AND " + WorkoutColumns.DAY_NUMBER + " = ?", argsWorkout, null);
                                         workoutCursor.moveToFirst();
                                         workoutId = workoutCursor.getLong(workoutCursor.getColumnIndex(WorkoutColumns.ID));
-                                        activity.getContentResolver().update(UltimateFitProvider.Workouts.CONTENT_URI, workoutContentValues[i],
+                                        activity.getContentResolver().update(UltimateFitProvider2.Workouts.CONTENT_URI, workoutContentValues[i],
                                                 WorkoutColumns.ID + " = " + workoutId, null);
                                         workoutCursor.close();
                                     }
@@ -361,7 +361,7 @@ public class MainActivity extends AppCompatActivity
                                 //ensure creator set up the workoutExercise already
                                 //Delete old workout exercises and sets
                                 if (isUpdating && isSyncAllowed) {
-                                    Cursor workoutExerciseCursor = activity.getContentResolver().query(UltimateFitProvider.WorkoutExercises.CONTENT_URI, null,
+                                    Cursor workoutExerciseCursor = activity.getContentResolver().query(UltimateFitProvider2.WorkoutExercises.CONTENT_URI, null,
                                             WorkoutExerciseColumns.WORKOUT_ID + " = " + workoutId, null, null);
                                     if (workoutExerciseCursor != null && workoutExerciseCursor.moveToFirst()) {
                                         int toBeSavedWESize = workoutExercises.size();
@@ -461,7 +461,7 @@ public class MainActivity extends AppCompatActivity
             for (int k = 0; k < noOfExercises; k++) {
                 String exerciseName = sets.get(k).getExerciseName();
                 String[] argsExercise = {exerciseName};
-                Cursor exerciseCursor = activity.getContentResolver().query(UltimateFitProvider.Exercises.CONTENT_URI, null,
+                Cursor exerciseCursor = activity.getContentResolver().query(UltimateFitProvider2.Exercises.CONTENT_URI, null,
                         ExerciseColumns.EXERCISE_NAME + " = ?", argsExercise, null);
                 if (exerciseCursor != null && exerciseCursor.moveToFirst()) {
                     long exerciseId = exerciseCursor.getLong(exerciseCursor.getColumnIndex(ExerciseColumns.ID));
@@ -472,7 +472,7 @@ public class MainActivity extends AppCompatActivity
             joinedExerciseIds = strJoin(exerciseIdArray, ",");
         } else {//set is not generated
             String[] argsExercise = {workoutExercise.getFirstExerciseName()};
-            Cursor exerciseCursor = activity.getContentResolver().query(UltimateFitProvider.Exercises.CONTENT_URI, null,
+            Cursor exerciseCursor = activity.getContentResolver().query(UltimateFitProvider2.Exercises.CONTENT_URI, null,
                     ExerciseColumns.EXERCISE_NAME + " = ?", argsExercise, null);
             if (exerciseCursor != null && exerciseCursor.moveToFirst()) {
                 long exerciseId = exerciseCursor.getLong(exerciseCursor.getColumnIndex(ExerciseColumns.ID));
@@ -491,7 +491,7 @@ public class MainActivity extends AppCompatActivity
                 .workoutId(workoutId)
                 .workoutExerciseNumber(j)
                 .exerciseIds(joinedExerciseIds).values();
-        Uri workoutExerciseUri = activity.getContentResolver().insert(UltimateFitProvider.WorkoutExercises.CONTENT_URI,
+        Uri workoutExerciseUri = activity.getContentResolver().insert(UltimateFitProvider2.WorkoutExercises.CONTENT_URI,
                 workoutExerciseContentValues);
         long workoutExerciseId = ContentUris.parseId(workoutExerciseUri);
 
@@ -510,7 +510,7 @@ public class MainActivity extends AppCompatActivity
                         .workoutExerciseId(workoutExerciseId)
                         .setPosition(k)
                         .setNumber(set.getSetNumber()).values();
-                activity.getContentResolver().insert(UltimateFitProvider.Sets.CONTENT_URI, setContentValues[k]);
+                activity.getContentResolver().insert(UltimateFitProvider2.Sets.CONTENT_URI, setContentValues[k]);
             }
         }
     }
@@ -529,7 +529,7 @@ public class MainActivity extends AppCompatActivity
 
             if (workoutExerciseOptional.isPresent()) {
                 WorkoutExercise workoutExercise = workoutExerciseOptional.get();
-                Cursor setCursor = activity.getContentResolver().query(UltimateFitProvider.Sets.CONTENT_URI, null,
+                Cursor setCursor = activity.getContentResolver().query(UltimateFitProvider2.Sets.CONTENT_URI, null,
                         SetColumns.WORKOUT_EXERCISE_ID + " = " + workoutExerciseId, null, null);
                 if (setCursor != null && setCursor.moveToFirst()) {
                     List<Set> sets = workoutExercise.getSets();
@@ -558,7 +558,7 @@ public class MainActivity extends AppCompatActivity
                                             ContentValues setContentValues =
                                                     getSetContentValuesFromSet(set, count, noOfExercises, exerciseIdArray, workoutExerciseId, setPosition);
                                             if (setContentValues != null)
-                                                activity.getContentResolver().update(UltimateFitProvider.Sets.CONTENT_URI, setContentValues,
+                                                activity.getContentResolver().update(UltimateFitProvider2.Sets.CONTENT_URI, setContentValues,
                                                         SetColumns.ID + " = " + setId, null);
                                         }
                                     }
@@ -567,7 +567,7 @@ public class MainActivity extends AppCompatActivity
                                         ContentValues setContentValues =
                                                 getSetContentValuesFromSet(set, count, noOfExercises, exerciseIdArray, workoutExerciseId, j);
                                         if (setContentValues != null)
-                                            activity.getContentResolver().insert(UltimateFitProvider.Sets.CONTENT_URI, setContentValues);
+                                            activity.getContentResolver().insert(UltimateFitProvider2.Sets.CONTENT_URI, setContentValues);
                                     }
                                     break;
                                 case LESS:
@@ -584,10 +584,10 @@ public class MainActivity extends AppCompatActivity
                                             ContentValues setContentValues =
                                                     getSetContentValuesFromSet(set, count_less, noOfExercises, exerciseIdArray, workoutExerciseId, setPosition);
                                             if (setContentValues != null)
-                                                activity.getContentResolver().update(UltimateFitProvider.Sets.CONTENT_URI, setContentValues,
+                                                activity.getContentResolver().update(UltimateFitProvider2.Sets.CONTENT_URI, setContentValues,
                                                         SetColumns.ID + " = " + setId, null);
                                         } else {
-                                            activity.getContentResolver().delete(UltimateFitProvider.Sets.CONTENT_URI,
+                                            activity.getContentResolver().delete(UltimateFitProvider2.Sets.CONTENT_URI,
                                                     SetColumns.ID + " = " + setId, null);
                                         }
                                     }
@@ -606,7 +606,7 @@ public class MainActivity extends AppCompatActivity
                                             ContentValues setContentValues =
                                                     getSetContentValuesFromSet(set, count_equal, noOfExercises, exerciseIdArray, workoutExerciseId, setPosition);
                                             if (setContentValues != null)
-                                                activity.getContentResolver().update(UltimateFitProvider.Sets.CONTENT_URI, setContentValues,
+                                                activity.getContentResolver().update(UltimateFitProvider2.Sets.CONTENT_URI, setContentValues,
                                                         SetColumns.ID + " = " + setId, null);
                                         }
                                     }
@@ -620,7 +620,7 @@ public class MainActivity extends AppCompatActivity
                                 ContentValues setContentValues =
                                         getSetContentValuesFromSet(set, count, noOfExercises, exerciseIdArray, workoutExerciseId, j);
                                 if (setContentValues != null)
-                                    activity.getContentResolver().insert(UltimateFitProvider.Sets.CONTENT_URI, setContentValues);
+                                    activity.getContentResolver().insert(UltimateFitProvider2.Sets.CONTENT_URI, setContentValues);
                             }
                         }
                     }
@@ -638,13 +638,13 @@ public class MainActivity extends AppCompatActivity
                         .workoutExerciseNumber(workoutExerciseNumber)
                         .exerciseIds(joinedExerciseIds).values();
                 if (isSyncAllowed) {
-                    activity.getContentResolver().update(UltimateFitProvider.WorkoutExercises.CONTENT_URI, workoutExerciseContentValues,
+                    activity.getContentResolver().update(UltimateFitProvider2.WorkoutExercises.CONTENT_URI, workoutExerciseContentValues,
                             WorkoutExerciseColumns.ID + " = " + workoutExerciseId, null);
                 }
             } else {
-                activity.getContentResolver().delete(UltimateFitProvider.Sets.CONTENT_URI,
+                activity.getContentResolver().delete(UltimateFitProvider2.Sets.CONTENT_URI,
                         SetColumns.WORKOUT_EXERCISE_ID + " = " + workoutExerciseId, null);
-                activity.getContentResolver().delete(UltimateFitProvider.WorkoutExercises.CONTENT_URI,
+                activity.getContentResolver().delete(UltimateFitProvider2.WorkoutExercises.CONTENT_URI,
                         WorkoutExerciseColumns.ID + " = " + workoutExerciseId, null);
             }
         }
@@ -654,7 +654,7 @@ public class MainActivity extends AppCompatActivity
         ContentValues setContentValues = null;
         String exerciseName = set.getExerciseName();
         String[] argsExercise = {exerciseName};
-        Cursor exerciseCursor = activity.getContentResolver().query(UltimateFitProvider.Exercises.CONTENT_URI, null,
+        Cursor exerciseCursor = activity.getContentResolver().query(UltimateFitProvider2.Exercises.CONTENT_URI, null,
                 ExerciseColumns.EXERCISE_NAME + " = ?", argsExercise, null);
         long exerciseId;
         if (exerciseCursor != null && exerciseCursor.moveToFirst()) {

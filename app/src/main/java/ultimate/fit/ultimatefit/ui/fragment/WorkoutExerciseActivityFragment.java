@@ -33,13 +33,13 @@ import butterknife.OnClick;
 import butterknife.OnEditorAction;
 import butterknife.OnFocusChange;
 import ultimate.fit.ultimatefit.R;
+import ultimate.fit.ultimatefit.data.UltimateFitProvider2;
 import ultimate.fit.ultimatefit.ui.category.CategoryActivity;
 import ultimate.fit.ultimatefit.adapter.ExerciseArrayListAdapter;
 import ultimate.fit.ultimatefit.adapter.SetAdapter;
 import ultimate.fit.ultimatefit.data.ExerciseColumns;
 import ultimate.fit.ultimatefit.data.SetColumns;
 import ultimate.fit.ultimatefit.data.UltimateFitDatabase;
-import ultimate.fit.ultimatefit.data.UltimateFitProvider;
 import ultimate.fit.ultimatefit.data.WorkoutExerciseColumns;
 import ultimate.fit.ultimatefit.data.generated.values.SetsValuesBuilder;
 import ultimate.fit.ultimatefit.data.generated.values.Workout_exercisesValuesBuilder;
@@ -133,7 +133,7 @@ public class WorkoutExerciseActivityFragment extends Fragment implements LoaderM
                             exerciseIds = newExerciseIds;
                             ContentValues contentValues;
                             if (currentExerciseIds.size() == 1) {
-                                Cursor exerciseCursor = getActivity().getContentResolver().query(UltimateFitProvider.Exercises.withId(Integer.parseInt(newExerciseIds))
+                                Cursor exerciseCursor = getActivity().getContentResolver().query(UltimateFitProvider2.Exercises.withId(Integer.parseInt(newExerciseIds))
                                         , null, null, null, null);
                                 exerciseCursor.moveToFirst();
                                 String exerciseName = exerciseCursor.getString(exerciseCursor.getColumnIndex(ExerciseColumns.EXERCISE_NAME));
@@ -143,7 +143,7 @@ public class WorkoutExerciseActivityFragment extends Fragment implements LoaderM
                                 exerciseCursor.close();
                             } else
                                 contentValues = new Workout_exercisesValuesBuilder().exerciseIds(newExerciseIds).values();
-                            getActivity().getContentResolver().update(UltimateFitProvider.WorkoutExercises.CONTENT_URI,
+                            getActivity().getContentResolver().update(UltimateFitProvider2.WorkoutExercises.CONTENT_URI,
                                     contentValues, UltimateFitDatabase.Tables.WORKOUT_EXERCISES + "." + WorkoutExerciseColumns.ID + "=" + workoutExerciseId, null);
                         } catch (Exception e) {
                             // TODO: handle exception
@@ -180,12 +180,12 @@ public class WorkoutExerciseActivityFragment extends Fragment implements LoaderM
             public void run() {
                 try {
                     arrayListExercise.clear();
-                    Cursor workoutExerciseCursor = getActivity().getContentResolver().query(UltimateFitProvider.WorkoutExercises.withId(workoutExerciseId), null, null, null, null);
+                    Cursor workoutExerciseCursor = getActivity().getContentResolver().query(UltimateFitProvider2.WorkoutExercises.withId(workoutExerciseId), null, null, null, null);
                     workoutExerciseCursor.moveToFirst();
                     exerciseIds = workoutExerciseCursor.getString(workoutExerciseCursor.getColumnIndex(WorkoutExerciseColumns.EXERCISE_IDS));
                     String exerciseId[] = exerciseIds.split(",");
                     for (int i = 0; i < exerciseId.length; i++) {
-                        Cursor exerciseCursor = getActivity().getContentResolver().query(UltimateFitProvider.Exercises.withId(Integer.parseInt(exerciseId[i])), null, null, null, null);
+                        Cursor exerciseCursor = getActivity().getContentResolver().query(UltimateFitProvider2.Exercises.withId(Integer.parseInt(exerciseId[i])), null, null, null, null);
                         exerciseCursor.moveToFirst();
                         String exerciseName = exerciseCursor.getString(exerciseCursor.getColumnIndex(ExerciseColumns.EXERCISE_NAME));
                         Exercise exercise = new Exercise(Integer.parseInt(exerciseId[i]), exerciseName);
@@ -214,7 +214,7 @@ public class WorkoutExerciseActivityFragment extends Fragment implements LoaderM
             @Override
             public void run() {
                 try {
-                    getActivity().getContentResolver().delete(UltimateFitProvider.Sets.CONTENT_URI,
+                    getActivity().getContentResolver().delete(UltimateFitProvider2.Sets.CONTENT_URI,
                             UltimateFitDatabase.Tables.SETS + "." + SetColumns.WORKOUT_EXERCISE_ID + "=" + workoutExerciseId, null);
                     ContentValues[] setValues = new ContentValues[arrayListExercise.size() * noOfSet];
                     int count = 0;
@@ -227,7 +227,7 @@ public class WorkoutExerciseActivityFragment extends Fragment implements LoaderM
                             count++;
                         }
                     }
-                    getActivity().getContentResolver().bulkInsert(UltimateFitProvider.Sets.CONTENT_URI, setValues);
+                    getActivity().getContentResolver().bulkInsert(UltimateFitProvider2.Sets.CONTENT_URI, setValues);
                 } catch (Exception e) {
                     // TODO: handle exception
                     Log.e("log_tag", "Error Parsing Data " + e.toString());
@@ -274,7 +274,7 @@ public class WorkoutExerciseActivityFragment extends Fragment implements LoaderM
                     @Override
                     public void run() {
                         ContentValues contentValues = new Workout_exercisesValuesBuilder().set(Integer.valueOf(editTextSet.getText().toString())).values();
-                        context.getContentResolver().update(UltimateFitProvider.WorkoutExercises.CONTENT_URI,
+                        context.getContentResolver().update(UltimateFitProvider2.WorkoutExercises.CONTENT_URI,
                                 contentValues, UltimateFitDatabase.Tables.WORKOUT_EXERCISES + "." + WorkoutExerciseColumns.ID + "=" + workoutExerciseId, null);
                     }
                 }).start();
@@ -294,7 +294,7 @@ public class WorkoutExerciseActivityFragment extends Fragment implements LoaderM
                 @Override
                 public void run() {
                     ContentValues contentValues = new Workout_exercisesValuesBuilder().set(Integer.valueOf(editTextSet.getText().toString())).values();
-                    context.getContentResolver().update(UltimateFitProvider.WorkoutExercises.CONTENT_URI,
+                    context.getContentResolver().update(UltimateFitProvider2.WorkoutExercises.CONTENT_URI,
                             contentValues, UltimateFitDatabase.Tables.WORKOUT_EXERCISES + "." + WorkoutExerciseColumns.ID + "=" + workoutExerciseId, null);
                 }
             }).start();
@@ -306,7 +306,7 @@ public class WorkoutExerciseActivityFragment extends Fragment implements LoaderM
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
         switch (id) {
             case SET_LOADER:
-                return new CursorLoader(getActivity(), UltimateFitProvider.Sets.fromWorkoutExercise(workoutExerciseId), null, null, null, null);
+                return new CursorLoader(getActivity(), UltimateFitProvider2.Sets.fromWorkoutExercise(workoutExerciseId), null, null, null, null);
         }
         return null;
     }

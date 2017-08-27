@@ -28,10 +28,8 @@ import butterknife.ButterKnife;
 import ultimate.fit.ultimatefit.R;
 import ultimate.fit.ultimatefit.data.ExerciseColumns;
 import ultimate.fit.ultimatefit.data.UltimateFitDatabase;
-import ultimate.fit.ultimatefit.data.UltimateFitProvider;
-import ultimate.fit.ultimatefit.data.WorkoutColumns;
+import ultimate.fit.ultimatefit.data.UltimateFitProvider2;
 import ultimate.fit.ultimatefit.data.generated.values.ExercisesValuesBuilder;
-import ultimate.fit.ultimatefit.data.generated.values.WorkoutsValuesBuilder;
 import ultimate.fit.ultimatefit.utils.CalculationMethods;
 
 
@@ -98,7 +96,7 @@ public class ExerciseFragment extends Fragment {
             @Override
             public void run() {
                 try {
-                    Cursor exerciseCursor = getActivity().getContentResolver().query(UltimateFitProvider.Exercises.withId(exerciseId), null, null, null, null);
+                    Cursor exerciseCursor = getActivity().getContentResolver().query(UltimateFitProvider2.Exercises.withId(exerciseId), null, null, null, null);
                     exerciseCursor.moveToFirst();
                     exerciseName = exerciseCursor.getString(exerciseCursor.getColumnIndex(ExerciseColumns.EXERCISE_NAME));
                     exerciseImage1 = exerciseCursor.getString(exerciseCursor.getColumnIndex(ExerciseColumns.IMAGE_PATH));
@@ -223,7 +221,7 @@ public class ExerciseFragment extends Fragment {
                             new Thread(() -> {
                                 double orm = getOrm(editTextRep, editTextWeight);
                                 ContentValues exerciseContentValues = new ExercisesValuesBuilder().oneRepMax(orm).values();
-                                getActivity().getContentResolver().update(UltimateFitProvider.Exercises.CONTENT_URI,
+                                getActivity().getContentResolver().update(UltimateFitProvider2.Exercises.CONTENT_URI,
                                         exerciseContentValues, UltimateFitDatabase.EXERCISES + "." + ExerciseColumns.ID + "=" + exerciseId, null);
                             }).start();
                             alertDialog.cancel();

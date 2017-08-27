@@ -10,6 +10,7 @@ import java.util.List;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
+import ultimate.fit.ultimatefit.AppExecutors;
 import ultimate.fit.ultimatefit.api.ApiResponse;
 import ultimate.fit.ultimatefit.api.UltimateFitService;
 import ultimate.fit.ultimatefit.db.CategoryDao;
@@ -25,17 +26,20 @@ public class CategoryRepository {
     private final CategoryDao categoryDao;
     private final UltimateFitService ultimateFitService;
     private Context context;
+    private final AppExecutors appExecutors;
 
     @Inject
-    public CategoryRepository(CategoryDao categoryDao, UltimateFitService ultimateFitService, Context context) {
+    public CategoryRepository(CategoryDao categoryDao, UltimateFitService ultimateFitService,
+                              Context context, AppExecutors appExecutors) {
         this.categoryDao = categoryDao;
         this.ultimateFitService = ultimateFitService;
         this.context = context;
+        this.appExecutors = appExecutors;
     }
 
 
     public LiveData<Resource<List<CategoryApiResponse>>> getCategory() {
-        return new NetworkBoundResource<List<CategoryApiResponse>, List<CategoryApiResponse>>() {
+        return new NetworkBoundResource<List<CategoryApiResponse>, List<CategoryApiResponse>>(appExecutors) {
             @Override
             protected void saveCallResult(@NonNull List<CategoryApiResponse> item) {
                 for (CategoryApiResponse categoryApiResponse : item) {
@@ -65,6 +69,6 @@ public class CategoryRepository {
                 }
                 return ultimateFitService.getCategory(lastUpdated);
             }
-        }.getAsLiveData();
+        }.asLiveData();
     }
 }

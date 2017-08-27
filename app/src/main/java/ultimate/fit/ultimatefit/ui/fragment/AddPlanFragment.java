@@ -23,7 +23,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import ultimate.fit.ultimatefit.R;
 import ultimate.fit.ultimatefit.data.PlanColumns;
-import ultimate.fit.ultimatefit.data.UltimateFitProvider;
+import ultimate.fit.ultimatefit.data.UltimateFitProvider2;
 import ultimate.fit.ultimatefit.data.generated.values.WorkoutsValuesBuilder;
 import ultimate.fit.ultimatefit.ui.MainActivity;
 
@@ -98,14 +98,14 @@ public class AddPlanFragment extends Fragment {
                 planContentValues.put(PlanColumns.DAY_PER_WEEK, dayPerWeek);
                 planContentValues.put(PlanColumns.CREATOR, MainActivity.userEmail);
                 planContentValues.put(PlanColumns.PLAN_UUID, planUuid);
-                Uri uri = context.getContentResolver().insert(UltimateFitProvider.Plans.CONTENT_URI, planContentValues);
+                Uri uri = context.getContentResolver().insert(UltimateFitProvider2.Plans.CONTENT_URI, planContentValues);
 
                 long planId = ContentUris.parseId(uri);
                 ContentValues[] workoutContentValues = new ContentValues[numOfWeek * dayPerWeek];
                 for (int i = 0; i < workoutContentValues.length; i++) {
                     workoutContentValues[i] = new WorkoutsValuesBuilder().dayNumber(i + 1).planId(planId).values();
                 }
-                context.getContentResolver().bulkInsert(UltimateFitProvider.Workouts.CONTENT_URI, workoutContentValues);
+                context.getContentResolver().bulkInsert(UltimateFitProvider2.Workouts.CONTENT_URI, workoutContentValues);
             }
         });
         thread.start();

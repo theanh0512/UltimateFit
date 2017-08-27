@@ -24,7 +24,7 @@ import butterknife.OnEditorAction;
 import butterknife.OnFocusChange;
 import ultimate.fit.ultimatefit.R;
 import ultimate.fit.ultimatefit.data.UltimateFitDatabase;
-import ultimate.fit.ultimatefit.data.UltimateFitProvider;
+import ultimate.fit.ultimatefit.data.UltimateFitProvider2;
 import ultimate.fit.ultimatefit.data.WorkoutExerciseColumns;
 import ultimate.fit.ultimatefit.data.generated.values.Workout_exercisesValuesBuilder;
 
@@ -163,7 +163,7 @@ public class WorkoutExerciseAdapter extends RecyclerView.Adapter<WorkoutExercise
                         @Override
                         public void run() {
                             ContentValues contentValues = new Workout_exercisesValuesBuilder().rep(Integer.valueOf(editTextRep.getText().toString())).values();
-                            context.getContentResolver().update(UltimateFitProvider.WorkoutExercises.CONTENT_URI,
+                            context.getContentResolver().update(UltimateFitProvider2.WorkoutExercises.CONTENT_URI,
                                     contentValues, UltimateFitDatabase.Tables.WORKOUT_EXERCISES + "." + WorkoutExerciseColumns.ID + "=" + workoutExerciseId, null);
                         }
                     }).start();
@@ -191,7 +191,7 @@ public class WorkoutExerciseAdapter extends RecyclerView.Adapter<WorkoutExercise
                         @Override
                         public void run() {
                             ContentValues contentValues = new Workout_exercisesValuesBuilder().set(Integer.valueOf(editTextSet.getText().toString())).values();
-                            context.getContentResolver().update(UltimateFitProvider.WorkoutExercises.CONTENT_URI,
+                            context.getContentResolver().update(UltimateFitProvider2.WorkoutExercises.CONTENT_URI,
                                     contentValues, UltimateFitDatabase.Tables.WORKOUT_EXERCISES + "." + WorkoutExerciseColumns.ID + "=" + workoutExerciseId, null);
                         }
                     }).start();
@@ -212,7 +212,7 @@ public class WorkoutExerciseAdapter extends RecyclerView.Adapter<WorkoutExercise
                         @Override
                         public void run() {
                             ContentValues contentValues = new Workout_exercisesValuesBuilder().rep(Integer.valueOf(editTextRep.getText().toString())).values();
-                            context.getContentResolver().update(UltimateFitProvider.WorkoutExercises.CONTENT_URI,
+                            context.getContentResolver().update(UltimateFitProvider2.WorkoutExercises.CONTENT_URI,
                                     contentValues, UltimateFitDatabase.Tables.WORKOUT_EXERCISES + "." + WorkoutExerciseColumns.ID + "=" + workoutExerciseId, null);
                         }
                     }).start();
@@ -231,7 +231,7 @@ public class WorkoutExerciseAdapter extends RecyclerView.Adapter<WorkoutExercise
                         @Override
                         public void run() {
                             ContentValues contentValues = new Workout_exercisesValuesBuilder().set(Integer.valueOf(editTextSet.getText().toString())).values();
-                            context.getContentResolver().update(UltimateFitProvider.WorkoutExercises.CONTENT_URI,
+                            context.getContentResolver().update(UltimateFitProvider2.WorkoutExercises.CONTENT_URI,
                                     contentValues, UltimateFitDatabase.Tables.WORKOUT_EXERCISES + "." + WorkoutExerciseColumns.ID + "=" + workoutExerciseId, null);
                         }
                     }).start();

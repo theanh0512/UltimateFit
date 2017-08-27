@@ -43,8 +43,8 @@
         </activity>
 
         <provider
-            android:name=".data.generated.UltimateFitProvider"
-            android:authorities="ultimate.fit.ultimatefit.data.UltimateFitProvider"
+            android:name=".data.generated.UltimateFitProvider2"
+            android:authorities="ultimate.fit.ultimatefit.data.UltimateFitProvider2"
             android:exported="false" />
 
         <activity

@@ -28,7 +28,7 @@ import ultimate.fit.ultimatefit.R;
 import ultimate.fit.ultimatefit.UltimateFitWidgetProvider;
 import ultimate.fit.ultimatefit.data.PlanColumns;
 import ultimate.fit.ultimatefit.data.SetColumns;
-import ultimate.fit.ultimatefit.data.UltimateFitProvider;
+import ultimate.fit.ultimatefit.data.UltimateFitProvider2;
 import ultimate.fit.ultimatefit.data.WorkoutColumns;
 import ultimate.fit.ultimatefit.data.WorkoutExerciseColumns;
 import ultimate.fit.ultimatefit.model.Plan;
@@ -99,7 +99,7 @@ public class PlanAdapter extends RecyclerView.Adapter<PlanAdapter.ViewHolder> {
                     public void run() {
                         ContentValues cv = new ContentValues();
                         cv.put(PlanColumns.APPLIED_DATE, new DateTime().getMillis());
-                        context.getContentResolver().update(UltimateFitProvider.Plans.withId(currentAppliedPlanID), cv, null, null);
+                        context.getContentResolver().update(UltimateFitProvider2.Plans.withId(currentAppliedPlanID), cv, null, null);
                     }
                 });
                 thread.start();
@@ -163,7 +163,7 @@ public class PlanAdapter extends RecyclerView.Adapter<PlanAdapter.ViewHolder> {
 
         List<Workout> workouts = new ArrayList<>();
         //query workout
-        Cursor workoutCursor = context.getContentResolver().query(UltimateFitProvider.Workouts.CONTENT_URI, null,
+        Cursor workoutCursor = context.getContentResolver().query(UltimateFitProvider2.Workouts.CONTENT_URI, null,
                 WorkoutColumns.PLAN_ID + " = '" + planId + "'", null, null);
         for (workoutCursor.moveToFirst(); !workoutCursor.isAfterLast(); workoutCursor.moveToNext()) {
             int dayNumber = workoutCursor.getInt(workoutCursor.getColumnIndex(WorkoutColumns.DAY_NUMBER));
@@ -173,7 +173,7 @@ public class PlanAdapter extends RecyclerView.Adapter<PlanAdapter.ViewHolder> {
 
             List<WorkoutExercise> workoutExercises = new ArrayList<>();
             //query workoutExercise
-            Cursor workoutExerciseCursor = context.getContentResolver().query(UltimateFitProvider.WorkoutExercises.CONTENT_URI, null,
+            Cursor workoutExerciseCursor = context.getContentResolver().query(UltimateFitProvider2.WorkoutExercises.CONTENT_URI, null,
                     WorkoutExerciseColumns.WORKOUT_ID + " = '" + workoutId + "'", null, null);
             for (workoutExerciseCursor.moveToFirst(); !workoutExerciseCursor.isAfterLast(); workoutExerciseCursor.moveToNext()) {
                 int noOfSets = workoutExerciseCursor.getInt(workoutExerciseCursor.getColumnIndex(WorkoutExerciseColumns.SET));
@@ -185,7 +185,7 @@ public class PlanAdapter extends RecyclerView.Adapter<PlanAdapter.ViewHolder> {
 
                 List<Set> sets = new ArrayList<>();
                 //query set
-                Cursor setCursor = context.getContentResolver().query(UltimateFitProvider.Sets.CONTENT_URI, null,
+                Cursor setCursor = context.getContentResolver().query(UltimateFitProvider2.Sets.CONTENT_URI, null,
                         SetColumns.WORKOUT_EXERCISE_ID + " = '" + workoutExerciseId + "'", null, null);
                 for (setCursor.moveToFirst(); !setCursor.isAfterLast(); setCursor.moveToNext()) {
                     String exerciseName = setCursor.getString(setCursor.getColumnIndex(SetColumns.SET_NAME));

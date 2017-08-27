@@ -27,7 +27,7 @@ import java.util.List;
 import java.util.Objects;
 
 import ultimate.fit.ultimatefit.R;
-import ultimate.fit.ultimatefit.data.UltimateFitProvider;
+import ultimate.fit.ultimatefit.data.UltimateFitProvider2;
 import ultimate.fit.ultimatefit.data.generated.values.CategoriesValuesBuilder;
 import ultimate.fit.ultimatefit.data.generated.values.ExercisesValuesBuilder;
 import ultimate.fit.ultimatefit.ui.MainActivity;
@@ -180,7 +180,7 @@ public class GetDataTask extends AsyncTask<String, Void, List<String>> {
                             String imagePath = jsonFields.getString("image");
                             categoryValues[i] = new CategoriesValuesBuilder().id(categoryId).categoryName(name).imagePath(imagePath).values();
                         }
-                        mContext.getContentResolver().bulkInsert(UltimateFitProvider.Categories.CONTENT_URI, categoryValues);
+                        mContext.getContentResolver().bulkInsert(UltimateFitProvider2.Categories.CONTENT_URI, categoryValues);
                     } catch (Exception e) {
                         // TODO: handle exception
                         Log.e("log_tag", "Error Parsing Data " + e.toString());
@@ -210,7 +210,7 @@ public class GetDataTask extends AsyncTask<String, Void, List<String>> {
                             exerciseValues[i] = new ExercisesValuesBuilder().categoryId(categoryId).imagePath(imagePath).image2Path(image2Path)
                                     .description(description).exerciseName(name).videoPath(videoPath).oneRepMax(0.0).values();
                         }
-                        mContext.getContentResolver().bulkInsert(UltimateFitProvider.Exercises.CONTENT_URI, exerciseValues);
+                        mContext.getContentResolver().bulkInsert(UltimateFitProvider2.Exercises.CONTENT_URI, exerciseValues);
                     } catch (Exception e) {
                         // TODO: handle exception
                         Log.e("log_tag", "Error Parsing Data " + e.toString());

@@ -13,7 +13,7 @@ import java.util.Locale;
 
 import ultimate.fit.ultimatefit.ui.WorkoutActivity;
 import ultimate.fit.ultimatefit.adapter.PlanAdapter;
-import ultimate.fit.ultimatefit.data.UltimateFitProvider;
+import ultimate.fit.ultimatefit.data.UltimateFitProvider2;
 import ultimate.fit.ultimatefit.data.WorkoutColumns;
 
 /**
@@ -24,7 +24,7 @@ public class UltimateFitWidgetProvider extends AppWidgetProvider {
     public static void updateAppWidget(Context context, AppWidgetManager appWidgetManager,
                                        int appWidgetId) {
 
-        Cursor setCursor = context.getContentResolver().query(UltimateFitProvider.Workouts.fromPlan(PlanAdapter.currentAppliedPlanID), null, null, null, null);
+        Cursor setCursor = context.getContentResolver().query(UltimateFitProvider2.Workouts.fromPlan(PlanAdapter.currentAppliedPlanID), null, null, null, null);
         setCursor.moveToFirst();
         int dayNumber = setCursor.getInt(setCursor.getColumnIndex(WorkoutColumns.DAY_NUMBER));
         String bodyPart = setCursor.getString(setCursor.getColumnIndex(WorkoutColumns.BODY_PART));

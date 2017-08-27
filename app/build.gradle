@@ -44,6 +44,7 @@ android {
         versionCode 2
         versionName "1.0.1"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        multiDexEnabled  true
     }
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
@@ -51,6 +52,7 @@ android {
     }
     buildTypes {
         release {
+            applicationIdSuffix '.release'
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             signingConfig signingConfigs.config
@@ -103,6 +105,10 @@ dependencies {
 
     implementation "com.squareup.retrofit2:retrofit:$rootProject.retrofitVersion"
     implementation "com.squareup.retrofit2:converter-gson:$rootProject.retrofitVersion"
+
+    // ReactiveX
+    implementation "io.reactivex.rxjava2:rxjava:$rootProject.rxJavaVersion"
+    implementation "io.reactivex.rxjava2:rxandroid:$rootProject.rxAndroidVersion"
 
     testCompile 'junit:junit:4.12'
 }

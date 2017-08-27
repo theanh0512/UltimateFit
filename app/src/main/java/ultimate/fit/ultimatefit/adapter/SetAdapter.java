@@ -26,7 +26,7 @@ import ultimate.fit.ultimatefit.R;
 import ultimate.fit.ultimatefit.data.ExerciseColumns;
 import ultimate.fit.ultimatefit.data.SetColumns;
 import ultimate.fit.ultimatefit.data.UltimateFitDatabase;
-import ultimate.fit.ultimatefit.data.UltimateFitProvider;
+import ultimate.fit.ultimatefit.data.UltimateFitProvider2;
 import ultimate.fit.ultimatefit.data.generated.values.ExercisesValuesBuilder;
 import ultimate.fit.ultimatefit.data.generated.values.SetsValuesBuilder;
 import ultimate.fit.ultimatefit.utils.CalculationMethods;
@@ -80,7 +80,7 @@ public class SetAdapter extends RecyclerView.Adapter<SetAdapter.ViewHolder> {
         //user can input their weight per set. Next to it will be the target weight automatically calculated
         Thread thread = new Thread(() -> {
             try {
-                Cursor exerciseCursor = context.getContentResolver().query(UltimateFitProvider.Exercises.withId(exerciseId), null, null, null, null);
+                Cursor exerciseCursor = context.getContentResolver().query(UltimateFitProvider2.Exercises.withId(exerciseId), null, null, null, null);
                 exerciseCursor.moveToFirst();
                 oneRepMax = exerciseCursor.getDouble(exerciseCursor.getColumnIndex(ExerciseColumns.ONE_REP_MAX));
                 exerciseCursor.close();
@@ -167,20 +167,20 @@ public class SetAdapter extends RecyclerView.Adapter<SetAdapter.ViewHolder> {
                     //final Context context = context;
                     new Thread(() -> {
                         if (weight > 0) {
-                            Cursor exerciseCursor = context.getContentResolver().query(UltimateFitProvider.Exercises.withId(exerciseId), null, null, null, null);
+                            Cursor exerciseCursor = context.getContentResolver().query(UltimateFitProvider2.Exercises.withId(exerciseId), null, null, null, null);
                             exerciseCursor.moveToFirst();
                             oneRepMax = exerciseCursor.getDouble(exerciseCursor.getColumnIndex(ExerciseColumns.ONE_REP_MAX));
                             double calculatedOneRepMax = CalculationMethods.weightMaxForOneRep(weight, Integer.valueOf(editTextRep.getText().toString()));
                             if (calculatedOneRepMax > oneRepMax) {
                                 ContentValues exerciseContentValues = new ExercisesValuesBuilder().oneRepMax(calculatedOneRepMax).values();
-                                context.getContentResolver().update(UltimateFitProvider.Exercises.CONTENT_URI,
+                                context.getContentResolver().update(UltimateFitProvider2.Exercises.CONTENT_URI,
                                         exerciseContentValues, UltimateFitDatabase.EXERCISES + "." + ExerciseColumns.ID + "=" + exerciseId, null);
                             }
                             exerciseCursor.close();
 
                         }
                         ContentValues contentValues = new SetsValuesBuilder().rep(Integer.valueOf(editTextRep.getText().toString())).values();
-                        context.getContentResolver().update(UltimateFitProvider.Sets.CONTENT_URI,
+                        context.getContentResolver().update(UltimateFitProvider2.Sets.CONTENT_URI,
                                 contentValues, UltimateFitDatabase.Tables.SETS + "." + SetColumns.ID + "=" + setId, null);
                     }).start();
                     return true; // consume.
@@ -207,13 +207,13 @@ public class SetAdapter extends RecyclerView.Adapter<SetAdapter.ViewHolder> {
                     new Thread(() -> {
                         //only update one rep max in normal mode
                         if (numberOfRep != 0 && !isPersonalTrainerMode) {
-                            Cursor exerciseCursor = context.getContentResolver().query(UltimateFitProvider.Exercises.withId(exerciseId), null, null, null, null);
+                            Cursor exerciseCursor = context.getContentResolver().query(UltimateFitProvider2.Exercises.withId(exerciseId), null, null, null, null);
                             exerciseCursor.moveToFirst();
                             oneRepMax = exerciseCursor.getDouble(exerciseCursor.getColumnIndex(ExerciseColumns.ONE_REP_MAX));
                             double calculatedOneRepMax = CalculationMethods.weightMaxForOneRep(Double.valueOf(editTextWeight.getText().toString()), numberOfRep);
                             if (calculatedOneRepMax > oneRepMax) {
                                 ContentValues exerciseContentValues = new ExercisesValuesBuilder().oneRepMax(calculatedOneRepMax).values();
-                                context.getContentResolver().update(UltimateFitProvider.Exercises.CONTENT_URI,
+                                context.getContentResolver().update(UltimateFitProvider2.Exercises.CONTENT_URI,
                                         exerciseContentValues, UltimateFitDatabase.EXERCISES + "." + ExerciseColumns.ID + "=" + exerciseId, null);
                             }
                             exerciseCursor.close();
@@ -221,12 +221,12 @@ public class SetAdapter extends RecyclerView.Adapter<SetAdapter.ViewHolder> {
                         if (isPersonalTrainerMode) {
                             //will update weight ratio instead
                             ContentValues contentValues = new SetsValuesBuilder().weightRatio(Double.valueOf(editTextWeight.getText().toString())).values();
-                            context.getContentResolver().update(UltimateFitProvider.Sets.CONTENT_URI,
+                            context.getContentResolver().update(UltimateFitProvider2.Sets.CONTENT_URI,
                                     contentValues, UltimateFitDatabase.Tables.SETS + "." + SetColumns.ID + "=" + setId, null);
                         } else {
                             //normal mode: update weight
                             ContentValues contentValues = new SetsValuesBuilder().weight(Double.valueOf(editTextWeight.getText().toString())).values();
-                            context.getContentResolver().update(UltimateFitProvider.Sets.CONTENT_URI,
+                            context.getContentResolver().update(UltimateFitProvider2.Sets.CONTENT_URI,
                                     contentValues, UltimateFitDatabase.Tables.SETS + "." + SetColumns.ID + "=" + setId, null);
                         }
                     }).start();
@@ -248,13 +248,13 @@ public class SetAdapter extends RecyclerView.Adapter<SetAdapter.ViewHolder> {
                     final int numberOfRep = cursor.getInt(cursor.getColumnIndex(SetColumns.REP));
                     new Thread(() -> {
                         if (numberOfRep != 0 && !isPersonalTrainerMode) {
-                            Cursor exerciseCursor = context.getContentResolver().query(UltimateFitProvider.Exercises.withId(exerciseId), null, null, null, null);
+                            Cursor exerciseCursor = context.getContentResolver().query(UltimateFitProvider2.Exercises.withId(exerciseId), null, null, null, null);
                             exerciseCursor.moveToFirst();
                             oneRepMax = exerciseCursor.getDouble(exerciseCursor.getColumnIndex(ExerciseColumns.ONE_REP_MAX));
                             double calculatedOneRepMax = CalculationMethods.weightMaxForOneRep(Double.valueOf(editTextWeight.getText().toString()), numberOfRep);
                             if (calculatedOneRepMax > oneRepMax) {
                                 ContentValues exerciseContentValues = new ExercisesValuesBuilder().oneRepMax(calculatedOneRepMax).values();
-                                context.getContentResolver().update(UltimateFitProvider.Exercises.CONTENT_URI,
+                                context.getContentResolver().update(UltimateFitProvider2.Exercises.CONTENT_URI,
                                         exerciseContentValues, UltimateFitDatabase.EXERCISES + "." + ExerciseColumns.ID + "=" + exerciseId, null);
                             }
                             exerciseCursor.close();
@@ -263,12 +263,12 @@ public class SetAdapter extends RecyclerView.Adapter<SetAdapter.ViewHolder> {
                         if (isPersonalTrainerMode) {
                             //will update weight ratio instead
                             ContentValues contentValues = new SetsValuesBuilder().weightRatio(Double.valueOf(editTextWeight.getText().toString())).values();
-                            context.getContentResolver().update(UltimateFitProvider.Sets.CONTENT_URI,
+                            context.getContentResolver().update(UltimateFitProvider2.Sets.CONTENT_URI,
                                     contentValues, UltimateFitDatabase.Tables.SETS + "." + SetColumns.ID + "=" + setId, null);
                         } else {
                             //normal mode: update weight
                             ContentValues contentValues = new SetsValuesBuilder().weight(Double.valueOf(editTextWeight.getText().toString())).values();
-                            context.getContentResolver().update(UltimateFitProvider.Sets.CONTENT_URI,
+                            context.getContentResolver().update(UltimateFitProvider2.Sets.CONTENT_URI,
                                     contentValues, UltimateFitDatabase.Tables.SETS + "." + SetColumns.ID + "=" + setId, null);
                         }
                     }).start();
@@ -287,20 +287,20 @@ public class SetAdapter extends RecyclerView.Adapter<SetAdapter.ViewHolder> {
                     final double weight = cursor.getDouble(cursor.getColumnIndex(SetColumns.WEIGHT));
                     new Thread(() -> {
                         if (weight > 0) {
-                            Cursor exerciseCursor = context.getContentResolver().query(UltimateFitProvider.Exercises.withId(exerciseId), null, null, null, null);
+                            Cursor exerciseCursor = context.getContentResolver().query(UltimateFitProvider2.Exercises.withId(exerciseId), null, null, null, null);
                             exerciseCursor.moveToFirst();
                             oneRepMax = exerciseCursor.getDouble(exerciseCursor.getColumnIndex(ExerciseColumns.ONE_REP_MAX));
                             double calculatedOneRepMax = CalculationMethods.weightMaxForOneRep(weight, Integer.valueOf(editTextRep.getText().toString()));
                             if (calculatedOneRepMax > oneRepMax) {
                                 ContentValues exerciseContentValues = new ExercisesValuesBuilder().oneRepMax(calculatedOneRepMax).values();
-                                context.getContentResolver().update(UltimateFitProvider.Exercises.CONTENT_URI,
+                                context.getContentResolver().update(UltimateFitProvider2.Exercises.CONTENT_URI,
                                         exerciseContentValues, UltimateFitDatabase.EXERCISES + "." + ExerciseColumns.ID + "=" + exerciseId, null);
                             }
                             exerciseCursor.close();
 
                         }
                         ContentValues contentValues = new SetsValuesBuilder().rep(Integer.valueOf(editTextRep.getText().toString())).values();
-                        context.getContentResolver().update(UltimateFitProvider.Sets.CONTENT_URI,
+                        context.getContentResolver().update(UltimateFitProvider2.Sets.CONTENT_URI,
                                 contentValues, UltimateFitDatabase.Tables.SETS + "." + SetColumns.ID + "=" + setId, null);
                     }).start();
                 }

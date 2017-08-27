@@ -25,7 +25,7 @@ import ultimate.fit.ultimatefit.R;
 import ultimate.fit.ultimatefit.adapter.PlanAdapter;
 import ultimate.fit.ultimatefit.adapter.WorkoutAdapter;
 import ultimate.fit.ultimatefit.data.PlanColumns;
-import ultimate.fit.ultimatefit.data.UltimateFitProvider;
+import ultimate.fit.ultimatefit.data.UltimateFitProvider2;
 
 public class TabWorkoutFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
     private static final String LOG_TAG = TabWorkoutFragment.class.getSimpleName();
@@ -89,7 +89,7 @@ public class TabWorkoutFragment extends Fragment implements LoaderManager.Loader
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-        return new CursorLoader(getActivity(), UltimateFitProvider.Workouts.fromPlan(PlanAdapter.currentAppliedPlanID), null, null, null, null);
+        return new CursorLoader(getActivity(), UltimateFitProvider2.Workouts.fromPlan(PlanAdapter.currentAppliedPlanID), null, null, null, null);
     }
 
     @Override

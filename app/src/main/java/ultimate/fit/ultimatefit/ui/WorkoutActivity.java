@@ -35,7 +35,7 @@ import butterknife.OnFocusChange;
 import ultimate.fit.ultimatefit.R;
 import ultimate.fit.ultimatefit.adapter.WorkoutExerciseAdapter;
 import ultimate.fit.ultimatefit.data.UltimateFitDatabase;
-import ultimate.fit.ultimatefit.data.UltimateFitProvider;
+import ultimate.fit.ultimatefit.data.UltimateFitProvider2;
 import ultimate.fit.ultimatefit.data.WorkoutColumns;
 import ultimate.fit.ultimatefit.data.generated.values.WorkoutsValuesBuilder;
 import ultimate.fit.ultimatefit.ui.category.CategoryActivity;
@@ -130,7 +130,7 @@ public class WorkoutActivity extends AppCompatActivity implements LoaderManager.
                     @Override
                     public void run() {
                         ContentValues workoutContentValues = new WorkoutsValuesBuilder().bodyPart(editTextBodyPart.getText().toString()).values();
-                        context.getContentResolver().update(UltimateFitProvider.Workouts.CONTENT_URI,
+                        context.getContentResolver().update(UltimateFitProvider2.Workouts.CONTENT_URI,
                                 workoutContentValues, UltimateFitDatabase.WORKOUTS + "." + WorkoutColumns.ID + "=" + workoutId, null);
                     }
                 }).start();
@@ -148,7 +148,7 @@ public class WorkoutActivity extends AppCompatActivity implements LoaderManager.
                 @Override
                 public void run() {
                     ContentValues workoutContentValues = new WorkoutsValuesBuilder().bodyPart(editTextBodyPart.getText().toString()).values();
-                    context.getContentResolver().update(UltimateFitProvider.Workouts.CONTENT_URI,
+                    context.getContentResolver().update(UltimateFitProvider2.Workouts.CONTENT_URI,
                             workoutContentValues, UltimateFitDatabase.WORKOUTS + "." + WorkoutColumns.ID + "=" + workoutId, null);
                 }
             }).start();
@@ -174,7 +174,7 @@ public class WorkoutActivity extends AppCompatActivity implements LoaderManager.
                 AlertDialog alertDialog;
                 alertDialog = builderSingle.create();
 
-                Cursor workoutCursor = getContentResolver().query(UltimateFitProvider.Workouts.withId(workoutId), null, null, null, null);
+                Cursor workoutCursor = getContentResolver().query(UltimateFitProvider2.Workouts.withId(workoutId), null, null, null, null);
                 workoutCursor.moveToFirst();
                 String originalNote = workoutCursor.getString(workoutCursor.getColumnIndex(WorkoutColumns.NOTE_OF_WORKOUT));
                 EditText editTextNote = (EditText) v.findViewById(R.id.edit_text_note);
@@ -186,7 +186,7 @@ public class WorkoutActivity extends AppCompatActivity implements LoaderManager.
                             new Thread(() -> {
                                 String note = editTextNote.getText().toString();
                                 ContentValues workoutContentValues = new WorkoutsValuesBuilder().noteOfWorkout(note).values();
-                                getContentResolver().update(UltimateFitProvider.Workouts.CONTENT_URI,
+                                getContentResolver().update(UltimateFitProvider2.Workouts.CONTENT_URI,
                                         workoutContentValues, UltimateFitDatabase.WORKOUTS + "." + WorkoutColumns.ID + "=" + workoutId, null);
                             }).start();
                             alertDialog.cancel();
@@ -202,7 +202,7 @@ public class WorkoutActivity extends AppCompatActivity implements LoaderManager.
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-        return new CursorLoader(this, UltimateFitProvider.WorkoutExercises.fromWorkout(workoutId), null, null, null, null);
+        return new CursorLoader(this, UltimateFitProvider2.WorkoutExercises.fromWorkout(workoutId), null, null, null, null);
     }
 
     @Override
