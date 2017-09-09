@@ -43,7 +43,7 @@ public abstract class NetworkBoundResource<ResultType, RequestType> {
         response -> {
           result.removeSource(apiResponse);
           result.removeSource(dbSource);
-          //noinspection ConstantConditions
+          // noinspection ConstantConditions
           if (response.isSuccessful()) {
             appExecutors
                 .diskIO()
@@ -56,7 +56,8 @@ public abstract class NetworkBoundResource<ResultType, RequestType> {
                               () ->
                                   // we specially request a new live data,
                                   // otherwise we will get immediately last cached value,
-                                  // which may not be updated with latest results received from network.
+                                  // which may not be updated with latest results received from
+                                  // network.
                                   result.addSource(
                                       loadFromDb(),
                                       newData -> result.setValue(Resource.success(newData))));
